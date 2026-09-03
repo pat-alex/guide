@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>الأسئلة الشائعة — الأكاديمية المهنية للمعلمين، فرع الإسكندرية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5F1;
+    --surface:#FFFFFF;
+    --ink:#182623;
+    --muted:#5B6B66;
+    --line:#DCE3DC;
+    --primary:#1F6F5C;
+    --primary-dark:#123D33;
+    --primary-tint:#E7F1EC;
+    --gold:#B8894F;
+    --gold-tint:#F5EBDD;
+    --gold-line:#E3CDA4;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(15,30,26,.06), 0 8px 24px rgba(15,30,26,.06);
+    --maxw:820px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Sans Arabic", "Cairo", Tahoma, sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:"Cairo","IBM Plex Sans Arabic",sans-serif;
+    margin:0;
+  }
+  a{color:inherit;}
+  button{font:inherit;color:inherit;}
+
+  /* ---------- Header ---------- */
+  .topbar{
+    background:linear-gradient(180deg, var(--primary-dark), var(--primary));
+    color:#F4F7F5;
+    padding:34px 20px 26px;
+  }
+  .topbar-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+  }
+  .brand-eyebrow{
+    display:block;
+    font-size:.92rem;
+    color:#CFE6DC;
+    margin-bottom:4px;
+    font-weight:600;
+  }
+  .topbar h1{
+    font-size:clamp(1.6rem,4vw,2.1rem);
+    font-weight:800;
+    letter-spacing:.2px;
+  }
+  .welcome{
+    margin:14px 0 20px;
+    color:#DCEDE5;
+    max-width:56ch;
+    font-size:.98rem;
+  }
+  .search-wrap{
+    position:relative;
+    background:var(--surface);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:center;
+    padding:2px;
+  }
+  .search-wrap svg{
+    flex:0 0 auto;
+    width:20px;height:20px;
+    margin:0 14px;
+    color:var(--muted);
+  }
+  #searchInput{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    padding:14px 4px;
+    font-family:inherit;
+    font-size:1rem;
+    color:var(--ink);
+  }
+  #searchInput::placeholder{color:#9AA6A1;}
+
+  /* ---------- Quick nav ---------- */
+  .quicknav{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(243,245,241,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .quicknav-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    display:flex;
+    gap:8px;
+    padding:10px 20px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .quicknav-inner::-webkit-scrollbar{display:none;}
+  .pill{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--muted);
+    font-size:.88rem;
+    font-weight:600;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .pill.active{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:#fff;
+  }
+
+  /* ---------- Notice banner ---------- */
+  .notice{
+    max-width:var(--maxw);
+    margin:22px auto 0;
+    padding:0 20px;
+  }
+  .notice-box{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    background:var(--gold-tint);
+    border:1px solid var(--gold-line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+  }
+  .notice-icon{
+    flex:0 0 auto;
+    width:34px;height:34px;
+    border-radius:9px;
+    background:#fff;
+    color:#8A5A22;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .notice-icon svg{width:18px;height:18px;}
+  .notice-text h3{
+    font-size:.98rem;
+    color:#6B4B23;
+    margin-bottom:6px;
+  }
+  .notice-text ul{
+    margin:0;
+    padding-inline-start:20px;
+    color:#6B4B23;
+    font-size:.9rem;
+  }
+  .notice-text li{margin-bottom:2px;}
+
+  /* ---------- Main / topics ---------- */
+  main{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:30px 20px 10px;
+  }
+  .topic{
+    scroll-margin-top:66px;
+    margin-bottom:38px;
+  }
+  .topic-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .topic-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;height:38px;
+    border-radius:10px;
+    background:var(--primary-tint);
+    color:var(--primary-dark);
+    flex:0 0 auto;
+  }
+  .topic-icon svg{width:20px;height:20px;}
+  .topic-head h2{
+    font-size:1.18rem;
+    font-weight:700;
+  }
+  .topic-note{
+    color:var(--muted);
+    font-size:.9rem;
+    margin:0 0 12px 48px;
+  }
+
+  .accordion{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .item{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    transition:border-color .18s ease;
+  }
+  .item.open{border-color:var(--primary);}
+  .item-head{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:right;
+    background:none;
+    border:none;
+    padding:15px 16px;
+    cursor:pointer;
+    font-size:.98rem;
+    font-weight:600;
+  }
+  .item-head .chev{
+    margin-right:auto;
+    flex:0 0 auto;
+    width:18px;height:18px;
+    color:var(--muted);
+    transition:transform .22s ease;
+  }
+  .item.open .item-head .chev{transform:rotate(180deg);color:var(--primary);}
+  .item-body{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .24s ease;
+  }
+  .item.open .item-body{grid-template-rows:1fr;}
+  .item-body-inner{overflow:hidden;}
+  .item-body p, .item-body ol, .item-body ul{
+    margin:0 0 10px;
+    padding:0 16px 16px;
+    color:#33433F;
+    font-size:.95rem;
+  }
+  .item-body ol, .item-body ul{padding-inline-start:34px;}
+  .item-body li{margin-bottom:4px;}
+  .item-body p:last-child, .item-body ol:last-child{margin-bottom:0;}
+  .item-body .platform-link{
+    color:var(--primary-dark);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:1px solid var(--primary);
+  }
+  .item-body .maps-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin:0 16px 16px;
+    padding:9px 14px;
+    background:var(--gold-tint);
+    color:#6B4B23;
+    border-radius:9px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:.9rem;
+  }
+  .item-body .maps-link svg{width:16px;height:16px;}
+
+  .item[hidden]{display:none;}
+  .topic[hidden]{display:none;}
+
+  #noResults{
+    display:none;
+    text-align:center;
+    color:var(--muted);
+    padding:40px 10px;
+  }
+
+  .closing-note{
+    max-width:var(--maxw);
+    margin:8px auto 34px;
+    padding:0 20px;
+    color:var(--muted);
+    font-size:.88rem;
+    text-align:center;
+  }
+
+  /* ---------- Contact / footer ---------- */
+  .contact{
+    background:var(--primary-dark);
+    color:#EAF3EF;
+    padding:36px 20px 30px;
+    scroll-margin-top:66px;
+  }
+  .contact-inner{max-width:var(--maxw);margin:0 auto;}
+  .contact h2{font-size:1.15rem;margin-bottom:16px;}
+  .contact-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+  .contact-card{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:var(--radius);
+    padding:16px;
+    text-decoration:none;
+    color:#EAF3EF;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    transition:background .18s ease;
+  }
+  .contact-card:hover{background:rgba(255,255,255,.12);}
+  .contact-icon{
+    width:34px;height:34px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:9px;
+    background:rgba(255,255,255,.12);
+  }
+  .contact-icon svg{width:18px;height:18px;}
+  .contact-title{font-weight:700;font-size:.95rem;}
+  .contact-sub{font-size:.8rem;color:#BFDBD0;}
+  .hours-line{
+    margin:20px 0 0;
+    font-size:.85rem;
+    color:#BFDBD0;
+    text-align:center;
+  }
+
+  @media (max-width:640px){
+    .contact-grid{grid-template-columns:1fr;}
+    .topic-note{margin-inline-start:0;}
+    .notice-box{flex-direction:column;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+  :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand-eyebrow">الأكاديمية المهنية للمعلمين</span>
+    <h1>فرع الإسكندرية — صفحة الدعم والأسئلة الشائعة</h1>
+    <p class="welcome">أهلاً بك، ستجد هنا إجابات سريعة لأكثر الاستفسارات شيوعاً. اضغط على عنوان الموضوع لتظهر لك التفاصيل، أو ابحث مباشرة عن كلمة تخص استفسارك.</p>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="مثال: شهادة، اختبار، اعتماد، إجازة..." aria-label="ابحث في الأسئلة الشائعة" />
+    </div>
+  </div>
+</header>
+
+<nav class="quicknav" aria-label="التنقل بين الموضوعات">
+  <div class="quicknav-inner" id="quicknavInner">
+    <a href="#loc" class="pill" data-target="loc">مقر الأكاديمية</a>
+    <a href="#cert" class="pill" data-target="cert">الشهادات</a>
+    <a href="#exams" class="pill" data-target="exams">الاختبارات والترقيات</a>
+    <a href="#qual" class="pill" data-target="qual">التأهيل التربوي</a>
+    <a href="#accred" class="pill" data-target="accred">الاعتماد المهني</a>
+    <a href="#admin" class="pill" data-target="admin">الشئون الإدارية</a>
+  </div>
+</nav>
+
+<div class="notice">
+  <div class="notice-box">
+    <span class="notice-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </span>
+    <div class="notice-text">
+      <h3>تنبيه هام للزائرين</h3>
+      <p style="margin:0 0 8px;">حرصاً على راحتكم، نذكركم بضرورة إحضار المستندات التالية لإتمام أى معاملة مع الفرع:</p>
+      <ul>
+        <li>صحيفة أحوال إلكترونية.</li>
+        <li>صورة بطاقة الرقم القومى.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<main id="faqRoot">
+
+  <!-- 1. مقر الأكاديمية -->
+  <section class="topic" id="loc" data-topic>
+    <div class="topic-head">
+      <span class="topic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </span>
+      <h2>1. مقر الأكاديمية</h2>
+    </div>
+    <div class="accordion">
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          أين يقع المقر، وما هو رقم الهاتف؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>المقر: مبنى كلية التربية - الشاطبى - الدور الأول.<br>الهاتف الأرضى: 034870028</p>
+          <a class="maps-link" href="https://www.google.com/maps/search/?api=1&query=%D9%83%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B4%D8%A7%D8%B7%D8%A8%D9%8A%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            فتح الموقع على خرائط جوجل
+          </a>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. الشهادات -->
+  <section class="topic" id="cert" data-topic>
+    <div class="topic-head">
+      <span class="topic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l3 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7z"/><path d="M9 12h6M9 16h4"/></svg>
+      </span>
+      <h2>2. الشهادات (التجديد - بدل الفاقد - الاستلام)</h2>
+    </div>
+    <div class="accordion">
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يتم تجديد شهادة مدير / وكيل / موجه، أو استخراج بدل فاقد؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يتم تجديد شهادات مدير / وكيل / موجه لمرة واحدة فقط بعد التاريخ المكتوب عليها. أما بدل الفاقد فيتم إصداره خلال مدة سريان الشهادة.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          متى وكيف يتم استلام الشهادة؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يتم تسليم الشهادات بعد شهرين من تاريخ أداء الاختبار أو دفع رسوم التجديد. وحرصاً على راحتكم، يتم استلام الشهادة من قسم التنسيق العام بإدارتك التعليمية.</p>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. الاختبارات والترقيات -->
+  <section class="topic" id="exams" data-topic>
+    <div class="topic-head">
+      <span class="topic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+      </span>
+      <h2>3. الاختبارات والترقيات</h2>
+    </div>
+    <div class="accordion">
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يتم حجز اختبارات مدير / موجه / وكيل؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يتم الحجز عبر <a class="platform-link" href="http://pat.edu.eg/platform/programs/platform-support.html" target="_blank" rel="noopener">منصة الأكاديمية</a>. المادة التدريبية متاحة أونلاين طوال المدة التى ترغب بها، ثم تحدد موعد الاختبار. يُؤدى الاختبار الإلكترونى حضورياً بمقر الفرع.</p>
+          <p>تُتاح هذه الاختبارات مرتين فى السنة: خلال إجازة نصف العام وإجازة الصيف، فى توقيتات محددة يتم إبلاغ الإدارات التعليمية بها.</p>
+          <p>ملاحظة: الشهادة متطلب وظيفى، لكنها غير ملزمة لجهة العمل دون استيفاء باقى الشروط.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          ما هو اختبار الترقى على الكادر؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>الحصول على التدريب واختبار الصلاحية أحد الشروط للترقى على الكادر. لمعرفة باقى الشروط وحل مشاكل الإيميل الموحد، تواصل مع مسئول الحكومة الإلكترونية بمدرستك أو مسئول الإحصاء بالإدارة.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          ما هو اختبار تطبيقات تربوية للمعلم المساعد؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>التدريب والاختبار شرط للتعيين. تعرف على باقى الشروط من موظف التعيينات بإدارتك، وكن على تواصل دائم معه لحين إتمام التعيين.</p>
+          <p>يُتاح هذا الاختبار مرتين فى السنة: خلال إجازة نصف العام وإجازة الصيف، فى توقيتات محددة يتم إبلاغ الإدارات التعليمية بها.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يتم التقدم لاختبار تغيير المسمى الوظيفى؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يُرجى التواصل مع قسم التنسيق بالإدارة لمعرفة شروط التقديم والمواعيد.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يتم التقدم لاختبار التسكين على الكادر لأول مرة؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>تواصل مع قسم الإحصاء بالإدارة لمعرفة مواعيد الترشح للحصول على التدريب والاختبار، مع مراعاة:</p>
+          <ol>
+            <li>تسجيل الترشح خلال المواعيد المقررة بالفاكس فقط، وإلا سيُلغى الترشح للعام القادم.</li>
+            <li>مراجعة البيانات قبل الحفظ، وطلب التعديل من مسئول الإحصاء إن لزم الأمر.</li>
+            <li>طباعة استمارة الترشح والاحتفاظ بها، والمتابعة المستمرة مع الإدارة لمعرفة صدور فاكس التدريب والاختبار.</li>
+          </ol>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          ما هى خطوات إعادة التعيين؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يُرجى التواصل مع قسم شئون العاملين بالإدارة لمعرفة موقفك.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          متى يتم الإعلان عن مدارس المتفوقين STEM؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يتم الإعلان عنها بالمدارس فى حينه.</p>
+        </div></div>
+      </div>
+    </div>
+    <p class="topic-note">لمزيد من التفاصيل حول أى اختبار مذكور أعلاه، يمكنك الرجوع إلى <a class="platform-link" href="http://pat.edu.eg/platform/programs/platform-support.html" target="_blank" rel="noopener">منصة الأكاديمية الإلكترونية</a> أو التواصل معنا مباشرة.</p>
+  </section>
+
+  <!-- 4. برامج التأهيل التربوي -->
+  <section class="topic" id="qual" data-topic>
+    <div class="topic-head">
+      <span class="topic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+      </span>
+      <h2>4. برامج التأهيل التربوي</h2>
+    </div>
+    <div class="accordion">
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف أحصل على مؤهل تربوى للتعيين بالمدارس الحكومية؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يُشترط الحصول على دبلوم عام فى التربية (لمدة عام دراسى) من كليات التربية. لا علاقة للأكاديمية بهذا الدبلوم.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          ما هو برنامج التأهيل التربوى للعاملين بالمدارس الحكومية (للوظائف الإشرافية)؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>مخصص لغير خريجى كليات التربية للتقدم للوظائف الإشرافية فقط، ويُقدمه مركز التميز بجامعة عين شمس. تواصل معهم مباشرة لمعرفة التفاصيل.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          ما هو برنامج التأهيل التربوى لمعلمى المدارس الخاصة والقومية (فقط)؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>برنامج بالتعاون بين الأكاديمية وكلية التربية بجامعة الإسكندرية، للراغبين فى العمل بالتدريس من غير خريجى كليات التربية، بشرط الحصول على مؤهل عالٍ من جامعة حكومية أو خاصة معتمدة من المجلس الأعلى للجامعات.</p>
+          <p>يؤهلك التدريب للعمل بالمدارس الخاصة والقومية فقط. توجه لمركز الخدمات التربوية بكلية التربية لمزيد من التفاصيل.</p>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. برامج وشهادات الاعتماد المهني -->
+  <section class="topic" id="accred" data-topic>
+    <div class="topic-head">
+      <span class="topic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M9 13.5 7 22l5-3 5 3-2-8.5"/></svg>
+      </span>
+      <h2>5. برامج وشهادات الاعتماد المهني</h2>
+    </div>
+    <div class="accordion">
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          ما هى شهادات الاعتماد المتاحة من الأكاديمية؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>تشمل الحصول على الاعتماد المهنى فى الفئات التالية:</p>
+          <ul>
+            <li>مدرب معتمد.</li>
+            <li>مراجع خارجى معتمد.</li>
+            <li>معد حقائب تدريبية معتمد.</li>
+          </ul>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يمكن التقدم لهذه البرامج؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>لا يُتاح التقديم لهذه البرامج بشكل مفتوح طوال العام، بل يصدر بها إعلان رسمى يحدد الشروط ومواعيد التقدم، وذلك وفقاً للاحتياجات الفعلية لوزارة التربية والتعليم والأكاديمية المهنية للمعلمين.</p>
+          <p>يُرجى متابعة الصفحة الرسمية لمعرفة أوقات طرح الإعلانات.</p>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. الشئون الإدارية -->
+  <section class="topic" id="admin" data-topic>
+    <div class="topic-head">
+      <span class="topic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </span>
+      <h2>6. الشئون الإدارية (تخفيض المدة - ضم المدة - رعاية الطفل)</h2>
+    </div>
+    <div class="accordion">
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يتم تخفيض المدة البينية لحملة الماجستير والدكتوراه؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يتم بتقديم طلب لقسم حصر الوظائف بإدارتك، وتسليم نسخة لقسم الإحصاء والمتابعة معهم للتأكد من التنفيذ.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          كيف يتم ضم المدة؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>يتم من خلال قسم التسويات بإدارتك.</p>
+        </div></div>
+      </div>
+      <div class="item" data-q>
+        <button class="item-head" aria-expanded="false">
+          هل تُحتسب إجازة رعاية الطفل ضمن المدة البينية؟
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="item-body"><div class="item-body-inner">
+          <p>تُخصم إجازة رعاية الطفل من المدة البينية، ولم يصدر حتى الآن أى قانون باحتسابها ضمن سنوات المدة البينية.</p>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <p id="noResults">لا توجد نتائج مطابقة لبحثك، جرّب كلمة أخرى.</p>
+</main>
+
+<p class="closing-note">إذا كانت لديك أسئلة أخرى، راجع الموضوعات بالأعلى بالضغط عليها — فقد تكون إجابة سؤالك موجودة بالفعل ولا تحتاج لانتظار الرد.</p>
+
+<script>
+(function(){
+  document.querySelectorAll('.item-head').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.closest('.item');
+      var isOpen = item.classList.contains('open');
+      item.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  var input = document.getElementById('searchInput');
+  var topics = Array.from(document.querySelectorAll('.topic[data-topic]'));
+  var noResults = document.getElementById('noResults');
+
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var anyVisible = false;
+
+    topics.forEach(function(topic){
+      var topicHasMatch = false;
+      topic.querySelectorAll('.item[data-q]').forEach(function(item){
+        var text = item.textContent.toLowerCase();
+        var match = q === '' || text.indexOf(q) !== -1;
+        item.hidden = !match;
+        if(match) topicHasMatch = true;
+      });
+      topic.hidden = !topicHasMatch;
+      if(topicHasMatch) anyVisible = true;
+    });
+
+    noResults.style.display = anyVisible ? 'none' : 'block';
+  });
+
+  var pills = Array.from(document.querySelectorAll('.pill'));
+  var sections = ['loc','cert','exams','qual','accred','admin'].map(function(id){
+    return document.getElementById(id);
+  }).filter(Boolean);
+
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id = entry.target.id;
+        pills.forEach(function(p){
+          p.classList.toggle('active', p.dataset.target === id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+  sections.forEach(function(s){ observer.observe(s); });
+})();
+</script>
+
+</body>
+</html>
