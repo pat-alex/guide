@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="خطوات تجديد شهادات القيادات وطلب بدل فاقد عبر منصة الأكاديمية المهنية للمعلمين، فرع الإسكندرية.">
+    <title>دليل تجديد الشهادات وبدل الفاقد - الأكاديمية المهنية للمعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0b5394;
+            --secondary-color: #3d85c6;
+            --accent-color: #e69138;
+            --text-dark: #333333;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --danger-color: #ef4444;
+            --warning-bg: #fff3e0;
+            --border-radius: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9em;
+            padding: 6px 14px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 999px;
+            margin-bottom: 18px;
+        }
+        .back-link:hover { background-color: #eef6fc; }
+
+        .main-header { text-align: center; color: var(--primary-color); margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .main-header h1 { font-weight: 900; font-size: 2em; line-height: 1.2; }
+        .main-header h2 { font-weight: 600; font-size: 1.1em; color: var(--secondary-color); margin-top: 8px; }
+
+        .important-dates { background-color: #e8f4f8; border-right: 5px solid var(--secondary-color); padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        .date-box { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
+        .date-item { flex: 1; min-width: 250px; background: var(--white); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .date-item h3 { color: var(--primary-color); border-bottom: 1px dashed #ccc; padding-bottom: 5px; margin-bottom: 10px; }
+
+        .alert { padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: 600; }
+        .alert-warning { background-color: var(--warning-bg); color: #d35400; border-right: 5px solid var(--accent-color); }
+        .alert-danger { background-color: #fee2e2; color: #991b1b; border-right: 5px solid var(--danger-color); }
+        .alert-success { background-color: #e8f8f5; color: var(--success-color); border-right: 5px solid var(--success-color); }
+
+        .step-container { margin-bottom: 30px; }
+        .step-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .step-number { background-color: var(--primary-color); color: var(--white); width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1.5em; font-weight: bold; margin-left: 15px; flex-shrink: 0; }
+        .step-title { font-size: 1.4em; color: var(--primary-color); font-weight: 700; }
+
+        .step-content { background-color: var(--white); border: 1px solid #e0e0e0; border-radius: var(--border-radius); padding: 20px; }
+
+        .ui-badge { display: inline-block; background-color: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 4px; font-weight: bold; border: 1px dashed #94a3b8; cursor: default; margin: 0 4px; }
+        .action-button { display: inline-block; background-color: var(--primary-color); color: var(--white); padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 10px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); word-break: break-all; }
+
+        .code-highlight { display: inline-block; background-color: #fffbeb; border: 2px dashed #f59e0b; color: #b45309; padding: 8px 18px; border-radius: 8px; font-weight: 900; font-size: 1.15em; margin: 6px 4px; direction: ltr; }
+
+        ul.styled-list { list-style-type: none; padding-right: 0; }
+        ul.styled-list li { position: relative; padding-right: 25px; margin-bottom: 10px; }
+        ul.styled-list li::before { content: "✓"; position: absolute; right: 0; color: var(--success-color); font-weight: bold; }
+
+        ol.numbered-list { padding-right: 22px; }
+        ol.numbered-list li { margin-bottom: 8px; }
+
+        footer.page-footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; color: #888; font-size: 0.9em; }
+
+        @media (max-width: 600px) {
+            body { padding: 0; }
+            .container { padding: 10px; border-radius: 0; }
+            .step-content { padding: 15px; }
+            .step-title { font-size: 1.2em; }
+            .step-number { width: 35px; height: 35px; font-size: 1.2em; margin-left: 10px; }
+            .date-item { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <a href="pat.html" class="back-link">→ الخدمات الإلكترونية</a>
+
+        <header class="main-header">
+            <h1>خطوات تجديد الشهادات وبدل الفاقد</h1>
+            <h2>(شهادات مدير - وكيل - موجه)</h2>
+        </header>
+
+        <section class="important-dates">
+            <h2>👤 التعريف بالخدمة</h2>
+            <div class="date-box">
+                <div class="date-item">
+                    <h3>تجديد الشهادة</h3>
+                    <p>لمن مرّ على تاريخ اختباره <strong>ثلاث سنوات</strong> فأكثر.</p>
+                    <p>يتم التجديد <strong>لمرة واحدة فقط</strong> بعد التاريخ المكتوب على الشهادة.</p>
+                </div>
+                <div class="date-item">
+                    <h3>بدل الفاقد</h3>
+                    <p>لمن فقد شهادته وهى  <strong>سارية</strong>.</p>
+                    <p>يتم الإصدار خلال <strong>مدة سريان الشهادة</strong> فقط.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="alert alert-success">
+            <strong>🎓 استلام الشهادة:</strong> بعد شهرين من تاريخ الدفع، من قسم التنسيق العام بإدارتك التعليمية.
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>📸 تنبيه هام:</strong> بمجرد الحصول على إيصال فورى، صوّره فوراً قبل زوال الحبر .
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">دخول منصة الأكاديمية</h3>
+            </div>
+            <div class="step-content">
+                <p>الدخول إلى الموقع من هذا الرابط:</p>
+                <a href="http://pat.edu.eg/etraining/Login.aspx" target="_blank" class="action-button" style="direction: ltr;">pat.edu.eg/etraining/Login.aspx</a>
+                <ul class="styled-list" style="margin-top: 15px;">
+                    <li>اكتب <strong>الرقم القومى</strong> بأرقام إنجليزية.</li>
+                    <li>ثم اكتب <strong>كلمة المرور</strong> الخاصة بك.</li>
+                    <li>ثم اضغط على زر <span class="ui-badge">دخول</span>.</li>
+                </ul>
+                <div class="alert alert-warning" style="margin-top: 15px;">
+                    <strong>😕 لو مش قادر تدخل:</strong> ابعت رسالة <strong>واتساب فقط</strong> (مش مكالمة تليفونية) لأرقام دعم محافظتك، واكتب فيها: رقمك القومى بالإنجليزية، اسمك، إدارتك، وطلب كلمة المرور.
+                </div>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">اختيار نوع الخدمة</h3>
+            </div>
+            <div class="step-content">
+                <ol class="numbered-list">
+                    <li>استخدم كمبيوتر أو امسك الموبايل بالعرض لتظهر  <strong>"القائمة الجانبية"</strong>.</li>
+                    <li>من القائمة الجانبية، اضغط على <strong>"البرامج التدريبية"</strong>.</li>
+                    <li>ثم اضغط على <strong>"الشهادات"</strong>.</li>
+                    <li>بجوار الشهادة المطلوبة، اضغط زر <span class="ui-badge">طلب تجديد</span> أو <span class="ui-badge">بدل فاقد</span> حسب طلبك.</li>
+                    <li>من قائمة <strong>"الطلبات"</strong> هيظهر لك اسم الشهادة ورسوم التجديد — راجعهم كويس قبل الدفع.</li>
+                    <li>اضغط <span class="ui-badge">إتمام الدفع</span>.</li>
+                </ol>
+                <div class="alert alert-warning" style="margin-top: 15px;">
+                    <strong>💡 ملحوظة:</strong> لو ظهرت لك رسالة "لقد قمت بطلب تجديد لهذه الشهادة مسبقاً"، فمعنى ذلك إن طلبك اتسجل بالفعل — راجع قائمة "الطلبات" بدل ما تكرر الطلب.
+                </div>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">دفع الرسوم بخدمة فورى</h3>
+            </div>
+            <div class="step-content">
+                <p>تأكد من <strong>مسمى الشهادة</strong> ورقم المحمول الخاص بك، ثم اضغط زر <span class="ui-badge">Fawry</span> الأصفر، واختر <span class="ui-badge">ادفع فورى</span>.</p>
+
+                <div style="text-align: center; margin: 18px 0;">
+                    <span class="code-highlight">المبلغ: 311 ج.م</span>
+                </div>
+
+                <div class="alert alert-danger">
+                    <strong>🛑 تحذير هام:</strong> لو ظهر لك مبلغ <strong>أكبر</strong> من 311 جنيه، لا تدفع، وتواصل فوراً مع الدعم الفنى.
+                </div>
+
+                <p>هتظهر لك رسالة بها <strong>رقم الطلب</strong> (صالح لمدة 24 ساعة فقط)، وهتوصلك رسالة على موبايلك المسجل بالمنصة.</p>
+
+                <ul class="styled-list" style="margin-top: 15px;">
+                    <li>احتفظ برقم الطلب، واذهب لأقرب ماكينة فورى.</li>
+                    <li>قول للبائع رقم الطلب، وكود الخدمة <span class="code-highlight" style="font-size: 1em; padding: 4px 12px;">788</span> للدفع للأكاديمية.</li>
+                </ul>
+
+                <div class="alert alert-danger" style="margin-top: 15px;">
+                    <strong>🛑 الدفع برقم الطلب فقط.</strong> لو البائع طلب منك الدفع برقمك القومى، اذهب لبائع آخر وادفع برقم الطلب فقط.
+                </div>
+            </div>
+        </div>
+
+    
+        </div>
+
+        <footer class="page-footer">
+            <p>الأكاديمية المهنية للمعلمين — فرع الإسكندرية</p>
+            <p>ت: 034870028</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
