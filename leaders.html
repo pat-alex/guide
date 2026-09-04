@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل حجز موعد الاختبار - الأكاديمية المهنية للمعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0b5394;
+            --secondary-color: #3d85c6;
+            --accent-color: #e69138;
+            --text-dark: #333333;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --warning-bg: #fff3e0;
+            --border-radius: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: transparent;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 10px;
+            /* منع التمرير العرضي تماماً */
+            overflow-x: hidden; 
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .main-header { text-align: center; color: var(--primary-color); margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .main-header h1 { font-weight: 900; font-size: 2em; line-height: 1.2; }
+        .important-dates { background-color: #e8f4f8; border-right: 5px solid var(--secondary-color); padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        .date-box { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
+        .date-item { flex: 1; min-width: 250px; background: var(--white); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .date-item h3 { color: var(--primary-color); border-bottom: 1px dashed #ccc; padding-bottom: 5px; margin-bottom: 10px; }
+
+        .alert { padding: 15px; border-radius: 8px; margin: 15px 0; font-weight: 600; }
+        .alert-warning { background-color: var(--warning-bg); color: #d35400; border-right: 5px solid var(--accent-color); }
+        .alert-success { background-color: #e8f8f5; color: var(--success-color); border-right: 5px solid var(--success-color); }
+        
+        .step-container { margin-bottom: 30px; }
+        .step-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .step-number { background-color: var(--primary-color); color: var(--white); width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 1.5em; font-weight: bold; margin-left: 15px; flex-shrink: 0; }
+        .step-title { font-size: 1.4em; color: var(--primary-color); font-weight: 700; }
+        
+        .step-content { background-color: var(--white); border: 1px solid #e0e0e0; border-radius: var(--border-radius); padding: 20px; }
+        
+        .ui-badge { display: inline-block; background-color: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 4px; font-weight: bold; border: 1px dashed #94a3b8; cursor: default; margin: 0 4px; }
+        .action-button { display: inline-block; background-color: var(--primary-color); color: var(--white); padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 10px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); word-break: break-all; }
+        
+        ul.styled-list { list-style-type: none; padding-right: 0; }
+        ul.styled-list li { position: relative; padding-right: 25px; margin-bottom: 10px; }
+        ul.styled-list li::before { content: "✓"; position: absolute; right: 0; color: var(--success-color); font-weight: bold; }
+
+        @media (max-width: 600px) {
+            body { padding: 0; }
+            .container { padding: 10px; border-radius: 0; }
+            .step-content { padding: 15px; }
+            .step-title { font-size: 1.2em; }
+            .step-number { width: 35px; height: 35px; font-size: 1.2em; margin-left: 10px; }
+            .date-item { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="main-header">
+            <h1>خطوات حجز يوم و ساعة الاختبار بالإسكندرية</h1>
+            <h2>(مدير - وكيل - موجه)</h2>
+        </header>
+
+        <section class="important-dates">
+            <h2>📅 مواعيد هامة</h2>
+            <div class="date-box">
+                <div class="date-item">
+                    <h3>ظهور المادة العلمية وحجز موعد الاختبار</h3>
+                    <p>سيكون متاح بداية من: <strong>يوم 31-8-2026</strong></p>
+                    <p>إلى: <strong>يوم 8-9-2026</strong></p>
+                </div>
+                <div class="date-item">
+                    <h3>أداء الاختبار حضورياً</h3>
+                    <p>من: <strong>يوم 1-9-2026</strong></p>
+                    <p>إلى: <strong>يوم 10-9-2026</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <div class="alert alert-success">
+            <strong>🎓 استلام الشهادة:</strong> الأصلية بعد شهر ونصف من انتهاء الاختبارات من قسم التنسيق العام بإدارتك.
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>⏰ تنبيه هام:</strong> لا تنس تحديد ساعة حضورك بنهاية هذه الصفحة لتقليل الزحام ومدة الانتظار، مع مراعاة عدم الحضور مبكراً لعدم وجود أماكن انتظار.
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">دخول موقع الأكاديمية</h3>
+            </div>
+            <div class="step-content">
+                <p>الدخول إلى الموقع من هذا الرابط فقط :</p>
+                <a href="https://www.pat.edu.eg/eTraining/" target="_blank" class="action-button" style="direction: ltr;">https://www.pat.edu.eg/eTraining/</a>
+                <ul class="styled-list" style="margin-top: 15px;">
+                    <li>اكتب <strong>رقمك القومي</strong> بأرقام إنجليزية (123).</li>
+                    <li>فى خانة كلمة المرور اكتب <strong>كود المعلم</strong> الخاص بك. <br><span style="color: #666; font-size: 0.9em; margin-right: 15px;">.</span></li>
+                    <li>ثم اضغط على زر <span class="ui-badge">دخول</span> <strong>(الموجود هناك في موقع الأكاديمية)</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">دخول الدورة</h3>
+            </div>
+            <div class="step-content">
+                <div class="alert alert-warning" style="font-size: 1.1em; margin-bottom: 20px;">
+                    <strong>📱 هام جداً للدخول:</strong> استخدم كمبيوتر أو امسك الموبايل بالعرض لتظهر لك القائمة الجانبية.
+                </div>
+                <ul class="styled-list">
+                    <li style="font-size: 1.1em; margin-bottom: 15px;">من <span style="background-color: #ffeaa7; padding: 2px 8px; border-radius: 4px; color: #d35400; font-weight: bold; border: 1px dashed #d35400;">القائمة الجانبية ≡</span>، اختر <strong style="color: var(--primary-color); font-size: 1.2em; border-bottom: 2px solid var(--accent-color); padding-bottom: 2px;">البرامج التدريبية</strong>.</li>
+                    <li style="font-size: 1.1em;">بعد ذلك، تأكد من اسم الدورة التى تظهر لك، ثم اضغط على زر <span class="ui-badge">الدخول إلى الدورة</span>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3 class="step-title">الإطلاع على المادة</h3>
+            </div>
+            <div class="step-content">
+                <p>اضغط <span class="ui-badge">بدء الوحدة</span> لتظهر لك ملفات المادة.</p>
+                <p>بعد الإطلاع، اضغط <span class="ui-badge">أتممت التدريب - احجز الاختبار</span>.</p>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h3 class="step-title">اختيار يوم الحضور</h3>
+            </div>
+            <div class="step-content">
+                <ul class="styled-list">
+                    <li>اضغط زر <span class="ui-badge">حجز موعد الاختبار</span>.</li>
+                    <li>ثم اختر من القائمة أى يوم يناسبك من <strong>الأيام المتاحة</strong>.</li>
+                    <li>ثم اضغط <span class="ui-badge">تأكيد الحجز</span>.</li>
+                </ul>
+                <div style="margin-top: 15px; padding: 12px; background-color: #f0f7ff; border-right: 4px solid var(--primary-color); border-radius: 6px;">
+                    <p style="color: var(--primary-color); font-size: 1.1em; font-weight: bold; margin: 0;">💡 ملحوظة: يمكنك تعديل الموعد بعد اختياره.</p>
+                </div>
+                
+                <p style="color: var(--primary-color); font-weight: bold; margin-top: 15px; text-align: center;">.</p>
+
+                <div style="margin-top: 20px; background-color: #fffbeb; border: 2px dashed #f59e0b; color: #b45309; padding: 15px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 1.1em; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1);">
+                    🔚 انتهت الإجراءات على موقع الأكاديمية.<br>
+                    برجاء العودة إلى هذه الصفحة لتنفيذ (الخطوة 5) بالأسفل 👇
+                </div>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h3 class="step-title">تحديد ساعة الحضور</h3>
+            </div>
+            <div class="step-content">
+                <div style="background-color: #fee2e2; border-right: 5px solid #ef4444; color: #991b1b; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 1.1em;">
+                    🛑 تنبيه هام: برجاء عدم حجز الساعة هنا إلا بعد الانتهاء من الحجز على موقع الأكاديمية أولاً ومعرفة "يوم الاختبار" الذي ستحضر فيه.
+                </div>
+                <p>من القائمة التالية:</p>
+                <ul class="styled-list">
+                    <li>اختر أولاً <strong>اليوم</strong> الذى اخترته للحضور على موقع الأكاديمية.</li>
+                    <li>ثم حدد <strong>الساعة</strong> التى ستحضر بها.</li>
+                </ul>
+                <div class="alert alert-success" style="margin-top: 15px;">
+                    قم بالاختيار <strong>مرة واحدة فقط</strong> واطمن أن الموعد تم إرساله بظهور <strong>رسالة تأكيد فى مربع أخضر</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- تطبيق الويب (تم وضعه هنا ليكون جزءاً من تدفق الصفحة الطبيعي) -->
+        <div style="margin: 30px 0; width: 100%; border-radius: var(--border-radius); overflow: hidden; border: 1px solid #ccc;">
+            <iframe src="https://script.google.com/macros/s/AKfycbww3FsVdVkRqfglBQJcY9uyAlVLL20bQNmD1XxYIERUf0m0YOXs7o8qA4RL7FngYtpo/exec" width="100%" height="1100px" style="border:none; display: block;"></iframe>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number" style="background-color: var(--accent-color);">6</div>
+                <h3 class="step-title" style="color: var(--accent-color);">تعليمات حضور الاختبار بالأكاديمية</h3>
+            </div>
+            <div class="step-content" style="border-color: var(--accent-color);">
+                <div style="background-color: #fee2e2; border: 2px dashed #ef4444; color: #b91c1c; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.1);">
+                    <h4 style="font-size: 1.4em; margin-bottom: 15px;">🛑 تنبيه ورجاء هام جداً</h4>
+                    <div style="font-size: 1.2em; font-weight: 900; line-height: 1.6; text-align: right; display: inline-block;">
+                        <p style="margin-bottom: 10px;">١- <strong>الرجاء الأول:</strong> التزام الهدوء التام أثناء التواجد بمبنى الكلية نظراً لوجود امتحانات في نفس الدور.</p>
+                        <p style="margin: 0;">٢- <strong>الرجاء الثاني:</strong> الانصراف فوراً وعدم انتظار أي زميل بمجرد انتهائك من الاختبار.</p>
+                    </div>
+                </div>
+                
+                <p>فى اليوم الذى اخترته للاختبار، يجب <strong>الحضور (قبل موعدك بـ 15 دقيقة فقط)</strong> إلى:</p>
+                <p style="text-align: center; font-size: 1.2em; font-weight: bold; color: var(--primary-color); margin: 15px 0;">
+                    مقر فرع الأكاديمية بالإسكندرية<br>
+                    بكلية التربية بالشاطبى - الدور الأول
+                </p>
+                <p>لأداء الاختبار الإلكترونى. (طبيعة الأسئلة: اختيارات من متعدد | زمن الاختبار: 30 دقيقة)</p>
+
+                <div class="alert alert-warning" style="margin-top: 20px;">
+                    <h4 style="color: #d35400; margin-bottom: 10px;">⚠️ هام جداً:</h4>
+                    <p>لتتمكن من أداء الاختبار، لابد من إحضار التالى:</p>
+                    <ol style="margin-right: 25px; margin-top: 10px; font-weight: bold;">
+                        <li>أصل بطاقة الرقم القومى.</li>
+                        <li>صحيفة أحوال حديثة (لا يشترط أن تكون مختومة).</li>
+                    </ol>
+                    <p style="margin-top: 15px; font-size: 0.9em; border-top: 1px solid #f5c6cb; padding-top: 10px;">
+                        * الحضور للاختبار <strong>لا يعد مأمورية عمل</strong> لأنه أمر شخصى بناء على طلب المعلم.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
