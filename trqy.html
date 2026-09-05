@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دليل الترقي على الكادر - دفعة 2020 وما قبلها | الأكاديمية المهنية للمعلمين</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg:         #F8FAFC; /* خلفية الصفحة رمادي فاتح جداً */
+      --surface:    #FFFFFF; /* خلفية الكروت بيضاء */
+      --text-main:  #1E293B; /* لون النص الأساسي داكن */
+      --text-muted: #475569; /* لون النص الفرعي رمادي */
+      --primary:    #0F172A; /* لون العناوين */
+      --accent:     #1D4ED8; /* لون أزرق مميز للأيقونات */
+      --gold:       #D97706; /* لون ذهبي داكن للتباين */
+      --gold-bg:    #FEF3C7; /* خلفية ذهبية فاتحة */
+      --border:     #E2E8F0; /* لون الحدود */
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 60px 20px 50px;
+      text-align: center;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(217,119,6,0.3);
+      background: var(--gold-bg);
+      color: var(--gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 8px 22px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+    }
+
+    .logo-emblem {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin: 0 auto 20px;
+    }
+
+    .logo-emblem i { font-size: 2rem; color: var(--accent); }
+
+    header h1 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.35;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 8px 0 16px;
+    }
+
+    .header-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .section-label { text-align: center; margin-bottom: 30px; }
+
+    .section-label span {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: #DBEAFE;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .section-label h2 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+      color: var(--primary);
+    }
+
+    .section-intro {
+      text-align: center;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: -15px auto 30px;
+      font-size: 1rem;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+
+    .container {
+      position: relative;
+      z-index: 5;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 50px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 30px 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border-color: #93C5FD;
+    }
+
+    /* لمسات لونية خفيفة لكل كارت على حدة */
+    .card:nth-child(1) { background-color: #F5F8FF; border-color: #DBEAFE; }
+    .card:nth-child(1) .card-number { color: #EFF6FF; text-shadow: none; }
+    .card:nth-child(1) .card-icon { background: #DBEAFE; color: #1D4ED8; }
+
+    .card:nth-child(2) { background-color: #FFFDF4; border-color: #FEF3C7; }
+    .card:nth-child(2) .card-number { color: #FFFBEB; text-shadow: none; }
+    .card:nth-child(2) .card-icon { background: #FEF3C7; color: #D97706; }
+
+    .card:nth-child(3) { background-color: #F4FBF7; border-color: #DCFCE7; }
+    .card:nth-child(3) .card-number { color: #F0FDF4; text-shadow: none; }
+    .card:nth-child(3) .card-icon { background: #DCFCE7; color: #15803D; }
+
+    .card-number {
+      font-family: 'Amiri', serif;
+      font-size: 4rem;
+      color: #F1F5F9;
+      font-weight: 700;
+      line-height: 1;
+      position: absolute;
+      top: 10px; left: 16px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card-icon {
+      position: relative;
+      z-index: 1;
+      width: 50px; height: 50px;
+      border-radius: 12px;
+      background: #EFF6FF;
+      color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .card-icon i { font-size: 1.5rem; }
+
+    .card h3 {
+      position: relative;
+      z-index: 1;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .card p { 
+      position: relative;
+      z-index: 1;
+      font-size: 0.95rem; 
+      color: var(--text-muted); 
+      line-height: 1.7; 
+    }
+    .card p + p { margin-top: 8px; }
+
+    .timeline { display: flex; flex-direction: column; }
+
+    .step { display: flex; gap: 16px; }
+
+    .step-marker-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+
+    .step-marker {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 3px solid var(--accent);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .step-line {
+      width: 3px;
+      flex: 1;
+      min-height: 20px;
+      margin: 4px 0;
+      background: #CBD5E1;
+    }
+
+    .step:last-child .step-line { display: none; }
+
+    .step-content {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .step-content h4 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .step-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; }
+
+    .step-content ul {
+      margin-top: 10px;
+      padding-inline-start: 22px;
+    }
+
+    .step-content li {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .step-content li::marker { color: var(--accent); }
+
+    .timeline-divider {
+      text-align: center;
+      margin: 15px 0 35px;
+      position: relative;
+    }
+
+    .timeline-divider::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      border-top: 2px dashed #CBD5E1;
+      z-index: 0;
+    }
+
+    .timeline-divider-badge {
+      position: relative;
+      z-index: 1;
+      background: var(--accent);
+      color: #FFFFFF;
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .timeline-divider.end .timeline-divider-badge {
+      background: var(--text-muted); /* لون رمادي أنيق للنهاية */
+    }
+
+    .important-notice {
+      background-color: #FEF2F2; /* أحمر فاتح جداً */
+      border: 2px solid #EF4444; /* أحمر واضح */
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 18px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+      animation: pulseAlert 2s infinite;
+    }
+
+    .important-notice i {
+      color: #DC2626;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .important-notice h5 {
+      color: #991B1B;
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .important-notice p {
+      color: #7F1D1D;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    @keyframes pulseAlert {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    footer .footer-brand {
+      font-family: 'Amiri', serif;
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 40px 16px 30px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .container { padding: 0 16px 40px; }
+      .step-content { padding: 16px; }
+      .step { gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="badge">
+      <i class="fas fa-arrow-trend-up"></i>
+      دليل تعليمات
+    </div>
+
+    <div class="logo-emblem">
+      <i class="fas fa-graduation-cap"></i>
+    </div>
+
+    <h1>دليل الترقي على الكادر</h1>
+    <p class="subtitle">دفعة 2020 وما قبلها</p>
+    <p class="header-desc">دليل مبسط يوضح شروط وخطوات إجراءات الترقي على الكادر للمعلمين من دفعة 2020 وما قبلها، من بداية استيفاء الشروط وحتى صدور قرار الترقية وتنفيذه.</p>
+  </header>
+
+  <!-- ==================== شروط الترقي ==================== -->
+  <div class="container">
+    <div class="section-label">
+      <span>قبل البدء</span>
+      <h2>شروط الترقي</h2>
+    </div>
+    
+    <!-- تنبيه استيفاء الشروط -->
+    <div style="background-color: #FFFBEB; border: 2px solid #F59E0B; border-radius: 12px; padding: 18px 20px; margin: -10px auto 35px; max-width: 650px; text-align: center; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);">
+      <i class="fas fa-exclamation-circle" style="color: #D97706; font-size: 1.8rem; margin-bottom: 10px;"></i>
+      <p style="color: #92400E; font-size: 1.1rem; font-weight: 800; margin: 0; line-height: 1.6;">
+        تنبيه هام: يجب استيفاء <span style="text-decoration: underline;">جميع الشروط والإجراءات في توقيتاتها المحددة</span> لاستكمال إجراءات الترشح للترقي بنجاح.
+      </p>
+    </div>
+
+    <div class="cards-grid">
+      <!-- الشرط الأول -->
+      <div class="card">
+        <span class="card-number">1</span>
+        <div class="card-icon">
+          <i class="fas fa-user-check"></i>
+        </div>
+        <h3>البقاء على رأس العمل</h3>
+        <p>أن يكون المعلم على رأس العمل عند بدء الإجراءات، ويستمر على رأس العمل حتى صدور قرار الوزير وتنفيذ الترقية. (باستثناء الحالات المذكورة صراحة فى الفاكس الرسمي) .</p>
+      </div>
+
+      <!-- الشرط الثاني -->
+      <div class="card">
+        <span class="card-number">2</span>
+        <div class="card-icon">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <h3>استيفاء المدة البينية</h3>
+        <p>استيفاء مدة بينية <strong>خمس سنوات عمل فعلي كاملة</strong> من تاريخ الترقية السابقة وحتى الآن.</p>
+        <p>فى حالة وجود إجازات، يُرجع لقسم الإجازات بالإدارة لحساب مدتها ومعرفة مدى استيفاء الخمس سنوات، ثم الحصول على إقرار المدة البينية.</p>
+      </div>
+
+      <!-- الشرط الثالث (تمت إضافته بناءً على الطلب) -->
+      <div class="card">
+        <span class="card-number">3</span>
+        <div class="card-icon">
+          <i class="fas fa-file-signature"></i>
+        </div>
+        <h3>شروط الفاكس الرسمي</h3>
+        <p>أن يكون المعلم مستوفياً لكافة الشروط الأخرى المذكورة تفصيلاً في الفاكس الرسمي المرسل للمديريات التعليمية بشأن الترقي.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== خطوات الإجراءات ==================== -->
+  <div class="container">
+    <div class="section-label">
+      <span>خطوة بخطوة</span>
+      <h2>خطوات إجراءات الترقي</h2>
+    </div>
+
+    <div class="timeline">
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>تسليم المستندات لقسم الإحصاء</h4>
+          <p>تسليم آخر تقريرين لمسئول الإحصاء بالإدارة، مع إقرار المدة البينية، لتسجيل الترشح للترقي.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>متابعة ملف الإنجاز والتقييمات</h4>
+          <p>التأكد من ملف الإنجاز ومتابعته بصفة دورية للتأكد من انتهاء باقي الأطراف من التقييم، وتتوزع المسئوليات كالتالي:</p>
+          <ul>
+            <li><strong>تقييم المدير:</strong> مسئولية مسئول الحكومة الإلكترونية ومدير المدرسة.</li>
+            <li><strong>تقييم الموجه:</strong> مسئولية مسئول الحكومة الإلكترونية والموجه.</li>
+            <li><strong>تقييم لجنة الإدارة:</strong> مسئولية لجنة الإدارة.</li>
+          </ul>
+          <p style="margin-top: 10px; font-weight: 700; color: var(--primary);">* مسئولية المعلم: الدخول على صفحته الشخصية (باستخدام الإيميل الموحد) ومتابعة ملف الإنجاز أولاً بأول للتأكد من قيام جميع الأطراف بالدور المطلوب منها.</p>
+          
+          <div style="margin-top: 15px; padding: 12px 15px; background: #EFF6FF; border-right: 4px solid var(--accent); border-radius: 8px; font-size: 0.95rem; color: #1E3A8A;">
+            <i class="fas fa-info-circle" style="margin-left: 5px;"></i>
+            <strong>تنبيه:</strong> لحل أي مشاكل تخص (الإيميل الموحد) أو لمعرفة بيانات الدخول للصفحة الشخصية، يرجى الرجوع فوراً إلى <strong>مسئول الحكومة الإلكترونية</strong> بمدرستك.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>الإجابة على أسئلة صفحة المعلم</h4>
+          <p>هذه الخطوة هي <strong>مسئولية المعلم</strong>؛ حيث يجب عليه الدخول بنفسه على حسابه الشخصي (باستخدام الإيميل الموحد)، والإجابة بنفسه على الأسئلة العشرة الموجودة بصفحته لاستكمال أسئلة ملف الإنجاز.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>إبلاغ الأكاديمية باستيفاء الشروط</h4>
+          <p>بعد استيفاء جميع الإجراءات السابقة، تقوم جهة العمل بإبلاغ الأكاديمية باستيفاء المعلم للشروط.</p>
+        </div>
+      </div>
+
+      <div class="timeline-divider">
+        <span class="timeline-divider-badge">
+          <i class="fas fa-flag"></i> بداية دور فرع الأكاديمية
+        </span>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">5</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>إتاحة تدريب الترقي واختبار الصلاحية</h4>
+          <p>بناءً على ذلك، تقوم الأكاديمية بإتاحة تدريب الترقي واختبار الصلاحية للمعلم.</p>
+          
+          <!-- تم إضافة صندوق التنبيه الواضح والمميز هنا بناءً على الطلب -->
+          <div class="important-notice">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h5>تنبيه هام جداً للمعلمين</h5>
+            <p>يرجى متابعة هذه الصفحة بصورة مستمرة لمعرفة كافة خطوات (حجز، وتدريب، واختبار الترقي) فور إتاحتها رسمياً.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">6</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>إرسال أسماء الناجحين إلى الوزارة</h4>
+          <p>بعد انتهاء تدريب واختبار الصلاحية، تقوم الأكاديمية بإرسال أسماء من اجتازه إلى الوزارة لاستكمال الإجراءات.</p>
+        </div>
+      </div>
+
+      <div class="timeline-divider end">
+        <span class="timeline-divider-badge">
+          <i class="fas fa-flag-checkered"></i> نهاية دور فرع الأكاديمية
+        </span>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">7</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>صدور قرار الوزير</h4>
+          <p>يصدر قرار الوزير، ويُرسل إلى المديريات التعليمية لاستكمال الإجراءات من استوفى جميع الشروط السابقة فى توقيتاتها المحددة .</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">8</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>تحليل المخدرات ومراجعة الملف</h4>
+          <p>تراجع المديرية التعليمية المدة البينية مرة أخري بصورة دقيقة والجزاءات و تطلب تحليل المخدرات من المعلمين .</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">9</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>توقيع المحافظ</h4>
+          <p>بعد التصفية، يتم الحصول على توقيع المحافظ على قرارات الترقية.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">10</div>
+        </div>
+        <div class="step-content">
+          <h4>تنفيذ الترقية</h4>
+          <p>يتم إصدار قرارات الترقية للمعلمين لتنفيذها، وتعديل الصحيفة.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-brand">الأكاديمية المهنية للمعلمين — فرع الإسكندرية</p>
+    <p>ت: 034870028</p>
+    <p>© 2026</p>
+  </footer>
+
+</body>
+</html>
