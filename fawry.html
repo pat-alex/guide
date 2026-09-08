@@ -20,7 +20,7 @@
     
     <!-- رأس الصفحة -->
     <div class="text-center mb-8">
-      <h1 class="text-2xl font-bold text-gray-800">بوابة خدمات المعلمين</h1>
+      <h1 class="text-2xl font-bold text-gray-800">الحصول على كود فوري لدورة التأهيل التربوي لمعلمى المدارس الخاصة </h1>
       <p class="text-gray-500 mt-2 text-sm">احصل على كود الدفع (فوري) للخدمات والدورات</p>
     </div>
 
@@ -55,7 +55,14 @@
       <div id="fawry-box" class="hidden bg-blue-50 border-2 border-blue-200 rounded-xl p-6 text-center">
         <p class="text-blue-800 font-medium mb-2">كود الدفع الخاص بك:</p>
         <p class="text-4xl font-bold text-blue-700 tracking-widest font-mono" id="display-fawry-code"></p>
-        <p class="text-xs text-red-500 mt-3 font-medium">* تنبيه: هذا الكود صالح لمدة 24 ساعة فقط من وقت إصداره.</p>
+        
+        <!-- إضافة قسم العد التنازلي هنا -->
+        <div id="countdown-container" class="mt-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg hidden">
+          <p class="text-sm font-bold mb-1">⏰ الوقت المتبقي لانتهاء صلاحية الكود:</p>
+          <p id="countdown-timer" class="text-2xl font-mono font-bold tracking-wider" dir="ltr"></p>
+        </div>
+
+        <p class="text-xs text-gray-500 mt-3 font-medium">* تنبيه: يجب الدفع قبل انتهاء الوقت الموضح أعلاه وإلا سيتم إلغاء الكود.</p>
       </div>
 
       <button onclick="showRequestForm()" class="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-bold py-3 px-4 rounded-lg transition duration-200 mt-4">
@@ -119,11 +126,12 @@
   <!-- أكواد الجافاسكريبت للتحكم بالواجهة -->
   <script>
     // هام جداً: ضع هنا رابط الـ Web App الخاص بك الذي سينتجه جوجل سكريبت
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmqavz-sh98D_KjITYRW9FHpXARaVkWjS6qOGZFZhNTzTXuMIElnCW_jP8GFY49JA/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxh4mEU6NbtOzdu8ir4BDaJ8uuVn5s5cuNnlFg0kotjTfnaFW0C_iuupMYP9j0JbKcq/exec';
 
     // تخزين البيانات محلياً أثناء الجلسة
     let currentUserData = {};
     let currentNID = "";
+    let countdownInterval; // متغير لحفظ مؤقت العد التنازلي
 
     function showLoader(text = "جاري التحميل...") {
       document.getElementById('loader-text').innerText = text;
@@ -178,12 +186,20 @@
       const statusBox = document.getElementById('status-message-container');
       const fawryBox = document.getElementById('fawry-box');
       
+      // إيقاف أي عد تنازلي سابق إذا كان يعمل
+      clearInterval(countdownInterval);
+
       // تهيئة صندوق الرسائل بناءً على توفر الكود وصلاحيته
       if (currentUserData.isValidCode) {
         statusBox.className = "p-4 rounded-lg text-center font-medium bg-green-100 text-green-800";
         statusBox.innerText = currentUserData.statusMessage;
         document.getElementById('display-fawry-code').innerText = currentUserData.fawryCode;
         fawryBox.classList.remove('hidden');
+        
+        // تشغيل العد التنازلي
+        if(currentUserData.codeIssuedAt) {
+          startCountdown(currentUserData.codeIssuedAt);
+        }
       } else {
         statusBox.className = "p-4 rounded-lg text-center font-medium bg-yellow-100 text-yellow-800";
         statusBox.innerText = currentUserData.statusMessage;
@@ -191,6 +207,45 @@
       }
       
       switchSection('status-section');
+    }
+
+    // دالة العد التنازلي الجديدة
+    function startCountdown(issuedAtMs) {
+      const container = document.getElementById('countdown-container');
+      const timerDisplay = document.getElementById('countdown-timer');
+      container.classList.remove('hidden');
+      
+      // وقت انتهاء الصلاحية هو وقت الإصدار + 24 ساعة (بالميللي ثانية)
+      const expiryTime = issuedAtMs + (24 * 60 * 60 * 1000);
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const distance = expiryTime - now;
+
+        if (distance <= 0) {
+          clearInterval(countdownInterval);
+          timerDisplay.innerText = "00:00:00";
+          timerDisplay.classList.replace('text-red-700', 'text-gray-500');
+          document.getElementById('status-message-container').innerText = "عفواً، انتهت صلاحية كود الدفع، يرجى تقديم طلب للحصول على كود جديد.";
+          document.getElementById('status-message-container').className = "p-4 rounded-lg text-center font-medium bg-red-100 text-red-800";
+          document.getElementById('display-fawry-code').classList.add('line-through', 'text-gray-400');
+          return;
+        }
+
+        // حساب الساعات والدقائق والثواني
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // تنسيق الوقت ليظهر بشكل 00:00:00
+        timerDisplay.innerText = 
+          String(hours).padStart(2, '0') + ":" + 
+          String(minutes).padStart(2, '0') + ":" + 
+          String(seconds).padStart(2, '0');
+      }
+
+      updateTimer(); // تشغيل فوري لتجنب تأخير ظهور الرقم للثانية الأولى
+      countdownInterval = setInterval(updateTimer, 1000);
     }
 
     function showRequestForm(isNewUser = false) {
@@ -276,6 +331,7 @@
     function resetApp() {
       currentNID = "";
       currentUserData = {};
+      clearInterval(countdownInterval); // إيقاف العداد عند تسجيل الخروج
       document.getElementById('login-nid').value = "";
       switchSection('login-section');
     }
