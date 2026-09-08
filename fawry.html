@@ -20,7 +20,7 @@
     
     <!-- رأس الصفحة -->
     <div class="text-center mb-8">
-      <h1 class="text-2xl font-bold text-gray-800">الحصول على كود فوري لدورة التأهيل التربوي لمعلمى المدارس الخاصة </h1>
+      <h1 class="text-2xl font-bold text-gray-800">بوابة خدمات المعلمين</h1>
       <p class="text-gray-500 mt-2 text-sm">احصل على كود الدفع (فوري) للخدمات والدورات</p>
     </div>
 
@@ -55,6 +55,12 @@
       <div id="fawry-box" class="hidden bg-blue-50 border-2 border-blue-200 rounded-xl p-6 text-center">
         <p class="text-blue-800 font-medium mb-2">كود الدفع الخاص بك:</p>
         <p class="text-4xl font-bold text-blue-700 tracking-widest font-mono" id="display-fawry-code"></p>
+        
+        <!-- قسم عرض المبلغ المطلوب إضافته هنا -->
+        <div class="mt-4 mb-2 p-3 bg-white border border-blue-100 rounded-lg shadow-sm">
+          <p class="text-gray-600 text-sm mb-1">المبلغ المطلوب سداده:</p>
+          <p class="text-2xl font-bold text-green-600"><span id="display-amount" class="font-mono">0</span> <span class="text-lg">جنيه</span></p>
+        </div>
         
         <!-- إضافة قسم العد التنازلي هنا -->
         <div id="countdown-container" class="mt-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg hidden">
@@ -107,7 +113,13 @@
 
         <div id="cert-count-container" class="hidden">
           <label class="block text-sm font-medium text-gray-700 mb-1">عدد الشهادات المطلوبة</label>
-          <input type="number" id="form-cert-count" min="1" max="10" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none">
+          <input type="number" id="form-cert-count" min="1" max="10" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculatePreviewPrice()">
+        </div>
+
+        <!-- معاينة المبلغ المطلوب قبل الإرسال (إضافة احترافية) -->
+        <div id="price-preview-container" class="hidden mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-center shadow-sm">
+          <p class="text-sm text-blue-800 font-medium mb-1">إجمالي الرسوم المطلوبة:</p>
+          <p class="text-xl font-bold text-blue-700"><span id="preview-amount" class="font-mono">0</span> جنيه</p>
         </div>
 
         <div class="flex gap-3 pt-4">
@@ -194,6 +206,17 @@
         statusBox.className = "p-4 rounded-lg text-center font-medium bg-green-100 text-green-800";
         statusBox.innerText = currentUserData.statusMessage;
         document.getElementById('display-fawry-code').innerText = currentUserData.fawryCode;
+        
+        // حساب وعرض المبلغ المطلوب وقت ظهور الكود
+        let totalAmount = 0;
+        if (currentUserData.serviceType === "دفع رسوم دورة") {
+          totalAmount = 605;
+        } else if (currentUserData.serviceType === "طلب شهادة إضافية") {
+          const count = parseInt(currentUserData.certCount) || 1;
+          totalAmount = count * 65;
+        }
+        document.getElementById('display-amount').innerText = totalAmount;
+
         fawryBox.classList.remove('hidden');
         
         // تشغيل العد التنازلي
@@ -279,6 +302,27 @@
         countInput.required = false;
         countInput.value = "";
       }
+      calculatePreviewPrice(); // استدعاء دالة تحديث السعر
+    }
+
+    // دالة جديدة لحساب وعرض السعر بشكل ديناميكي أثناء تعبئة النموذج
+    function calculatePreviewPrice() {
+      const service = document.getElementById('form-service').value;
+      const count = parseInt(document.getElementById('form-cert-count').value) || 0;
+      const pricePreview = document.getElementById('price-preview-container');
+      const previewAmount = document.getElementById('preview-amount');
+      
+      let total = 0;
+      if (service === "دفع رسوم دورة") {
+         total = 605;
+         pricePreview.classList.remove('hidden');
+      } else if (service === "طلب شهادة إضافية" && count > 0) {
+         total = count * 65;
+         pricePreview.classList.remove('hidden');
+      } else {
+         pricePreview.classList.add('hidden'); // إخفاء المربع إذا لم يكتمل الإدخال
+      }
+      previewAmount.innerText = total;
     }
 
     async function submitForm(event) {
