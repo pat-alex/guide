@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الحضور والإجازات</title>
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#172033;background:#f4f7fb}*{box-sizing:border-box}
+body{margin:0}.top{background:#173b67;color:#fff;padding:22px 16px}.wrap{max-width:1100px;margin:auto;padding:18px}
+h1{margin:0 0 8px;font-size:25px}.sub{opacity:.88}.tabs{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
+button,.btn{border:0;border-radius:10px;padding:11px 16px;background:#1769aa;color:#fff;font-weight:bold;cursor:pointer}
+button.secondary{background:#e3edf7;color:#173b67}.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 18px #1b3b5a12;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{display:block;font-weight:bold;margin-bottom:7px}input,select,textarea{width:100%;padding:11px;border:1px solid #ccd6e2;border-radius:9px;background:#fff;font:inherit}
+textarea{min-height:75px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:14px 0}
+.stat{background:#edf5fc;border-radius:12px;padding:13px}.stat small{display:block;color:#526579}.stat strong{font-size:24px;display:block;margin-top:5px}
+table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e7edf3;text-align:right}th{background:#f0f5fa}
+.tablewrap{overflow:auto}.status{color:#12614a;font-weight:bold}.msg{margin-top:12px;padding:10px;border-radius:9px;background:#edf5fc;display:none}.error{background:#fff0ef;color:#9c2520}.muted{color:#66758a;font-size:13px}
+@media(max-width:600px){.wrap{padding:12px}.panel{padding:13px}h1{font-size:21px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><h1>نظام الحضور والإجازات</h1><div class="sub">تسجيل يومي ومتابعة أرصدة السنة المالية</div></div></header>
+<main class="wrap">
+<div class="panel">
+ <div class="grid">
+  <div><label for="api">رابط Google Apps Script API</label><input id="api" placeholder="https://script.google.com/macros/s/AKfycbxNXmxGBfS2K2RrNP1tO6aiztWje7uEiyn2YLjpKAphaSeiuyxSVq_dkq2JU0_ydEIvtQ/exec"></div>
+  <div><label for="key">مفتاح API</label><input id="key" type="password" placeholder="234559863334590865432233"></div>
+ </div>
+ <p class="muted">يتم حفظ الإعدادات في هذه الصفحة فقط أثناء فتحها، ولا تُحفظ في GitHub.</p>
+ <button onclick="loadEmployees()">اتصال وتحميل الموظفين</button>
+ <div id="connMsg" class="msg"></div>
+</div>
+<div class="tabs">
+ <button id="tabEntry" onclick="showTab('entry')">تسجيل حالة</button>
+ <button class="secondary" id="tabProfile" onclick="showTab('profile')">ملف موظف والتقارير</button>
+</div>
+<section id="entry" class="panel">
+ <h2>تسجيل حالة موظف</h2>
+ <div class="grid">
+  <div><label for="employee">الموظف</label><select id="employee"><option value="">اتصل بالـ API أولًا</option></select></div>
+  <div><label for="date">التاريخ</label><input id="date" type="date"></div>
+  <div><label for="status">الحالة</label><select id="status">
+   <option>حضور</option><option>غياب</option><option>عارضة</option><option>اعتيادي</option>
+   <option>إذن صباحي</option><option>إذن مسائي</option><option>مأمورية صباحي</option><option>مأمورية مسائي</option>
+   <option>تأخير</option><option>المقر الرئيسي</option><option>نيابة إدارية</option>
+  </select></div>
+ </div>
+ <div style="margin-top:14px"><label for="note">ملاحظات (اختياري)</label><textarea id="note" placeholder="تفاصيل المأمورية أو سبب التأخير..."></textarea></div>
+ <p class="muted">تسجيل الموظف في التاريخ نفسه مرة أخرى يستبدل الحالة السابقة في خلية الموظف لذلك اليوم.</p>
+ <button onclick="saveRecord()">حفظ التسجيل</button><div id="saveMsg" class="msg"></div>
+</section>
+<section id="profile" class="panel" hidden>
+ <h2>ملف الموظف</h2>
+ <div class="grid">
+  <div><label for="person">اسم الموظف</label><select id="person"><option value="">اختر الموظف</option></select></div>
+  <div><label for="from">من تاريخ</label><input id="from" type="date"></div>
+  <div><label for="to">إلى تاريخ</label><input id="to" type="date"></div>
+ </div>
+ <p style="margin-top:14px"><button onclick="loadProfile()">عرض السجل والحسابات</button></p>
+ <div id="stats" class="stats"></div>
+ <div class="tablewrap"><table><thead><tr><th>التاريخ</th><th>الحالة</th><th>السنة المالية</th></tr></thead><tbody id="records"><tr><td colspan="3">اختر موظفًا ثم اضغط عرض.</td></tr></tbody></table></div>
+ <div id="profileMsg" class="msg"></div>
+</section>
+<p class="muted">تنبيه: الأرصدة المحسوبة تعتمد على التسجيلات الموجودة في الأعمدة. راجع السجلات التاريخية قبل الاعتماد الرسمي على الحسابات.</p>
+</main>
+<script>
+let employees=[];
+function config(){return {api:document.getElementById('api').value.trim(),key:document.getElementById('key').value.trim()}}
+function message(id,text,error=false){const el=document.getElementById(id);el.textContent=text;el.style.display='block';el.className='msg'+(error?' error':'')}
+function callApi(params){
+ const c=config(); if(!c.api||!c.key) return Promise.reject(new Error('أدخل رابط API ومفتاح API أولًا.'));
+ const url=new URL(c.api); Object.entries({...params,key:c.key}).forEach(([k,v])=>url.searchParams.set(k,v??''));
+ return new Promise((resolve,reject)=>{
+  const cb='apiCallback_'+Math.random().toString(36).slice(2);
+  url.searchParams.set('callback',cb);
+  const script=document.createElement('script');
+  const timer=setTimeout(()=>{cleanup();reject(new Error('انتهت مهلة الاتصال. تأكد من رابط النشر والصلاحيات.'))},20000);
+  function cleanup(){clearTimeout(timer);delete window[cb];script.remove()}
+  window[cb]=data=>{cleanup();data&&data.ok?resolve(data):reject(new Error(data?.error||'تعذر تنفيذ الطلب'))};
+  script.onerror=()=>{cleanup();reject(new Error('فشل الاتصال بالـ API.'))};
+  script.src=url.toString();document.body.appendChild(script);
+ });
+}
+function showTab(which){document.getElementById('entry').hidden=which!=='entry';document.getElementById('profile').hidden=which!=='profile';document.getElementById('tabEntry').className=which==='entry'?'':'secondary';document.getElementById('tabProfile').className=which==='profile'?'':'secondary'}
+async function loadEmployees(){try{const r=await callApi({action:'employees'});employees=r.employees||[];['employee','person'].forEach(id=>{const el=document.getElementById(id);el.innerHTML='<option value="">اختر الموظف</option>';employees.forEach(e=>{const o=document.createElement('option');o.value=e.name;o.textContent=e.name;el.appendChild(o)})});message('connMsg',`تم الاتصال بنجاح. عدد الأسماء المحمّلة: ${employees.length}`)}catch(e){message('connMsg',e.message,true)}}
+async function saveRecord(){try{const r=await callApi({action:'save',employee:document.getElementById('employee').value,date:document.getElementById('date').value,status:document.getElementById('status').value,note:document.getElementById('note').value});message('saveMsg',`${r.message}: ${r.employee} — ${r.date} — ${r.status}`)}catch(e){message('saveMsg',e.message,true)}}
+function fiscalRange(){const now=new Date();let y=now.getFullYear();if(now.getMonth()<6)y--;return {from:`${y}-07-01`,to:`${y+1}-06-30`}}
+function stat(label,value){return `<div class="stat"><small>${label}</small><strong>${value}</strong></div>`}
+async function loadProfile(){try{
+ const name=document.getElementById('person').value;if(!name)throw new Error('اختر اسم الموظف.');
+ const f=document.getElementById('from').value||fiscalRange().from,t=document.getElementById('to').value||fiscalRange().to;
+ const r=await callApi({action:'summary',employee:name,from:f,to:t});
+ const c=r.counts||{};
+ document.getElementById('stats').innerHTML=
+ stat('أيام العارضة',r.casualUsed||0)+stat('المتبقي من العارضة',r.casualRemaining)+
+ stat('أيام الاعتيادي المسجلة',r.annualLeaveUsed||0)+stat('خصم الأذونات الزائدة',r.extraPermissionDeduction||0)+
+ stat('إجمالي الاعتيادي + الخصم',r.ordinaryLeaveTotalDeducted||0)+stat('عدد السجلات',r.records.length);
+ const tbody=document.getElementById('records');tbody.innerHTML='';
+ if(!r.records.length)tbody.innerHTML='<tr><td colspan="3">لا توجد سجلات في الفترة المحددة.</td></tr>';
+ r.records.slice().reverse().forEach(x=>{const tr=document.createElement('tr');[x.date,x.status,x.sheet].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});tbody.appendChild(tr)});
+ message('profileMsg','تم تحديث سجل الموظف. الأذونات المحتسبة هي إذن صباحي وإذن مسائي فقط.');
+ }catch(e){message('profileMsg',e.message,true)}}
+document.getElementById('date').value=new Date().toLocaleDateString('en-CA');
+const range=fiscalRange();document.getElementById('from').value=range.from;document.getElementById('to').value=range.to;
+</script>
+</body></html>
