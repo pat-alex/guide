@@ -14,7 +14,7 @@
      الصق رابط الـ API (Web App URL اللي بينتهي بـ /exec) بين العلامتين.
      كلمة السر لا تُكتب هنا أبدًا؛ كل مستخدم بيكتبها مرة واحدة في الإعدادات. */
   window.ATTENDANCE_CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbzi4LuFVCxJO3GltT4NBK14BX3dW0EMa8ul8LWyYim-LcuxPyfs0quTmVhn1xQS8jnRvg/exec'   // الصق رابط الـ Web App (ينتهي بـ /exec) بدل الكلام ده
+    API_URL: 'https://script.google.com/macros/s/AKfycbyVMQbhbkNQaGXZcoz7oz3xvviqjPA8pzqyzm9fbmEuXswLkbBNduHHeHSsmcqZl46NPA/exec'   // الصق رابط الـ Web App (ينتهي بـ /exec) بدل الكلام ده
   };
 </script>
 
@@ -409,7 +409,7 @@ async function loadAll() {
   S.loadError = null;
   try {
     const p = S.fy ? { fy: S.fy } : {};
-    const [meta, ov] = await Promise.all([api('meta', p), api('overview', p)]);
+    const bt = await api('boot', p), meta = bt.meta, ov = bt.overview;
     S.meta = meta; S.overview = ov;
     S.fy = meta.fiscalYear.label.slice(0, 4);
     store.set('att.fy', S.fy);
