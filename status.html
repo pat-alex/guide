@@ -14,7 +14,7 @@
      الصق رابط الـ API (Web App URL اللي بينتهي بـ /exec) بين العلامتين.
      كلمة السر لا تُكتب هنا أبدًا؛ كل مستخدم بيكتبها مرة واحدة في الإعدادات. */
   window.ATTENDANCE_CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbzi4LuFVCxJO3GltT4NBK14BX3dW0EMa8ul8LWyYim-LcuxPyfs0quTmVhn1xQS8jnRvg/exec'
+    API_URL: 'https://script.google.com/macros/s/AKfycbyVMQbhbkNQaGXZcoz7oz3xvviqjPA8pzqyzm9fbmEuXswLkbBNduHHeHSsmcqZl46NPA/exec'
   };
 </script>
 
@@ -365,22 +365,33 @@ function setMain(html) { $('#app').innerHTML = html; }
 function skeleton() { setMain('<div class="skeleton" aria-busy="true"></div><p class="sub" style="margin-top:12px">جارى التحميل…</p>'); }
 
 async function loadAll() {
-  skeleton();
   S.loadError = null;
+  let shown = false;
+  // عرض آخر نسخة محفوظة فورًا (للصفحة الرئيسية) ثم تحديثها من السيرفر
+  try {
+    const c = JSON.parse(store.get('att.boot') || 'null');
+    if (c && c.meta && c.overview && route().name === 'home' && (!S.fy || c.meta.fiscalYear.label.slice(0, 4) === S.fy)) {
+      S.meta = c.meta; S.overview = c.overview; S.fy = c.meta.fiscalYear.label.slice(0, 4);
+      fillFy(); await show(); shown = true;
+    }
+  } catch (e) { /* نكمل عادي */ }
+  if (!shown) skeleton();
   try {
     const p = S.fy ? { fy: S.fy } : {};
-    const [meta, ov] = await Promise.all([api('pmeta', p), api('poverview', p)]);
+    const bt = await api('pboot', p), meta = bt.meta, ov = bt.overview;
     S.meta = meta; S.overview = ov;
     S.fy = meta.fiscalYear.label.slice(0, 4);
     store.set('att.fy', S.fy);
+    try { store.set('att.boot', JSON.stringify({ meta, overview: ov })); } catch (e) {}
     fillFy();
     await show();
   } catch (e) {
     S.loadError = e;
     if (e.code === 'NO_FY' && S.fy) { S.fy = ''; store.set('att.fy', ''); return loadAll(); }
-    renderError(e);
+    if (!shown) renderError(e);
   }
 }
+
 async function refreshOverview() {
   try { S.overview = await api('poverview', S.fy ? { fy: S.fy } : {}); if (route().name === 'home') renderHome(); } catch (e) { /* يتجاهل */ }
 }
