@@ -468,7 +468,7 @@ function renderHome() {
   const inFy = fy.from <= ov.today && ov.today <= fy.to;
   const rows = ov.employees.map(e => {
     const a = e.annual, c = e.casual, q = e.quota;
-    const todayHtml = e.todayParts.length ? `<div class="badges">${e.todayParts.map(badge).join('')}</div>` : '<span class="muted">لسه ما اتسجلش</span>';
+    const todayHtml = e.todayParts.length ? `<div class="badges">${e.todayParts.map(badge).join('')}</div>` : '<span class="muted">حضور</span>';
     return `<tr>
       <td class="who"><div><a href="#/e/${encodeURIComponent(e.key)}">${esc(e.name)}</a>${e.nursing ? '<small>ساعة رضاعة مسائى</small>' : ''}</div></td>
       <td class="today" data-label="${inFy ? 'النهاردة' : 'حالة اليوم'}">${inFy ? todayHtml : '<span class="muted">خارج السنة المعروضة</span>'}</td>
