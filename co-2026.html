@@ -360,7 +360,119 @@
         <a href="https://drive.google.com/file/d/1MkUzzY-bNFBC9z9ZZte_VAjj39-rkhXs/view" target="_blank" class="btn-download"><i class="fas fa-print"></i> طباعة النموذج</a>
       </div>
     </div>
+<!-- ====== ترتيب الملفات داخل الدوسيه ====== -->
+<style>
+  .fo-wrap { margin-bottom: 50px; }
+  .fo-list { list-style: none; display: flex; flex-direction: column; gap: 12px; padding: 0; margin: 0 0 18px; }
+  .fo-item {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .fo-item:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .fo-num {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 1.05rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fo-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 10px;
+    background: #EFF6FF; color: var(--accent);
+    font-size: 1.15rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fo-title {
+    flex: 1;
+    font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1.02rem;
+    color: var(--primary); line-height: 1.5;
+  }
+  .fo-note {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--gold-bg);
+    border: 1px solid rgba(217, 119, 6, 0.3);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.95rem; font-weight: 700; color: var(--gold);
+  }
+  @media (max-width: 600px) {
+    .fo-item { padding: 12px 14px; gap: 12px; }
+    .fo-icon { display: none; }
+  }
+</style>
 
+<div class="fo-wrap">
+  <div class="section-label">
+    <span>ترتيب الأوراق</span>
+    <h2>ترتيب الملفات داخل الدوسيه</h2>
+  </div>
+
+  <ol class="fo-list">
+    <li class="fo-item">
+      <div class="fo-num">1</div>
+      <div class="fo-icon"><i class="fas fa-file-lines"></i></div>
+      <div class="fo-title">صحيفة الأحوال</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">2</div>
+      <div class="fo-icon"><i class="fas fa-file-signature"></i></div>
+      <div class="fo-title">صورة العقد</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">3</div>
+      <div class="fo-icon"><i class="fas fa-chalkboard-user"></i></div>
+      <div class="fo-title">شهادة تطبيقات تربوية</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">4</div>
+      <div class="fo-icon"><i class="fas fa-desktop"></i></div>
+      <div class="fo-title">شهادة اختبار الحاسب</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">5</div>
+      <div class="fo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="fo-title">صورة المؤهل</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">6</div>
+      <div class="fo-icon"><i class="fas fa-user-tie"></i></div>
+      <div class="fo-title">تقرير المدير</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">7</div>
+      <div class="fo-icon"><i class="fas fa-user-pen"></i></div>
+      <div class="fo-title">تقرير الموجه</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">8</div>
+      <div class="fo-icon"><i class="fas fa-envelope-open-text"></i></div>
+      <div class="fo-title">خطاب ترشيح مدير المدرسة</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">9</div>
+      <div class="fo-icon"><i class="fas fa-money-bill-wave"></i></div>
+      <div class="fo-title">مفردات المرتب</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">10</div>
+      <div class="fo-icon"><i class="fas fa-id-card"></i></div>
+      <div class="fo-title">صورة الرقم القومي</div>
+    </li>
+  </ol>
+
+  <div class="fo-note">
+    <i class="fas fa-circle-info"></i>
+    يرجى الالتزام بهذا الترتيب عند وضع الأوراق داخل الدوسيه البلاستيك.
+  </div>
+</div>
+<!-- ====== نهاية ترتيب الملفات ====== -->
+    
     <div class="section-label">
       <span>خطوات التنفيذ</span>
       <h2>الإجراءات المتبعة لتسليم الملف</h2>
@@ -525,7 +637,6 @@
 
   <footer>
     <p class="footer-brand" style="font-family:'Cairo'; font-weight:700; color:var(--primary); font-size:1.1rem; margin-bottom:5px;">الأكاديمية المهنية للمعلمين — فرع الإسكندرية</p>
-    <p>ت: 034870028</p>
     <p>© 2026</p>
   </footer>
 
