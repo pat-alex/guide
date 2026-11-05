@@ -446,22 +446,22 @@
 
           <div class="field full" id="f-regName">
             <label for="regName">الاسم بالكامل كما هو مكتوب في بطاقة الرقم القومي <span class="req">*</span></label>
-            <input type="text" id="regName" maxlength="100" placeholder="مثال: أحمد محمد علي حسن" autocomplete="off">
-            <div class="field-hint">اكتب الاسم ثلاثياً على الأقل بالحروف العربية.</div>
+            <input type="text" id="regName" maxlength="100" placeholder="مثال: احمد محمد علي حسن" autocomplete="off">
+            <div class="field-hint">اكتب حرف الألف بدون همزات( احمد -اية- امل).</div>
             <div class="field-error" id="err-regName"></div>
           </div>
 
           <div class="field" id="f-regNationalId">
-            <label for="regNationalId">الرقم القومي <span class="req">*</span></label>
+            <label for="regNationalId">اكتب الرقم القومي كاملا بدقة <span class="req">*</span></label>
             <input type="text" id="regNationalId" class="num" inputmode="numeric" maxlength="14" placeholder="14 رقماً" autocomplete="off">
-            <div class="field-hint">14 رقماً بأرقام إنجليزية (0-9).</div>
+            <div class="field-hint">14 رقماً بأرقام إنجليزية بدقة لأنك لن تتمكن من تعديله لاحقاً.</div>
             <div class="field-error" id="err-regNationalId"></div>
           </div>
 
           <div class="field" id="f-regTeacherCode">
-            <label for="regTeacherCode">كود المعلم <span class="req">*</span></label>
+            <label for="regTeacherCode">كود المعلم كما هو مكتوب بصحيفة الأحوال <span class="req">*</span></label>
             <input type="text" id="regTeacherCode" class="num" inputmode="numeric" maxlength="15" placeholder="كود المعلم" autocomplete="off">
-            <div class="field-hint">أرقام إنجليزية فقط (0-9).</div>
+            <div class="field-hint">أرقام إنجليزية فقط (123).</div>
             <div class="field-error" id="err-regTeacherCode"></div>
           </div>
 
@@ -472,7 +472,7 @@
           </div>
 
           <div class="field" id="f-regAdmin">
-            <label for="regAdmin">الإدارة التعليمية الحالية (المنتدب إليها) <span class="req">*</span></label>
+            <label for="regAdmin">الإدارة (المنتدب إليها حاليا) <span class="req">*</span></label>
             <input type="text" id="regAdmin" maxlength="60" placeholder="اسم الإدارة التعليمية" autocomplete="off">
             <div class="field-error" id="err-regAdmin"></div>
           </div>
