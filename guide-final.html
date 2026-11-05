@@ -425,7 +425,7 @@
       <div class="reg-only-box">
         <i class="fas fa-location-dot"></i>
         <div>
-          <h4>هذا التسجيل مخصص لمعلم مساعد محافظة الإسكندرية فقط</h4>
+          <h4>هذا التسجيل مخصص لمعلمي محافظة الإسكندرية فقط</h4>
           <p>يسجّل بياناته <strong>المعلم المساعد العامل حالياً بمحافظة الإسكندرية</strong> (سواء كانت محافظته الأصلية أو منتدباً إليها). لا يُعتد بأي تسجيل من خارج المحافظة.</p>
         </div>
       </div>
@@ -484,7 +484,7 @@
           </div>
 
           <div class="field full" id="f-regOriginal">
-            <label>هل حصلت على شهادة تطبيقات تربوية ؟ <span class="req">*</span></label>
+            <label>هل حصلت على شهادة تطبيقات تربوية؟ <span class="req">*</span></label>
             <div class="radio-row">
               <label class="radio-pill"><input type="radio" name="regOriginal" value="نعم"><span>نعم</span></label>
               <label class="radio-pill"><input type="radio" name="regOriginal" value="لا"><span>لا</span></label>
@@ -972,11 +972,11 @@
     // ============================================================
 
     // ضع هنا رابط النشر (Web App) الخاص بشيت التسجيل الجديد، وينتهي بـ /exec
-    const FORM_API_URL = 'https://script.google.com/macros/s/AKfycbzXKr81o9BQJU9oqH68VowRBJO0R6dgymUcz9tLpU7iq1TS9mU0DfQ7gNsfNR5jV7nC/exec';
+    const FORM_API_URL = 'https://script.google.com/macros/s/AKfycbwtsmIkdmzaW3WtSwtRTa8-sgrJvN85270F2FCADzsaMVcTuuTg4KxVyk53oKFYASNU/exec';
 
-    // لو عندك قائمة رسمية بأسماء الإدارات التعليمية اكتبها هنا لتتحول الخانة إلى قائمة اختيار.
-    // مثال: ['شرق', 'وسط', 'غرب']  — اتركها فارغة ليكتب المعلم اسم الإدارة بنفسه.
-    const ADMIN_OPTIONS = [];
+    // الإدارات التعليمية بمحافظة الإسكندرية (مرتبة أبجدياً) - تظهر كقائمة اختيار في النموذج.
+    // يجب أن تطابق القائمة نفسها ALLOWED_ADMINS في كود Apps Script.
+    const ADMIN_OPTIONS = ['برج العرب', 'الجمرك', 'شرق', 'العامرية', 'العجمي', 'غرب', 'المنتزه أول', 'المنتزه ثان', 'وسط'];
 
     const ALLOWED_GOVERNORATE = 'الإسكندرية';
     const REG_FIELDS = ['regName', 'regNationalId', 'regTeacherCode', 'regSpecialty',
