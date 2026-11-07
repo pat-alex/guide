@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسليم ملفات المعلم المساعد | الأكاديمية المهنية للمعلمين بالإسكندرية</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg:         #F8FAFC; 
+      --surface:    #FFFFFF; 
+      --text-main:  #1E293B; 
+      --text-muted: #475569; 
+      --primary:    #0F172A; 
+      --accent:     #1D4ED8; 
+      --accent-hover: #1E3A8A;
+      --gold:       #D97706; 
+      --gold-bg:    #FEF3C7; 
+      --border:     #E2E8F0;
+      --danger:     #DC2626;
+      --danger-bg:  #FEF2F2;
+      --success:    #16A34A;
+      --success-bg: #DCFCE7;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 60px 20px 40px;
+      text-align: center;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05);
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(217,119,6,0.3);
+      background: var(--gold-bg);
+      color: var(--gold);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 8px 22px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+    }
+
+    .logo-emblem {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      background: #EFF6FF;
+      border: 2px solid #BFDBFE;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin: 0 auto 20px;
+    }
+
+    .logo-emblem i { font-size: 2.2rem; color: var(--accent); }
+
+    header h1 {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 10px 0 16px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    .section-label { text-align: center; margin-bottom: 35px; }
+    .section-label span {
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: #DBEAFE;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .section-label h2 {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(1.5rem, 3.2vw, 2rem);
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .alert-box {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--danger-bg);
+      border: 2px solid #FCA5A5;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 10px rgba(220, 38, 38, 0.05);
+    }
+    .alert-box.info {
+      background: #EFF6FF; border-color: #93C5FD;
+    }
+    .alert-box.info .alert-icon i { color: var(--accent); }
+    
+    .alert-icon { flex-shrink: 0; margin-top: 4px; }
+    .alert-icon i { font-size: 1.8rem; color: var(--danger); }
+    .alert-content { flex: 1; min-width: 0; }
+    .alert-content h4 { font-family: 'Cairo', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+    .alert-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      display: flex; flex-direction: column;
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .card-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--danger-bg); color: var(--danger);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; font-size: 1.4rem;
+    }
+    .card.blue .card-icon { background: #EFF6FF; color: var(--accent); }
+    .card h3 { font-family: 'Cairo', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; flex-grow: 1; margin-bottom: 20px; }
+    .btn-download {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--surface); color: var(--primary);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 16px; font-size: 0.9rem; font-weight: 700; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-download:hover { background: #F1F5F9; border-color: #CBD5E1; }
+
+    .timeline { display: flex; flex-direction: column; padding: 10px 0; }
+    .step { display: flex; gap: 20px; }
+    .step-marker-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .step-marker {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--surface); border: 3px solid var(--accent);
+      color: var(--accent); font-weight: 800; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center; z-index: 2;
+    }
+    .step-line { width: 3px; flex: 1; background: #CBD5E1; margin: 4px 0; min-height: 30px; }
+    .step:last-child .step-line { display: none; }
+    .step-content {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px; margin-bottom: 24px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    .step-content h4 { font-family: 'Cairo', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+    .step-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; }
+    
+    .faq-container { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-btn {
+      width: 100%; text-align: right; background: none; border: none;
+      padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;
+      font-family: 'Tajawal', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--primary);
+      cursor: pointer; transition: background 0.2s;
+    }
+    .faq-btn:hover { background: #F8FAFC; }
+    .faq-btn i { color: var(--text-muted); transition: transform 0.3s ease; }
+    .faq-item.active .faq-btn i { transform: rotate(180deg); color: var(--accent); }
+    .faq-item.active .faq-btn { color: var(--accent); }
+    .faq-content {
+      max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease;
+      background: #F8FAFC; padding: 0 24px;
+    }
+    .faq-item.active .faq-content { max-height: 2000px; padding: 0 24px 20px; }
+    .faq-content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
+    .faq-content p:last-child { margin-bottom: 0; }
+    .faq-content strong { color: var(--primary); }
+
+    .action-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; padding: 16px; border-radius: 12px;
+      font-family: 'Cairo', sans-serif; font-size: 1.1rem; font-weight: 700;
+      text-decoration: none; transition: all 0.3s ease; margin-bottom: 16px;
+    }
+    .action-btn.primary { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2); }
+    .action-btn.primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .action-btn.outline { background: var(--surface); color: var(--primary); border: 2px solid var(--border); }
+    .action-btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ====== نموذج الاستعلام عن حالة الملف ====== */
+    .lookup-form {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .lookup-form input {
+      flex: 1; min-width: 200px;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 1.05rem;
+      color: var(--primary);
+      background: var(--surface);
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .lookup-form input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+    }
+    .lookup-form button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: background 0.2s, transform 0.2s;
+    }
+    .lookup-form button:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
+    .lookup-form button:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .result-box {
+      display: none;
+      margin-top: 16px;
+      border-radius: 12px;
+      padding: 18px;
+      border: 2px solid transparent;
+    }
+    .result-box.show { display: block; }
+    .result-box.ok    { background: var(--success-bg); border-color: #86EFAC; }
+    .result-box.bad   { background: var(--danger-bg);  border-color: #FCA5A5; }
+    .result-box.error { background: var(--gold-bg);    border-color: #FCD34D; }
+    .result-box.loading { background: var(--surface); border-color: var(--border); color: var(--text-muted); }
+
+    .result-title {
+      font-family: 'Cairo', sans-serif; font-size: 1.1rem; font-weight: 800;
+      color: var(--primary); margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .result-box.ok .result-title i { color: var(--success); }
+    .result-box.bad .result-title i { color: var(--danger); }
+    .result-box.error .result-title i { color: var(--gold); }
+    .result-meta { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; }
+    .result-meta strong { color: var(--primary); }
+    .missing-list { margin: 10px 0 0; padding-right: 22px; }
+    .missing-list li { font-size: 0.97rem; color: var(--text-main); line-height: 1.9; font-weight: 700; }
+    .result-note { margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+    .help-line {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      text-align: center; color: var(--text-muted); font-size: 0.98rem; font-weight: 500;
+      padding: 10px 0 20px;
+    }
+    .help-line i { color: var(--accent); }
+
+    footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--text-muted); }
+    
+    /* ====== فهرس الصفحة تحت العنوان ====== */
+    .page-index {
+      max-width: 660px;
+      margin: 26px auto 0;
+      text-align: right;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+    }
+    .page-index-title {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Cairo', sans-serif; font-size: 1.05rem; font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .page-index-title i { color: var(--accent); }
+    .page-index ol {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 14px;
+      padding: 0; margin: 0;
+    }
+    .page-index a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 700; font-size: 0.95rem; line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
+    }
+    .page-index a:hover { background: #DBEAFE; color: var(--accent); }
+    .page-index .pi-num {
+      width: 26px; height: 26px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 0.82rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    @media (max-width: 600px) {
+      .page-index { padding: 16px 14px; }
+      .page-index ol { grid-template-columns: 1fr; }
+    }
+
+    /* ====== نموذج تسجيل البيانات ====== */
+    .reg-card {
+      background: var(--surface);
+      border: 2px solid #93C5FD;
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 40px;
+      box-shadow: 0 6px 18px rgba(29, 78, 216, 0.08);
+    }
+    .reg-only-box {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--gold-bg);
+      border: 2px solid #FCD34D;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+    .reg-only-box > i { font-size: 1.6rem; color: var(--gold); margin-top: 2px; flex-shrink: 0; }
+    .reg-only-box h4 { font-family: 'Cairo', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .reg-only-box p { font-size: 0.93rem; color: var(--text-muted); line-height: 1.7; }
+    .reg-only-box strong { color: var(--danger); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .field { display: flex; flex-direction: column; min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field > label {
+      font-family: 'Cairo', sans-serif; font-size: 0.97rem; font-weight: 700;
+      color: var(--primary); margin-bottom: 6px;
+    }
+    .field .req { color: var(--danger); }
+    .field input[type="text"],
+    .field input[type="tel"],
+    .field select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 1.02rem;
+      color: var(--primary);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input.num { direction: ltr; text-align: right; letter-spacing: 0.04em; }
+    .field input:focus, .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+    }
+    .field-hint { margin-top: 5px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+    .field-error { margin-top: 5px; font-size: 0.87rem; font-weight: 700; color: var(--danger); }
+    .field.invalid input, .field.invalid select { border-color: var(--danger); background: #FFF7F7; }
+
+    .radio-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-pill { position: relative; flex: 1; min-width: 140px; cursor: pointer; }
+    .radio-pill input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .radio-pill span {
+      display: block; text-align: center;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-weight: 700; color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .radio-pill:hover span { border-color: #93C5FD; }
+    .radio-pill input:checked + span { border-color: var(--accent); background: #EFF6FF; color: var(--accent); }
+    .radio-pill input:focus-visible + span { box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.25); }
+    .field.invalid .radio-pill span { border-color: var(--danger); }
+
+    .agree-row { display: flex; gap: 10px; align-items: flex-start; }
+    .agree-row input { width: 20px; height: 20px; margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); }
+    .agree-row label { font-size: 0.95rem; font-weight: 500; color: var(--text-main); line-height: 1.6; cursor: pointer; font-family: 'Tajawal', sans-serif; margin: 0; }
+
+    /* حقل وهمي مخفي لصد الروبوتات: يبقى داخل حدود الصفحة (لا تستخدم left:-9999px في صفحة RTL) */
+    .hp-field {
+      position: absolute;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0; border: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .reg-submit {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      padding: 15px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 12px;
+      font-family: 'Cairo', sans-serif; font-size: 1.1rem; font-weight: 700;
+      cursor: pointer; transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2);
+    }
+    .reg-submit:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
+    .reg-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    @media (max-width: 700px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .reg-card { padding: 20px 16px; }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 16px 40px; }
+      .step-content { padding: 16px; }
+      .faq-btn { padding: 16px; font-size: 1rem; }
+      .faq-item.active .faq-content { padding: 0 16px 16px; }
+      .alert-box { padding: 18px; }
+      .lookup-form button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">
+      <i class="fas fa-folder-open"></i>
+      دليل تسليم الملفات
+    </div>
+    <div class="logo-emblem">
+      <i class="fas fa-chalkboard-teacher"></i>
+    </div>
+    <h1>المعلم المساعد بالإسكندرية</h1>
+    <p class="subtitle">نوفمبر 2026</p>
+    <p class="header-desc">دليلك الشامل لخطوات الإجراءات، الأوراق المطلوبة، النماذج الرسمية، والإجابة على كافة الاستفسارات المتعلقة بتسليم الملفات.</p>
+
+    <div class="page-index">
+      <div class="page-index-title"><i class="fas fa-list-ol"></i>  ستجد في هذه الصفحة (اضغط عليها للانتقال مباشرة)</div>
+      <ol>
+        <li><a href="#register"><span class="pi-num">1</span> تسجيل بياناتك</a></li>
+        <li><a href="#status-lookup"><span class="pi-num">2</span> متابعة حالة ملفك (الاستعلام)</a></li>
+        <li><a href="#important"><span class="pi-num">3</span> تعليمات وتحذيرات هامة</a></li>
+        <li><a href="#sec-forms"><span class="pi-num">4</span> الاستمارات والفاكسات</a></li>
+        <li><a href="#sec-order"><span class="pi-num">5</span> ترتيب الملفات داخل الدوسيه</a></li>
+        <li><a href="#sec-steps"><span class="pi-num">6</span> الإجراءات المتبعة لتسليم الملف</a></li>
+        <li><a href="#sec-faq"><span class="pi-num">7</span> الأسئلة الشائعة</a></li>
+      </ol>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- ====== تسجيل بيانات المعلم (الإسكندرية فقط) ====== -->
+    <div class="section-label">
+      <span>الخطوة الأولى</span>
+      <h2>قم بتسجيل بياناتك لتتمكن من متابعة حالة ملفك  </h2>
+    </div>
+
+    <div class="reg-card" id="register">
+
+      <div class="reg-only-box">
+        <i class="fas fa-location-dot"></i>
+        <div>
+          <h4>هذا التسجيل مخصص لمعلمي محافظة الإسكندرية فقط</h4>
+          <p>يسجّل بياناته <strong>المعلم المساعد العامل حالياً بمحافظة الإسكندرية</strong> (سواء كانت محافظته الأصلية أو منتدباً إليها). لا يُعتد بأي تسجيل من خارج المحافظة.</p>
+        </div>
+      </div>
+
+      <form id="regForm" novalidate autocomplete="off">
+        <div class="form-grid">
+
+          <div class="field full" id="f-regName">
+            <label for="regName">الاسم بالكامل كما هو مكتوب في بطاقة الرقم القومي <span class="req">*</span></label>
+            <input type="text" id="regName" maxlength="100" placeholder="مثال: احمد محمد علي حسن" autocomplete="off">
+            <div class="field-hint">اكتب حرف الألف بدون همزات( احمد -اية- امل).</div>
+            <div class="field-error" id="err-regName"></div>
+          </div>
+
+          <div class="field" id="f-regNationalId">
+            <label for="regNationalId">اكتب الرقم القومي كاملا بدقة <span class="req">*</span></label>
+            <input type="text" id="regNationalId" class="num" inputmode="numeric" maxlength="14" placeholder="14 رقماً" autocomplete="off">
+            <div class="field-hint">14 رقماً بأرقام إنجليزية بدقة لأنك لن تتمكن من تعديله لاحقاً.</div>
+            <div class="field-error" id="err-regNationalId"></div>
+          </div>
+
+          <div class="field" id="f-regTeacherCode">
+            <label for="regTeacherCode">كود المعلم كما هو مكتوب بصحيفة الأحوال <span class="req">*</span></label>
+            <input type="text" id="regTeacherCode" class="num" inputmode="numeric" maxlength="15" placeholder="كود المعلم" autocomplete="off">
+            <div class="field-hint">أرقام إنجليزية فقط (123).</div>
+            <div class="field-error" id="err-regTeacherCode"></div>
+          </div>
+
+          <div class="field" id="f-regSpecialty">
+            <label for="regSpecialty">التخصص <span class="req">*</span></label>
+            <input type="text" id="regSpecialty" maxlength="60" placeholder="مثال: لغة عربية" autocomplete="off">
+            <div class="field-error" id="err-regSpecialty"></div>
+          </div>
+
+          <div class="field" id="f-regAdmin">
+            <label for="regAdmin">الإدارة (المنتدب إليها حاليا) <span class="req">*</span></label>
+            <input type="text" id="regAdmin" maxlength="60" placeholder="اسم الإدارة التعليمية" autocomplete="off">
+            <div class="field-error" id="err-regAdmin"></div>
+          </div>
+
+          <div class="field" id="f-regGov">
+            <label for="regGov">المحافظة <span class="req">*</span></label>
+            <select id="regGov">
+              <option value="" disabled selected>اختر المحافظة</option>
+              <option value="الإسكندرية">الإسكندرية</option>
+            </select>
+            <div class="field-hint">التسجيل متاح لمحافظة الإسكندرية فقط.</div>
+            <div class="field-error" id="err-regGov"></div>
+          </div>
+
+          <div class="field" id="f-regWhatsapp">
+            <label for="regWhatsapp">رقم الواتساب للتواصل عند الحاجة <span class="req">*</span></label>
+            <input type="tel" id="regWhatsapp" class="num" inputmode="numeric" maxlength="13" placeholder="01XXXXXXXXX" autocomplete="off">
+            <div class="field-hint">11 رقماً بأرقام إنجليزية ويبدأ بـ 01.</div>
+            <div class="field-error" id="err-regWhatsapp"></div>
+          </div>
+
+          <div class="field full" id="f-regOriginal">
+            <label>هل حصلت على شهادة تطبيقات تربوية؟ <span class="req">*</span></label>
+            <div class="radio-row">
+              <label class="radio-pill"><input type="radio" name="regOriginal" value="نعم"><span>نعم</span></label>
+              <label class="radio-pill"><input type="radio" name="regOriginal" value="لا"><span>لا</span></label>
+            </div>
+            <div class="field-error" id="err-regOriginal"></div>
+          </div>
+
+          <!-- حقل وهمي مخفي لصد الروبوتات: لا تحذفه ولا تعدّله -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="regWebsite">اترك هذا الحقل فارغاً</label>
+            <input type="text" id="regWebsite" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="field full" id="f-regAgree">
+            <div class="agree-row">
+              <input type="checkbox" id="regAgree">
+              <label for="regAgree">أقر بأن البيانات المدخلة صحيحة، وبأنني أعمل حالياً بمحافظة الإسكندرية.</label>
+            </div>
+            <div class="field-error" id="err-regAgree"></div>
+          </div>
+
+          <div class="field full">
+            <button type="submit" class="reg-submit" id="regSubmit"><i class="fas fa-paper-plane"></i> إرسال البيانات</button>
+          </div>
+
+        </div>
+      </form>
+
+      <div class="result-box" id="regMsg" aria-live="polite"></div>
+    </div>
+
+    <!-- ====== متابعة حالة الملف (استعلام بكود المعلم) ====== -->
+    <div class="alert-box info" id="status-lookup">
+      <div class="alert-icon"><i class="fas fa-search"></i></div>
+      <div class="alert-content">
+        <h4> متابعة حالة ملفك بالإسكندرية</h4>
+        <p>بعد تسليم ملفك للإدارة، والتأكد من قيام الإدارة بتسليم الملفات المجمعة للأكاديمية بالإسكندرية ، يمكنك متابعة حالة الملف ومعرفة المستندات غير المستوفاة عبر إدخال <strong>كود المعلم</strong>.</p>
+
+        <div class="lookup-form">
+          <input type="text" id="teacherCode" placeholder="أدخل كود المعلم" autocomplete="off" inputmode="text" maxlength="30">
+          <button type="button" id="lookupBtn"><i class="fas fa-search"></i> استعلام</button>
+        </div>
+
+        <div class="result-box" id="resultBox" aria-live="polite"></div>
+      </div>
+    </div>
+
+
+    
+    <div class="alert-box" id="important">
+      <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="alert-content">
+        <h4>تعليمات هامة بشأن الملف</h4>
+        <p>يتم تسليم أوراق الملف <strong>داخل دوسيه بلاستيك بكبسولة</strong>.</p>
+        <p style="margin-top: 5px;">أى تعليمات إضافية تطلبها منك إدارتك (غير مذكورة هنا) يرجى الالتزام بها أو التواصل بشأنها مع جهة عملك وليس مع الأكاديمية</p>
+      </div>
+    </div>
+
+    <div class="section-label">
+      <!-- ====== تحذير: بيانات صحيفة الأحوال ====== -->
+<div class="alert-box">
+  <div class="alert-icon"><i class="fas fa-triangle-exclamation"></i></div>
+  <div class="alert-content">
+    <h4>تحذير هام بخصوص صحيفة الأحوال</h4>
+    <p>يجب أن يكون مكتوباً في <strong>صحيفة الأحوال</strong> أن المعلم <strong>"تعاقدات"</strong>، وأنه <strong>"معلم مساعد"</strong>، وإلا <strong>لن تظهر بياناتك على موقع التسجيل</strong>.</p>
+    <p style="margin-top: 5px;">في حالة عدم صحة هذه البيانات بالصحيفة، يرجى التوجه إلى <strong>إدارة الإحصاء بالمديرية</strong> لتعديل الصحيفة قبل تسليم الملف.</p>
+  </div>
+</div>
+<!-- ====== نهاية التحذير ====== -->
+      <span id="sec-forms">المستندات الرسمية</span>
+      <h2>الاستمارات والفاكسات</h2>
+    </div>
+
+    <div class="cards-grid" style="margin-bottom: 50px;">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+        <h3>فاكس الأوراق والشهادات المقبولة والمواعيد</h3>
+        <p>يحتوي على الأوراق المطلوب تسليمها للإدارة وشهادات الحاسب المقبولة والمواعيد للمستهدفين حالياً فقط.</p>
+        <a href="https://drive.google.com/file/d/1Ev_1ThXSW2Gh8a2LLqiHyVk9T-EQfkft/view?usp=sharing" target="_blank" class="btn-download"><i class="fas fa-download"></i> عرض وتحميل</a>
+      </div>
+
+
+
+      <div class="card blue">
+        <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+        <h3>استمارة تقييم المدير</h3>
+        <p>الاستمارة الخاصة بتقييم مدير المدرسة. يملأها المدير بنفسه ويختمها.</p>
+        <a href="https://drive.google.com/file/d/11x9QII4Hq4MPzWyFqgo_nCeJ5pBHsF0i/view" target="_blank" class="btn-download"><i class="fas fa-print"></i> طباعة النموذج</a>
+      </div>
+
+      <div class="card blue">
+        <div class="card-icon"><i class="fas fa-user-edit"></i></div>
+        <h3>استمارات تقييم الموجه</h3>
+        <p>صفحة 2 (تُطبع 4 نسخ) وصفحة 3 (نسخة واحدة). يملأها الموجه بنفسه.</p>
+        <a href="https://drive.google.com/file/d/1MkUzzY-bNFBC9z9ZZte_VAjj39-rkhXs/view" target="_blank" class="btn-download"><i class="fas fa-print"></i> طباعة النموذج</a>
+      </div>
+    </div>
+<!-- ====== ترتيب الملفات داخل الدوسيه ====== -->
+<style>
+  .fo-wrap { margin-bottom: 50px; }
+  .fo-list { list-style: none; display: flex; flex-direction: column; gap: 12px; padding: 0; margin: 0 0 18px; }
+  .fo-item {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .fo-item:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .fo-num {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 1.05rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fo-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: 10px;
+    background: #EFF6FF; color: var(--accent);
+    font-size: 1.15rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fo-title {
+    flex: 1;
+    font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1.02rem;
+    color: var(--primary); line-height: 1.5;
+  }
+  .fo-note {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--gold-bg);
+    border: 1px solid rgba(217, 119, 6, 0.3);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.95rem; font-weight: 700; color: var(--gold);
+  }
+  @media (max-width: 600px) {
+    .fo-item { padding: 12px 14px; gap: 12px; }
+    .fo-icon { display: none; }
+  }
+</style>
+
+<div class="fo-wrap" id="sec-order">
+  <div class="section-label">
+    <span>ترتيب الأوراق</span>
+    <h2>ترتيب الملفات داخل الدوسيه</h2>
+  </div>
+
+  <ol class="fo-list">
+    <li class="fo-item">
+      <div class="fo-num">1</div>
+      <div class="fo-icon"><i class="fas fa-file-lines"></i></div>
+      <div class="fo-title">صحيفة الأحوال</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">2</div>
+      <div class="fo-icon"><i class="fas fa-file-signature"></i></div>
+      <div class="fo-title">صورة العقد</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">3</div>
+      <div class="fo-icon"><i class="fas fa-chalkboard-user"></i></div>
+      <div class="fo-title">شهادة تطبيقات تربوية</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">4</div>
+      <div class="fo-icon"><i class="fas fa-desktop"></i></div>
+      <div class="fo-title">شهادة اختبار الحاسب</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">5</div>
+      <div class="fo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="fo-title">صورة المؤهل</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">6</div>
+      <div class="fo-icon"><i class="fas fa-user-tie"></i></div>
+      <div class="fo-title">استمارة تقييم المدير</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">7</div>
+      <div class="fo-icon"><i class="fas fa-user-pen"></i></div>
+      <div class="fo-title">استمارات تقييم الموجه</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">8</div>
+      <div class="fo-icon"><i class="fas fa-envelope-open-text"></i></div>
+      <div class="fo-title">خطاب ترشيح مدير المدرسة</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">9</div>
+      <div class="fo-icon"><i class="fas fa-money-bill-wave"></i></div>
+      <div class="fo-title">مفردات المرتب</div>
+    </li>
+    <li class="fo-item">
+      <div class="fo-num">10</div>
+      <div class="fo-icon"><i class="fas fa-id-card"></i></div>
+      <div class="fo-title">صورة الرقم القومي</div>
+    </li>
+  </ol>
+
+  <div class="fo-note">
+    <i class="fas fa-circle-info"></i>
+    يرجى الالتزام بهذا الترتيب عند وضع الأوراق داخل الدوسيه البلاستيك.
+  </div>
+</div>
+<!-- ====== نهاية ترتيب الملفات ====== -->
+    
+    <div class="section-label" id="sec-steps">
+      <span>خطوات التنفيذ</span>
+      <h2>الإجراءات المتبعة لتسليم الملف</h2>
+    </div>
+
+    <div class="timeline" style="margin-bottom: 50px;">
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>تجهيز المعلم لملفه</h4>
+          <p>يقوم <strong>المعلم</strong> بتجهيز ملفه من خلال الخطوات التالية:</p>
+          <ul style="margin: 8px 0 0; padding-right: 22px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.9;">
+            <li><strong>طباعة الاستمارات</strong> المرفقة بالأعلى.</li>
+            <li><strong>مقابلة الموجه</strong> للحصول على تقييمه وختم التوجيه.</li>
+            <li><strong>الذهاب للإدارة</strong> للحصول على الأوراق المطلوبة أو صور طبق الأصل منها.</li>
+            <li><strong>ترتيب الملف</strong> بالترتيب المذكور بالأعلى.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>تسليم الملف للإدارة</h4>
+          <p>يقوم <strong>المعلم فى أسرع وقت</strong> بتسليم محتويات الملف كاملة (وفق المكتوب بالفاكس بالأعلى) داخل دوسيه بلاستيك بكبسولة إلى <strong>الإدارة التعليمية</strong> التابع لها، <strong>لتقوم لجنة الإدارة بمراجعة الملف واعتماده</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>التسليم للأكاديمية</h4>
+          <p>تقوم <strong>الإدارة التعليمية</strong> (وليس المعلم) بتسليم الملفات المجمعة <strong>قبل نهاية المواعيد المقررة بالفاكس إلى فرع الأكاديمية بالإسكندرية</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>المراجعة والتسجيل</h4>
+          <p>تراجع <strong>الأكاديمية</strong> الملفات وتسجل استيفاءها على موقع الوزارة، وبذلك <strong>ينتهي دور الأكاديمية المهنية للمعلمين</strong>. ويستطيع المعلم بعدها <strong>متابعة حالة ملفه من خانة الاستعلام</strong> بالأعلى.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker-col">
+          <div class="step-marker">5</div>
+        </div>
+        <div class="step-content">
+          <h4>المتابعة وانتظار القرار</h4>
+          <p>يتابع <strong>المعلم</strong> مع إدارته التعليمية اعتماد السيد الوزير والسيد المحافظ لقرار التثبيت، ووصول القرار رسمياً للإدارة.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" id="sec-faq">
+      <span>دليلك الشامل</span>
+      <h2>الأسئلة الشائعة</h2>
+    </div>
+
+    <div class="faq-container" style="margin-bottom: 40px;">
+      
+      <!-- FAQ Category 1 -->
+      <div class="faq-item">
+        <button class="faq-btn">المواعيد وتسليم الملفات <i class="fas fa-chevron-down"></i></button>
+        <div class="faq-content">
+          <div style="padding-top: 10px;">
+            <p><strong>س: من أين اتسلم شهادة اختبار تطبيقات تربوية؟</strong><br>
+            ج: من قسم التعيينات بإدارتك. يجب ضم الشهادة الأصلية بالملف ..</p>
+            <p><strong>س: متى موعد تسليم الملف للإدارة؟</strong><br>
+            ج: يجب على للمعلم تسليم الملفات فى أسرع وقت إلى الإدارة بداية من تاريخ 15 نوفمبر بالتنسيق مع إدارته و يتحمل المعلم عواقب تخلفه عن تسليم الملف للإدارة فى المواعيد المقررة .</p>
+            <p><strong>س: متى أخر موعد لتسليم الملف من الإدارة للأكاديمية؟</strong><br>
+            ج: يجب على الإدارة تسليم الملفات المجمعة فى أسرع وقت بحد أقصى قبل يوم 24 ديسمبر؛ ليتسنى مراجعة الملفات وإتاحة الفرصة للمعلم لاستكمال الأوراق الناقصة ثم تسجيلها. إذا أغلق موقع التسجيل سيضطر المعلم للانتظار والتسليم مع الدفعة التالية</p>
+            <p><strong>س: عندى مشكلة مع الإدارة أو تطلب طلبات غير مذكورة هنا؟</strong><br>
+            ج: الأكاديمية ليس لها علاقة بتعاملات المعلم مع إدارته أو اشتراطاتها. يرجى المتابعة معهم و تنفيذ طلباتهم.</p>
+            <p><strong>س: هل يمكن لشخص آخر تسليم الملف بدلاً مني للإدارة؟</strong><br>
+            ج: يرجى مراجعة موظف التعيينات في إدارتك للتأكد من ذلك.</p>
+            <p><strong>س: تجاوزت مدة عقدى سنتين فى 31/12/2026. ماذا أفعل ؟</strong><br>
+            ج: توجه للمديرية فوراً لطلب تجديد العقد وتسليم العقد الجديد في الملف قبل نهاية المواعيد المعلنة</p>
+<p><strong>س: منتدب حالياً لإدارة أخرى أو محافظة أخرى، أين أسلم الملف؟</strong><br>
+- <strong>الانتداب داخل المحافظة:</strong> سلّم الملف في الإدارة التعليمية المنتدب إليها حالياً.<br>
+- <strong>الانتداب لمحافظة أخرى:</strong> تواصل أولاً مع فرع الأكاديمية في المحافظة المنتدب إليها للتأكد من ظهور اسمك على النظام، ثم سلّم الملف هناك. ويُقبل الملف حتى لو كانت بعض مستنداته صادرة من محافظتك الأصلية.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Category 2 -->
+      <div class="faq-item">
+        <button class="faq-btn">الأختام والتوقيعات <i class="fas fa-chevron-down"></i></button>
+        <div class="faq-content">
+          <div style="padding-top: 10px;">
+            <div style="background: var(--danger-bg); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+              <strong style="color: var(--danger);">تنبيه هام:</strong> جميع التوقيعات والأختام بالاستمارات تكون بتاريخ حديث  2026. وأي ورقة مختومة بغير الختم المذكور بالأسفل غير مقبولة.
+            </div>
+            <p><strong>س: من يقوم بتوقيع الاستمارات في حالة الندب لإدارة أخرى؟</strong><br>
+            ج: التقييم وتوقيع الاستمارات يقوم به <strong>المدير الحالي والموجه الحالى بجهة الندب.</strong> (فى حالة الندب لمدرستين يكتفى بتوقيع مدير واحد منهما).</p>
+            <p><strong>س: ما هي الأختام المطلوبة على تقرير الموجه؟</strong><br>
+            ج: مطلوب <strong>ختم التوجيه فقط</strong> (ولا يشترط ختم المدرسة).</p>
+            <p><strong>س: ما هي الأختام المطلوبة لخطاب ترشيح مدير المدرسة؟</strong><br>
+            ج: يكفي <strong>ختم المدرسة فقط</strong>. ولا يشترط ختم الإدارة.</p>
+            <p><strong>س: هل يجوز ختم صحيفة الأحوال أو البطاقة بختم المدرسة؟</strong><br>
+            ج: لا، صحيفة الأحوال وصورة البطاقة (وباقي مستندات الملف) تُختم <strong>بختم النسر</strong> من الإدارة التعليمية </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Category 3 -->
+      <div class="faq-item">
+        <button class="faq-btn">المستندات، الأخطاء، والتعديلات <i class="fas fa-chevron-down"></i></button>
+        <div class="faq-content">
+          <div style="padding-top: 10px;">
+            <p><strong>س: ما هي صيغة خطاب ترشيح مدير المدرسة المطلوبة؟</strong><br>
+            ج: أي صيغة متداولة مقبولة طالما تحتوي على بياناتك الأساسية وعليها توقيع وختم مدير المدرسة، حتى لو كُتبت بخط اليد.</p>
+            <p><strong>س: بخصوص شهادة التخرج (المؤهل)، هل أسلم الأصل؟</strong><br>
+            ج: لا تسلم الأصل. المطلوب "صورة طبق الأصل" مختومة بختم النسر من الإدارة.</p>
+            <p><strong>س: هل يجب تقديم الدبلومة المهنية أو الخاصة؟</strong><br>
+            ج: لا، المطلوب المؤهل الدراسي الأساسي فقط (الليسانس/البكالوريوس).</p>
+            <p><strong>س: الإدارة أخذت أصل العقد، ماذا أفعل؟</strong><br>
+            ج: يوضع بالملف صورة طبق الأصل من العقد (مختومة بختم النسر للإدارة)، مع وجود ختم المديرية في حالة وجود تعديل مكتوب بخط اليد.</p>
+            <p><strong>س: هل يمكن استخدام الكوريكتور أو الشطب في الاستمارات؟</strong><br>
+            ج: لا، الاستمارات يجب أن تكون سليمة دون كشط أو تعديل، والتوقيعات والأختام واضحة.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Category 4 -->
+      <div class="faq-item">
+        <button class="faq-btn">شهادات الحاسب الآلي المقبولة <i class="fas fa-chevron-down"></i></button>
+        <div class="faq-content">
+          <div style="padding-top: 10px;">
+            <p><strong>س: ما شهادة الحاسب الألي المقبولة؟</strong><br>
+            ج: أى شهادة مذكورة بالفاكس المرفق مقبولة بشرط تسليم "أصل الشهادة الكرتون الملونة". ويُسمح بقبول (NEW ICDL) الحديثة فقط  المطبوعة ورقياً بشرط إرفاقها بصفحة مطابقة الشهادة من موقع التحقق الرسمي.</p>
+            <p><strong>س: معي شهادة تدريب من جامعة أو مركز ومكتوب عليها ICDL؟</strong><br>
+            ج: المعيار الوحيد لقبولها هو وجود "رقم كارت المهارات" (Skill Card No) مدون أسفل الشهادة وظهور بيانات مطابقة له على موقع التحقق. إذا لم تجده فالشهادة غير مقبولة.</p>
+            <p><strong>س: هل لشهادات الحاسب الآلي تاريخ انتهاء؟</strong><br>
+            ج: تعتبر سارية مدى الحياة بغض النظر عن تاريخ الحصول عليها. (ما عدا شهادة "التحول الرقمي" لها مدة صلاحية يجب أن تكون سارية).</p>
+            <p><strong>س: يوجد خطأ بالاسم في شهادة الحاسب؟</strong><br>
+            ج: لا يوجد مشكلة في الأخطاء البسيطة التي لا تغير الاسم بشكل جوهري، خاصة مع وجود الرقم القومي الصحيح.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="help-line">
+      <i class="fas fa-question-circle"></i>
+      <span>لديك سؤال غير مذكور هنا؟ تواصل مع مسئول التعيينات بإدارتك</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <p class="footer-brand" style="font-family:'Cairo'; font-weight:700; color:var(--primary); font-size:1.1rem; margin-bottom:5px;">الأكاديمية المهنية للمعلمين — فرع الإسكندرية</p>
+    <p>© 2026</p>
+  </footer>
+
+  <script>
+    // Accordion Logic
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      const btn = item.querySelector('.faq-btn');
+      btn.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+        // Close all
+        faqItems.forEach(el => el.classList.remove('active'));
+        // Open clicked if it was closed
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // ====== الاستعلام عن حالة الملف بكود المعلم ======
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzuCcgBqVEx-XX7M6Jy-o7FILJBCfhjDfSLBjDbtoN8562q4FAygEY0pvxH9QNNmaiy9w/exec';
+
+    const codeInput = document.getElementById('teacherCode');
+    const lookupBtn = document.getElementById('lookupBtn');
+    const resultBox = document.getElementById('resultBox');
+
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function showBox(type) {
+      resultBox.className = 'result-box show ' + type;
+      resultBox.innerHTML = '';
+    }
+
+    function titleRow(iconClass, text) {
+      const row = el('div', 'result-title');
+      const icon = el('i', iconClass);
+      row.appendChild(icon);
+      row.appendChild(el('span', '', text));
+      return row;
+    }
+
+    function showLoading() {
+      showBox('loading');
+      resultBox.appendChild(titleRow('fas fa-spinner fa-spin', 'جارٍ البحث...'));
+    }
+
+    function showError(message) {
+      showBox('error');
+      resultBox.appendChild(titleRow('fas fa-circle-info', message));
+    }
+
+    function showResult(d) {
+      showBox(d.complete ? 'ok' : 'bad');
+
+      resultBox.appendChild(
+        titleRow(
+          d.complete ? 'fas fa-circle-check' : 'fas fa-triangle-exclamation',
+          d.complete ? 'ملفك مكتمل' : 'ملفك غير مكتمل'
+        )
+      );
+
+      const meta = el('div', 'result-meta');
+      const nameLine = el('div');
+      nameLine.appendChild(el('strong', '', 'الاسم: '));
+      nameLine.appendChild(document.createTextNode(d.name || '—'));
+      meta.appendChild(nameLine);
+
+      if (d.admin) {
+        const adminLine = el('div');
+        adminLine.appendChild(el('strong', '', 'الإدارة: '));
+        adminLine.appendChild(document.createTextNode(d.admin));
+        meta.appendChild(adminLine);
+      }
+      resultBox.appendChild(meta);
+
+      if (d.complete) {
+        resultBox.appendChild(el('p', 'result-note', 'جميع المستندات المطلوبة مستوفاة حسب بيانات الأكاديمية.'));
+      } else {
+        resultBox.appendChild(el('p', 'result-note', 'المستندات غير المستوفاة:'));
+        const ul = el('ul', 'missing-list');
+        (d.missing || []).forEach(m => ul.appendChild(el('li', '', m.name)));
+        resultBox.appendChild(ul);
+        resultBox.appendChild(el('p', 'result-note', 'يرجى استكمال الأوراق الناقصة وتسليمها عن طريق إدارتك التعليمية.'));
+      }
+    }
+
+    async function lookupStatus() {
+      const code = codeInput.value.trim();
+      if (!code) {
+        showError('الرجاء إدخال كود المعلم أولاً.');
+        codeInput.focus();
+        return;
+      }
+
+      lookupBtn.disabled = true;
+      showLoading();
+
+      try {
+        const response = await fetch(API_URL + '?code=' + encodeURIComponent(code));
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+
+        if (!data.success) {
+          showError(data.error || 'تعذر إتمام الاستعلام.');
+        } else {
+          showResult(data);
+        }
+      } catch (err) {
+        showError('تعذر الاتصال بالخادم، حاول مرة أخرى بعد قليل.');
+      } finally {
+        lookupBtn.disabled = false;
+      }
+    }
+
+    lookupBtn.addEventListener('click', lookupStatus);
+    codeInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); lookupStatus(); }
+    });
+
+    // ============================================================
+    // ====== نموذج تسجيل بيانات المعلم (الإسكندرية فقط) ======
+    // ============================================================
+
+    // ضع هنا رابط النشر (Web App) الخاص بشيت التسجيل الجديد، وينتهي بـ /exec
+    const FORM_API_URL = 'https://script.google.com/macros/s/AKfycbwtsmIkdmzaW3WtSwtRTa8-sgrJvN85270F2FCADzsaMVcTuuTg4KxVyk53oKFYASNU/exec';
+
+    // الإدارات التعليمية بمحافظة الإسكندرية (مرتبة أبجدياً) - تظهر كقائمة اختيار في النموذج.
+    // يجب أن تطابق القائمة نفسها ALLOWED_ADMINS في كود Apps Script.
+    const ADMIN_OPTIONS = ['برج العرب', 'الجمرك', 'شرق', 'العامرية', 'العجمي', 'غرب', 'المنتزه أول', 'المنتزه ثان', 'وسط'];
+
+    const ALLOWED_GOVERNORATE = 'الإسكندرية';
+    const REG_FIELDS = ['regName', 'regNationalId', 'regTeacherCode', 'regSpecialty',
+                        'regAdmin', 'regGov', 'regWhatsapp', 'regOriginal', 'regAgree'];
+
+    const regForm = document.getElementById('regForm');
+    const regSubmit = document.getElementById('regSubmit');
+    const regMsg = document.getElementById('regMsg');
+
+    function toEnDigits(s) {
+      return String(s == null ? '' : s)
+        .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+        .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    }
+
+    // الإدارة: تتحول إلى قائمة اختيار إذا وُجدت خيارات
+    (function buildAdminField() {
+      if (!ADMIN_OPTIONS.length) return;
+      const oldInput = document.getElementById('regAdmin');
+      const sel = document.createElement('select');
+      sel.id = 'regAdmin';
+      const ph = document.createElement('option');
+      ph.value = ''; ph.disabled = true; ph.selected = true; ph.textContent = 'اختر الإدارة';
+      sel.appendChild(ph);
+      ADMIN_OPTIONS.forEach(name => {
+        const o = document.createElement('option');
+        o.value = name; o.textContent = name;
+        sel.appendChild(o);
+      });
+      oldInput.replaceWith(sel);
+    })();
+
+    // الأرقام: تحويل تلقائي للأرقام الإنجليزية ومنع أي حرف آخر
+    ['regNationalId', 'regTeacherCode', 'regWhatsapp'].forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener('input', () => {
+        const cleaned = toEnDigits(input.value).replace(/\D/g, '');
+        if (input.value !== cleaned) input.value = cleaned;
+      });
+    });
+
+    function setFieldError(id, msg) {
+      const wrap = document.getElementById('f-' + id);
+      const err = document.getElementById('err-' + id);
+      if (wrap) wrap.classList.toggle('invalid', !!msg);
+      if (err) err.textContent = msg || '';
+    }
+
+    function clearAllErrors() {
+      REG_FIELDS.forEach(id => setFieldError(id, ''));
+    }
+
+    function showRegMsg(type, title, text) {
+      regMsg.className = 'result-box show ' + type;
+      regMsg.innerHTML = '';
+      const icons = {
+        ok: 'fas fa-circle-check',
+        error: 'fas fa-circle-info',
+        bad: 'fas fa-triangle-exclamation',
+        loading: 'fas fa-spinner fa-spin'
+      };
+      regMsg.appendChild(titleRow(icons[type] || 'fas fa-circle-info', title));
+      if (text) regMsg.appendChild(el('p', 'result-note', text));
+    }
+
+    function normalizePhone(s) {
+      let d = toEnDigits(s).replace(/\D/g, '');
+      if (d.indexOf('0020') === 0 && d.length === 14) d = '0' + d.slice(4);
+      else if (d.indexOf('20') === 0 && d.length === 12) d = '0' + d.slice(2);
+      return d;
+    }
+
+    function validateReg() {
+      const errors = [];
+      const get = id => document.getElementById(id);
+
+      const name = get('regName').value.replace(/\s+/g, ' ').trim();
+      if (!/^[\u0621-\u064A\s]+$/.test(name) || name.split(' ').length < 3) {
+        errors.push(['regName', 'اكتب الاسم ثلاثياً على الأقل بالحروف العربية كما في البطاقة.']);
+      }
+
+      const nid = toEnDigits(get('regNationalId').value).replace(/\D/g, '');
+      if (!/^[23]\d{13}$/.test(nid)) {
+        errors.push(['regNationalId', 'الرقم القومي يجب أن يكون 14 رقماً صحيحاً.']);
+      }
+
+      const code = toEnDigits(get('regTeacherCode').value).replace(/\D/g, '');
+      if (!/^\d{1,15}$/.test(code)) {
+        errors.push(['regTeacherCode', 'اكتب كود المعلم بأرقام إنجليزية.']);
+      }
+
+      const specialty = get('regSpecialty').value.replace(/\s+/g, ' ').trim();
+      if (specialty.length < 2) {
+        errors.push(['regSpecialty', 'اكتب التخصص.']);
+      }
+
+      const admin = get('regAdmin').value.replace(/\s+/g, ' ').trim();
+      if (admin.length < 2) {
+        errors.push(['regAdmin', ADMIN_OPTIONS.length ? 'اختر الإدارة.' : 'اكتب اسم الإدارة التعليمية.']);
+      }
+
+      const gov = get('regGov').value;
+      if (gov !== ALLOWED_GOVERNORATE) {
+        errors.push(['regGov', 'اختر المحافظة. التسجيل متاح للإسكندرية فقط.']);
+      }
+
+      const phone = normalizePhone(get('regWhatsapp').value);
+      if (!/^01[0125]\d{8}$/.test(phone)) {
+        errors.push(['regWhatsapp', 'رقم الواتساب يجب أن يكون 11 رقماً ويبدأ بـ 01.']);
+      }
+
+      const originalEl = document.querySelector('input[name="regOriginal"]:checked');
+      if (!originalEl) {
+        errors.push(['regOriginal', 'اختر إجابتك: نعم أو لا.']);
+      }
+
+      if (!get('regAgree').checked) {
+        errors.push(['regAgree', 'يجب الإقرار بصحة البيانات للمتابعة.']);
+      }
+
+      const payload = {
+        fullName: name,
+        nationalId: nid,
+        teacherCode: code,
+        specialty: specialty,
+        currentAdmin: admin,
+        governorate: gov,
+        isOriginal: originalEl ? originalEl.value : '',
+        whatsapp: phone,
+        website: get('regWebsite').value
+      };
+
+      return { errors, payload };
+    }
+
+    function focusField(id) {
+      if (id === 'regOriginal') {
+        const first = document.querySelector('input[name="regOriginal"]');
+        if (first) first.focus();
+        return;
+      }
+      const node = document.getElementById(id);
+      if (node) node.focus();
+    }
+
+    regForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAllErrors();
+
+      const { errors, payload } = validateReg();
+      if (errors.length) {
+        errors.forEach(([id, msg]) => setFieldError(id, msg));
+        showRegMsg('bad', 'راجع البيانات المكتوبة', 'بعض الحقول تحتاج تصحيحاً، وهي موضحة باللون الأحمر.');
+        focusField(errors[0][0]);
+        return;
+      }
+
+      if (!/^https:\/\//.test(FORM_API_URL)) {
+        showRegMsg('error', 'النموذج غير مربوط بعد', 'لم يتم وضع رابط الخادم داخل الصفحة. تواصل مع إدارة الأكاديمية.');
+        return;
+      }
+
+      regSubmit.disabled = true;
+      showRegMsg('loading', 'جارٍ إرسال بياناتك...');
+
+      try {
+        // text/plain يتجنب طلب التحقق المسبق (preflight) مع Apps Script
+        const response = await fetch(FORM_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+
+        if (!data.success) {
+          showRegMsg('error', data.error || 'تعذر حفظ البيانات.', 'راجع البيانات وحاول مرة أخرى، وإن استمرت المشكلة فتواصل مع الأكاديمية.');
+        } else if (data.mode === 'update') {
+          showRegMsg('ok', 'تم تحديث بياناتك بنجاح', 'كانت بياناتك مسجلة من قبل بنفس الرقم القومي، وتم تحديثها بالبيانات الجديدة.');
+          regForm.reset();
+        } else {
+          showRegMsg('ok', 'تم تسجيل بياناتك بنجاح', 'شكراً لك. يمكنك مستقبلاً متابعة حالة ملفك من خانة الاستعلام التالية بعد تسليمه.');
+          regForm.reset();
+        }
+        regMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (err) {
+        showRegMsg('error', 'تعذر إرسال البيانات', 'تحقق من الاتصال بالإنترنت وحاول مرة أخرى بعد قليل.');
+      } finally {
+        regSubmit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
