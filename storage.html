@@ -109,11 +109,11 @@ input[type=file]{display:none}
   <div class="section-title"><h2>الخريطة المرئية للمخزن</h2><span class="hint">مرّر المؤشر فوق الرف أو الدرج لعرض المحتويات • اضغط للتعديل</span></div>
   <div class="visual-grid">
    <div class="cabinet-wrap">
-    <div class="cabinet-label"><strong>الدولاب المعدني الأول</strong><span>3 أرفف</span></div>
+    <div class="cabinet-label"><strong>الدولاب المعدني الأول</strong><span>4 أرفف</span></div>
     <div class="cabinet" id="cabinet1"></div>
    </div>
    <div class="cabinet-wrap">
-    <div class="cabinet-label"><strong>الدولاب المعدني الثاني</strong><span>3 أرفف</span></div>
+    <div class="cabinet-label"><strong>الدولاب المعدني الثاني</strong><span>4 أرفف</span></div>
     <div class="cabinet" id="cabinet2"></div>
    </div>
   </div>
@@ -163,10 +163,10 @@ input[type=file]{display:none}
 <script>
 // يُضبط هذا الرابط مرة واحدة فقط قبل رفع الصفحة إلى GitHub Pages.
 // ضع هنا رابط Web App المنشور من Google Apps Script وينتهي بـ /exec.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4KE5oJGO8qpMc5oKUWcj5KKNULVu-lH_4Yn1CeRdSUO9V0QaTescpmfrbJIRZr2s/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8P0mTpPNzc9yoWEJRjzTxTK4CUAkA1_Jt5pOQ32F9i3QRtgkkmcxVuyDhlxA6mzxf/exec';
 
 const locations = [];
-for(let c=1;c<=2;c++) for(let s=1;s<=3;s++) locations.push({id:`cab${c}s${s}`,label:`دولاب ${c} – رف ${s}`,type:'shelf',cabinet:c,slot:s});
+for(let c=1;c<=2;c++) for(let s=1;s<=4;s++) locations.push({id:`cab${c}s${s}`,label:`دولاب ${c} – رف ${s}`,type:'shelf',cabinet:c,slot:s});
 for(let u=1;u<=4;u++) for(let d=1;d<=4;d++) locations.push({id:`sh${u}d${d}`,label:`شانون ${u}${u===4?' (خلف الباب)':''} – درج ${d}`,type:'drawer',unit:u,slot:d});
 const defaultData = [];
 let data = loadData(); let editingId=null;
@@ -190,7 +190,7 @@ function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 function setSyncStatus(message){const el=document.getElementById('syncStatus');if(el)el.textContent=message;}
 function renderCabinet(num){
  const el=document.getElementById('cabinet'+num); el.innerHTML='';
- for(let s=1;s<=3;s++){
+ for(let s=1;s<=4;s++){
   const id=`cab${num}s${s}`, items=locItems(id);
   const div=document.createElement('div');div.className='shelf';div.tabIndex=0;div.dataset.loc=id;
   div.innerHTML=`<div class="shelf-info"><span class="shelf-name">الرف ${s}</span><span class="shelf-count">${items.length} مجموعة / ملف</span></div><div class="file-stack">${items.slice(0,9).map(()=>'<i class="mini-file"></i>').join('')}</div>`;
@@ -402,7 +402,7 @@ document.getElementById('exportBtn').onclick=()=>{
  XLSX.utils.book_append_sheet(wb,ws1,'محتويات الملفات');XLSX.utils.book_append_sheet(wb,ws2,'خريطة المواقع');XLSX.writeFile(wb,'محتويات-المخزن.xlsx');
 };
 document.getElementById('backupBtn').onclick=()=>{
- const blob=new Blob([JSON.stringify({app:'إدارة مخزن الملفات',version:2,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});
+ const blob=new Blob([JSON.stringify({app:'إدارة مخزن الملفات',version:3,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='نسخة-احتياطية-المخزن.json';a.click();URL.revokeObjectURL(url);
 };
 document.getElementById('importFile').addEventListener('change',async e=>{
