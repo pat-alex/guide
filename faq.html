@@ -14,18 +14,14 @@
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Segoe UI", Tahoma, Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
 
-  /* الهيدر */
-  header {
-    background:linear-gradient(135deg, var(--main) 0%, var(--main2) 100%);
-    color:#fff; text-align:center; padding:30px 16px 62px;
-  }
+  header { background:linear-gradient(135deg, var(--main) 0%, var(--main2) 100%); color:#fff; text-align:center; padding:30px 16px 62px; }
   header .logo { width:62px; height:62px; margin:0 auto 10px; background:rgba(255,255,255,.15); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; }
   header h1 { margin:0; font-size:1.45rem; }
   header p { margin:6px 0 0; opacity:.85; font-size:.92rem; }
 
   .wrap { max-width:720px; margin:-38px auto 30px; padding:0 14px; }
+  .wrap.wide { max-width:900px; }
 
-  /* التبويبات */
   .tabs { display:flex; gap:6px; background:var(--card); padding:6px; border-radius:var(--radius); box-shadow:0 4px 14px rgba(21,67,96,.12); margin-bottom:16px; }
   .tabs button { flex:1; padding:11px 4px; border:0; background:transparent; color:var(--muted); font-size:.92rem; font-weight:bold; border-radius:10px; cursor:pointer; font-family:inherit; transition:.2s; }
   .tabs button.active { background:linear-gradient(135deg, var(--main), var(--main2)); color:#fff; box-shadow:0 3px 8px rgba(36,113,163,.35); }
@@ -36,27 +32,20 @@
   .card .sub { margin:0 0 8px; color:var(--muted); font-size:.9rem; }
 
   label { display:block; margin:14px 0 6px; font-weight:bold; font-size:.9rem; color:var(--main); }
-  input, textarea, select {
-    width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px;
-    font-size:1rem; font-family:inherit; background:#fbfcfd; transition:.2s; color:var(--text);
-  }
+  input, textarea, select { width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; font-size:1rem; font-family:inherit; background:#fbfcfd; transition:.2s; color:var(--text); }
   input:focus, textarea:focus, select:focus { outline:none; border-color:var(--main2); background:#fff; box-shadow:0 0 0 4px rgba(36,113,163,.12); }
   textarea { min-height:140px; resize:vertical; }
   .counter { text-align:left; color:var(--muted); font-size:.78rem; margin-top:3px; }
 
-  .btn {
-    margin-top:18px; width:100%; padding:14px; border:0; border-radius:10px;
-    background:linear-gradient(135deg, var(--main), var(--main2)); color:#fff;
-    font-size:1.02rem; font-weight:bold; cursor:pointer; font-family:inherit; transition:.2s;
-    box-shadow:0 4px 12px rgba(36,113,163,.3);
-  }
+  .btn { margin-top:18px; width:100%; padding:14px; border:0; border-radius:10px; background:linear-gradient(135deg, var(--main), var(--main2)); color:#fff; font-size:1.02rem; font-weight:bold; cursor:pointer; font-family:inherit; transition:.2s; box-shadow:0 4px 12px rgba(36,113,163,.3); }
   .btn:hover { transform:translateY(-1px); }
   .btn:disabled { opacity:.6; cursor:wait; transform:none; }
   .btn.sec { background:#fff; color:var(--main); border:1.5px solid var(--line); box-shadow:none; margin-top:10px; }
+  .btn.small { width:auto; margin-top:0; padding:9px 18px; font-size:.92rem; }
+  .btn.green { background:linear-gradient(135deg,#1e8449,#27ae60); box-shadow:0 4px 12px rgba(30,132,73,.3); }
 
   .hidden { display:none !important; }
 
-  /* التنبيهات */
   .msg { margin-top:14px; padding:12px 14px; border-radius:10px; font-size:.93rem; }
   .msg.err { background:var(--errbg); color:var(--err); }
   .msg.wait { background:var(--warnbg); color:var(--warn); }
@@ -64,7 +53,6 @@
   .note { display:flex; gap:10px; align-items:flex-start; background:#eaf2f8; border-right:4px solid var(--main2); padding:11px 13px; border-radius:10px; margin-top:16px; font-size:.9rem; color:var(--main); }
   .note .ic { font-size:1.2rem; line-height:1.3; }
 
-  /* شاشة الكود */
   .success-ic { width:64px; height:64px; margin:0 auto 10px; border-radius:50%; background:var(--okbg); color:var(--ok); display:flex; align-items:center; justify-content:center; font-size:32px; }
   .center { text-align:center; }
   .code-box { margin:14px 0; padding:18px 12px; background:linear-gradient(135deg,#eaf2f8,#f6fbff); border:2px dashed var(--main2); border-radius:14px; text-align:center; }
@@ -74,7 +62,6 @@
   .keep-alert b { display:block; margin-bottom:6px; font-size:1rem; }
   .keep-alert ul { margin:6px 0 0; padding-right:20px; }
 
-  /* الإجابة */
   .q-block, .a-block { white-space:pre-wrap; line-height:1.9; padding:14px; border-radius:10px; margin-top:6px; }
   .q-block { background:#f3f6f9; border-right:4px solid #aab7c4; }
   .a-block { background:var(--okbg); border-right:4px solid var(--ok); }
@@ -83,7 +70,6 @@
   .status-pill.done { background:var(--okbg); color:var(--ok); }
   .status-pill.pending { background:var(--warnbg); color:var(--warn); }
 
-  /* الأسئلة الشائعة */
   details { background:var(--card); border-radius:12px; margin-bottom:10px; box-shadow:0 2px 8px rgba(21,67,96,.07); overflow:hidden; }
   summary { padding:14px 16px; cursor:pointer; font-weight:bold; list-style:none; display:flex; justify-content:space-between; gap:10px; align-items:center; }
   summary::-webkit-details-marker { display:none; }
@@ -93,24 +79,51 @@
   details .inner { padding:14px 16px 16px; }
   .count { color:var(--muted); font-size:.85rem; margin:0 4px 10px; }
 
+  /* لوحة المسؤول */
+  .adm-bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+  .stat { background:var(--card); border-radius:12px; padding:10px 6px; text-align:center; box-shadow:0 2px 8px rgba(21,67,96,.07); }
+  .stat b { display:block; font-size:1.4rem; color:var(--main); }
+  .stat span { font-size:.78rem; color:var(--muted); }
+  .filters { display:grid; grid-template-columns:1fr 2fr; gap:8px; margin-bottom:14px; }
+  .filters select, .filters input { margin:0; }
+  .adm-card { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:14px; box-shadow:0 2px 10px rgba(21,67,96,.09); border-right:5px solid #c9d3dd; }
+  .adm-card.pending { border-right-color:var(--accent); }
+  .adm-card.done { border-right-color:var(--ok); }
+  .adm-card.dirty { box-shadow:0 0 0 2px var(--accent), 0 2px 10px rgba(21,67,96,.09); }
+  .adm-head { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .adm-code { font-family:Consolas, monospace; font-weight:bold; color:var(--main); direction:ltr; font-size:1.05rem; }
+  .adm-meta { color:var(--muted); font-size:.82rem; }
+  .adm-meta a { color:var(--main2); text-decoration:none; font-weight:bold; }
+  .adm-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; margin-top:4px; }
+  .adm-row select { margin:0; }
+  .chk { display:flex; align-items:center; gap:8px; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; background:#fbfcfd; cursor:pointer; font-weight:bold; font-size:.9rem; color:var(--main); margin:0; }
+  .chk input { width:20px; height:20px; margin:0; accent-color:var(--ok); }
+  .adm-card textarea { min-height:110px; }
+  .adm-foot { display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+  .adm-foot .m { font-size:.88rem; }
+  .adm-foot .m.ok { color:var(--ok); } .adm-foot .m.err { color:var(--err); } .adm-foot .m.dirty { color:var(--warn); }
+  @media (max-width:560px) { .stats { grid-template-columns:repeat(2,1fr); } .adm-row, .filters { grid-template-columns:1fr; } }
+
   .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1c2833; color:#fff; padding:11px 22px; border-radius:30px; font-size:.92rem; opacity:0; pointer-events:none; transition:.3s; z-index:99; }
   .toast.show { opacity:1; }
   .spin { display:inline-block; width:15px; height:15px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite; vertical-align:middle; margin-left:6px; }
   @keyframes sp { to { transform:rotate(360deg); } }
   footer { text-align:center; color:var(--muted); font-size:.8rem; padding-bottom:20px; }
+  footer a { color:var(--muted); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">💬</div>
-  <h1>الاستفسارات والأسئلة</h1>
-  <p>اكتب سؤالك وسيتم الرد عليك في أقرب وقت</p>
+  <h1 id="hTitle">الاستفسارات والأسئلة</h1>
+  <p id="hSub">اكتب سؤالك وسيتم الرد عليك في أقرب وقت</p>
 </header>
 
-<div class="wrap">
+<div class="wrap" id="wrap">
 
-  <div class="tabs">
+  <div class="tabs" id="tabs">
     <button id="t-ask" class="active" onclick="showTab('ask')">✍️ إرسال سؤال</button>
     <button id="t-view" onclick="showTab('view')">🔍 عرض إجابتي</button>
     <button id="t-pub" onclick="showTab('pub')">📚 الأسئلة الشائعة</button>
@@ -188,16 +201,59 @@
     </div>
     <div id="pubList"></div>
   </div>
+
+  <!-- دخول المسؤول -->
+  <div id="p-login" class="card hidden">
+    <h2>دخول المسؤول</h2>
+    <p class="sub">أدخل كلمة المرور للوصول إلى لوحة الأسئلة.</p>
+    <label for="admPass">كلمة المرور</label>
+    <input id="admPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
+    <button class="btn" id="loginBtn" onclick="adminLogin()">دخول</button>
+    <button class="btn sec" onclick="closeAdmin()">رجوع للصفحة الرئيسية</button>
+    <div id="loginMsg"></div>
+  </div>
+
+  <!-- لوحة المسؤول -->
+  <div id="p-admin" class="hidden">
+    <div class="adm-bar">
+      <b style="color:var(--main);font-size:1.1rem">لوحة المسؤول</b>
+      <div style="display:flex;gap:8px">
+        <button class="btn small" onclick="adminLoad(true)">🔄 تحديث</button>
+        <button class="btn small sec" onclick="adminLogout()">خروج</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="stAll">0</b><span>إجمالي الأسئلة</span></div>
+      <div class="stat"><b id="stPend">0</b><span>بانتظار الرد</span></div>
+      <div class="stat"><b id="stDone">0</b><span>تم الرد</span></div>
+      <div class="stat"><b id="stPub">0</b><span>منشور للعامة</span></div>
+    </div>
+    <div class="filters">
+      <select id="admFilter" onchange="renderAdmin(true)">
+        <option value="pending">بانتظار الرد</option>
+        <option value="all">كل الأسئلة</option>
+        <option value="done">تم الرد</option>
+        <option value="published">المنشورة</option>
+      </select>
+      <input id="admSearch" placeholder="بحث بالاسم أو الكود أو نص السؤال..." oninput="renderAdmin(true)">
+    </div>
+    <div id="admList"></div>
+    <div id="admMore" class="center hidden"><button class="btn sec" onclick="admShowMore()">عرض المزيد</button></div>
+  </div>
 </div>
 
-<footer>نظام الاستفسارات</footer>
+<footer><span>نظام الاستفسارات</span> · <a href="#" onclick="openAdmin();return false;">دخول المسؤول</a></footer>
 <div id="toast" class="toast"></div>
 
 <script>
   // ضع هنا رابط الـ Web App (ينتهي بـ /exec)
-  const API_URL = 'https://script.google.com/macros/s/AKfycby9Vr2Kl29YdF_h5Ip5IfcwtstHk3jZN0sBINJEUI8ru4vcoPj2PjFrjsFrnkD9qQXATQ/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxerj_u0pqgxQuMroeSFJS-cuhfLe27ZKRnw3lEDGbeDm-dyshRYoRME3OGPKkS3GgSOg/exec';
   const LS_KEY = 'my_question_codes';
+  const TOK_KEY = 'adm_tok';
+  const PAGE_SIZE = 25;
   let pubData = null;
+  let admData = null;
+  let admLimit = PAGE_SIZE;
 
   const $ = id => document.getElementById(id);
 
@@ -205,21 +261,35 @@
     const el = $('toast'); el.textContent = t; el.classList.add('show');
     setTimeout(() => el.classList.remove('show'), 2200);
   }
-
   function msg(el, text, cls) {
     el.innerHTML = '';
     if (!text) return;
     const d = document.createElement('div');
     d.className = 'msg ' + cls; d.textContent = text; el.appendChild(d);
   }
-
   function updCount() { $('cnt').textContent = $('question').value.length; }
 
-  function showTab(t) {
-    ['ask','view','pub'].forEach(k => {
-      $('p-' + k).classList.toggle('hidden', k !== t);
-      $('t-' + k).classList.toggle('active', k === t);
+  // طلب POST للسكربت (text/plain لتجنب مشاكل CORS)
+  async function post(body) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
     });
+    return res.json();
+  }
+
+  /* ---------------- التنقل ---------------- */
+  const PAGES = ['ask','view','pub','login','admin'];
+
+  function showTab(t) {
+    PAGES.forEach(k => $('p-' + k).classList.toggle('hidden', k !== t));
+    ['ask','view','pub'].forEach(k => $('t-' + k).classList.toggle('active', k === t));
+    const isAdm = (t === 'login' || t === 'admin');
+    $('tabs').classList.toggle('hidden', isAdm);
+    $('wrap').classList.toggle('wide', t === 'admin');
+    $('hTitle').textContent = isAdm ? 'لوحة المسؤول' : 'الاستفسارات والأسئلة';
+    $('hSub').textContent = isAdm ? 'إدارة الأسئلة والإجابات' : 'اكتب سؤالك وسيتم الرد عليك في أقرب وقت';
     if (t === 'pub' && !pubData) loadPublic();
     if (t === 'view') {
       const last = lastCode();
@@ -228,6 +298,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  /* ---------------- المعلم ---------------- */
   function lastCode() {
     try { const a = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); return a[a.length - 1] || ''; }
     catch (e) { return ''; }
@@ -246,13 +317,7 @@
     btn.disabled = true; btn.innerHTML = 'جارٍ الإرسال <span class="spin"></span>';
     msg($('askMsg'), '');
     try {
-      // text/plain لتجنب مشاكل CORS مع Apps Script
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'submit', name, phone, question })
-      });
-      const data = await res.json();
+      const data = await post({ action: 'submit', name, phone, question });
       if (!data.ok) throw new Error(data.error || 'تعذر الإرسال');
       saveCode(data.code);
       $('myCode').textContent = data.code;
@@ -351,6 +416,202 @@
       const a = document.createElement('div'); a.className = 'a-block'; a.textContent = i.answer;
       inner.append(tag, a); d.append(s, inner); list.appendChild(d);
     });
+  }
+
+  /* ---------------- المسؤول ---------------- */
+  function getTok() { try { return sessionStorage.getItem(TOK_KEY) || ''; } catch (e) { return ''; } }
+  function setTok(t) { try { t ? sessionStorage.setItem(TOK_KEY, t) : sessionStorage.removeItem(TOK_KEY); } catch (e) {} }
+
+  function openAdmin() {
+    if (getTok()) { showTab('admin'); adminLoad(false); }
+    else { showTab('login'); setTimeout(() => $('admPass').focus(), 100); }
+  }
+  function closeAdmin() { $('admPass').value = ''; msg($('loginMsg'), ''); showTab('ask'); }
+
+  async function adminLogin() {
+    const password = $('admPass').value;
+    if (!password) return msg($('loginMsg'), 'اكتب كلمة المرور', 'err');
+    const btn = $('loginBtn');
+    btn.disabled = true; btn.innerHTML = 'جارٍ الدخول <span class="spin"></span>';
+    msg($('loginMsg'), '');
+    try {
+      const data = await post({ action: 'adminLogin', password });
+      if (!data.ok) throw new Error(data.error || 'تعذر الدخول');
+      setTok(data.token);
+      $('admPass').value = '';
+      showTab('admin');
+      adminLoad(false);
+    } catch (e) {
+      msg($('loginMsg'), e.message || 'تعذر الدخول', 'err');
+    } finally { btn.disabled = false; btn.textContent = 'دخول'; }
+  }
+
+  async function adminLogout() {
+    const t = getTok(); setTok('');
+    admData = null;
+    try { if (t) await post({ action: 'adminLogout', token: t }); } catch (e) {}
+    showTab('ask');
+  }
+
+  function sessionExpired() {
+    setTok(''); admData = null;
+    showTab('login');
+    msg($('loginMsg'), 'انتهت الجلسة، سجّل الدخول من جديد', 'wait');
+  }
+
+  function hasDirty() { return !!document.querySelector('.adm-card.dirty'); }
+
+  async function adminLoad(manual) {
+    if (manual && hasDirty() && !confirm('يوجد تعديلات غير محفوظة وسيتم فقدانها عند التحديث. متابعة؟')) return;
+    $('admList').innerHTML = '<div class="msg wait">جارٍ تحميل الأسئلة...</div>';
+    $('admMore').classList.add('hidden');
+    try {
+      const data = await post({ action: 'adminList', token: getTok() });
+      if (data.auth) return sessionExpired();
+      if (!data.ok) throw new Error(data.error || 'تعذر التحميل');
+      admData = data;
+      admLimit = PAGE_SIZE;
+      renderAdmin(false);
+    } catch (e) {
+      msg($('admList'), e.message || 'تعذر تحميل الأسئلة', 'err');
+    }
+  }
+
+  function updStats() {
+    const it = admData.items;
+    $('stAll').textContent = it.length;
+    $('stPend').textContent = it.filter(i => !i.answer.trim()).length;
+    $('stDone').textContent = it.filter(i => i.answer.trim()).length;
+    $('stPub').textContent = it.filter(i => i.publish).length;
+  }
+
+  function admFiltered() {
+    const f = $('admFilter').value, q = $('admSearch').value.trim().toLowerCase();
+    return admData.items.filter(i => {
+      const answered = i.answer.trim() !== '';
+      if (f === 'pending' && answered) return false;
+      if (f === 'done' && !answered) return false;
+      if (f === 'published' && !i.publish) return false;
+      if (q && !(i.code + ' ' + i.name + ' ' + i.question + ' ' + i.phone).toLowerCase().includes(q)) return false;
+      return true;
+    }).reverse(); // الأحدث أولًا
+  }
+
+  function renderAdmin(resetLimit) {
+    if (!admData) return;
+    if (resetLimit) admLimit = PAGE_SIZE;
+    if (resetLimit && hasDirty() && !confirm('يوجد تعديلات غير محفوظة وسيتم فقدانها. متابعة؟')) {
+      return;
+    }
+    updStats();
+    const list = $('admList'); list.innerHTML = '';
+    const items = admFiltered();
+    if (!items.length) {
+      msg(list, 'لا توجد أسئلة مطابقة', 'wait');
+      $('admMore').classList.add('hidden');
+      return;
+    }
+    items.slice(0, admLimit).forEach(it => list.appendChild(buildCard(it)));
+    $('admMore').classList.toggle('hidden', items.length <= admLimit);
+  }
+
+  function admShowMore() { admLimit += PAGE_SIZE; renderAdmin(false); }
+
+  function buildCard(it) {
+    const card = document.createElement('div');
+    const setCls = () => { card.className = 'adm-card ' + (it.answer.trim() ? 'done' : 'pending'); };
+    setCls();
+
+    // الرأس
+    const head = document.createElement('div'); head.className = 'adm-head';
+    const code = document.createElement('span'); code.className = 'adm-code'; code.textContent = it.code;
+    const pill = document.createElement('span');
+    const setPill = () => {
+      const a = it.answer.trim() !== '';
+      pill.className = 'status-pill ' + (a ? 'done' : 'pending');
+      pill.textContent = a ? 'تم الرد' : 'قيد الانتظار';
+    };
+    setPill();
+    head.append(code, pill);
+
+    // البيانات
+    const meta = document.createElement('div'); meta.className = 'adm-meta';
+    meta.append(document.createTextNode('👤 ' + it.name + '  ·  🕒 ' + it.time));
+    const digits = it.phone.replace(/[^0-9+]/g, '');
+    if (digits) {
+      meta.append(document.createTextNode('  ·  '));
+      const a = document.createElement('a'); a.href = 'tel:' + digits; a.textContent = '📞 ' + it.phone;
+      meta.appendChild(a);
+    }
+
+    // السؤال
+    const qLbl = document.createElement('label'); qLbl.textContent = 'السؤال';
+    const qb = document.createElement('div'); qb.className = 'q-block'; qb.textContent = it.question;
+
+    // الإجابة
+    const aLbl = document.createElement('label'); aLbl.textContent = 'الإجابة';
+    const ta = document.createElement('textarea'); ta.value = it.answer; ta.maxLength = 5000;
+    ta.placeholder = 'اكتب الإجابة هنا...';
+
+    // التصنيف والنشر
+    const row = document.createElement('div'); row.className = 'adm-row';
+    const catWrap = document.createElement('div');
+    const cLbl = document.createElement('label'); cLbl.textContent = 'التصنيف';
+    const sel = document.createElement('select');
+    sel.add(new Option('— بدون تصنيف —', ''));
+    admData.categories.forEach(c => sel.add(new Option(c, c)));
+    if (it.category && admData.categories.indexOf(it.category) === -1) sel.add(new Option(it.category, it.category));
+    sel.value = it.category;
+    catWrap.append(cLbl, sel);
+
+    const chkWrap = document.createElement('div');
+    const chkLbl = document.createElement('label'); chkLbl.innerHTML = '&nbsp;';
+    const chk = document.createElement('label'); chk.className = 'chk';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = it.publish;
+    chk.append(cb, document.createTextNode('نشر في الأسئلة الشائعة'));
+    chkWrap.append(chkLbl, chk);
+    row.append(catWrap, chkWrap);
+
+    // الحفظ
+    const foot = document.createElement('div'); foot.className = 'adm-foot';
+    const save = document.createElement('button'); save.className = 'btn small green'; save.textContent = '💾 حفظ';
+    const m = document.createElement('span'); m.className = 'm';
+    if (it.answeredAt) { m.textContent = 'آخر رد: ' + it.answeredAt; }
+    foot.append(save, m);
+
+    const markDirty = () => {
+      card.classList.add('dirty'); m.className = 'm dirty'; m.textContent = 'تعديلات غير محفوظة';
+    };
+    ta.addEventListener('input', markDirty);
+    sel.addEventListener('change', markDirty);
+    cb.addEventListener('change', markDirty);
+
+    save.addEventListener('click', async () => {
+      const answer = ta.value.trim();
+      if (cb.checked && !answer) { m.className = 'm err'; m.textContent = 'لا يمكن نشر سؤال بدون إجابة'; return; }
+      save.disabled = true; save.innerHTML = 'جارٍ الحفظ <span class="spin"></span>';
+      try {
+        const data = await post({
+          action: 'adminSave', token: getTok(), code: it.code,
+          answer: answer, category: sel.value, publish: cb.checked
+        });
+        if (data.auth) return sessionExpired();
+        if (!data.ok) throw new Error(data.error || 'تعذر الحفظ');
+        it.answer = answer; it.category = sel.value; it.publish = cb.checked;
+        it.status = data.status; it.answeredAt = data.answeredAt || '';
+        ta.value = answer;
+        card.classList.remove('dirty'); setCls(); setPill(); updStats();
+        m.className = 'm ok'; m.textContent = '✓ تم الحفظ' + (it.answeredAt ? ' · آخر رد: ' + it.answeredAt : '');
+        pubData = null; // لتحديث الأسئلة الشائعة عند فتحها
+      } catch (e) {
+        m.className = 'm err'; m.textContent = e.message || 'تعذر الحفظ';
+      } finally {
+        save.disabled = false; save.textContent = '💾 حفظ';
+      }
+    });
+
+    card.append(head, meta, qLbl, qb, aLbl, ta, row, foot);
+    return card;
   }
 </script>
 </body>
