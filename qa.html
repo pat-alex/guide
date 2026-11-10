@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الاستفسارات والأسئلة</title>
+<style>
+  :root {
+    --main:#154360; --main2:#2471a3; --accent:#f39c12;
+    --bg:#eef3f8; --card:#ffffff; --text:#1c2833; --muted:#6b7a89;
+    --ok:#1e8449; --okbg:#eafaf1; --warn:#9a6700; --warnbg:#fff8e1; --err:#c0392b; --errbg:#fdecea;
+    --line:#d5dfe9; --radius:14px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", Tahoma, Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
+
+  /* الهيدر */
+  header {
+    background:linear-gradient(135deg, var(--main) 0%, var(--main2) 100%);
+    color:#fff; text-align:center; padding:30px 16px 62px;
+  }
+  header .logo { width:62px; height:62px; margin:0 auto 10px; background:rgba(255,255,255,.15); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:30px; }
+  header h1 { margin:0; font-size:1.45rem; }
+  header p { margin:6px 0 0; opacity:.85; font-size:.92rem; }
+
+  .wrap { max-width:720px; margin:-38px auto 30px; padding:0 14px; }
+
+  /* التبويبات */
+  .tabs { display:flex; gap:6px; background:var(--card); padding:6px; border-radius:var(--radius); box-shadow:0 4px 14px rgba(21,67,96,.12); margin-bottom:16px; }
+  .tabs button { flex:1; padding:11px 4px; border:0; background:transparent; color:var(--muted); font-size:.92rem; font-weight:bold; border-radius:10px; cursor:pointer; font-family:inherit; transition:.2s; }
+  .tabs button.active { background:linear-gradient(135deg, var(--main), var(--main2)); color:#fff; box-shadow:0 3px 8px rgba(36,113,163,.35); }
+
+  .card { background:var(--card); border-radius:var(--radius); padding:22px; box-shadow:0 4px 14px rgba(21,67,96,.08); animation:fade .3s ease; }
+  @keyframes fade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  .card h2 { margin:0 0 4px; font-size:1.15rem; color:var(--main); }
+  .card .sub { margin:0 0 8px; color:var(--muted); font-size:.9rem; }
+
+  label { display:block; margin:14px 0 6px; font-weight:bold; font-size:.9rem; color:var(--main); }
+  input, textarea, select {
+    width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px;
+    font-size:1rem; font-family:inherit; background:#fbfcfd; transition:.2s; color:var(--text);
+  }
+  input:focus, textarea:focus, select:focus { outline:none; border-color:var(--main2); background:#fff; box-shadow:0 0 0 4px rgba(36,113,163,.12); }
+  textarea { min-height:140px; resize:vertical; }
+  .counter { text-align:left; color:var(--muted); font-size:.78rem; margin-top:3px; }
+
+  .btn {
+    margin-top:18px; width:100%; padding:14px; border:0; border-radius:10px;
+    background:linear-gradient(135deg, var(--main), var(--main2)); color:#fff;
+    font-size:1.02rem; font-weight:bold; cursor:pointer; font-family:inherit; transition:.2s;
+    box-shadow:0 4px 12px rgba(36,113,163,.3);
+  }
+  .btn:hover { transform:translateY(-1px); }
+  .btn:disabled { opacity:.6; cursor:wait; transform:none; }
+  .btn.sec { background:#fff; color:var(--main); border:1.5px solid var(--line); box-shadow:none; margin-top:10px; }
+
+  .hidden { display:none !important; }
+
+  /* التنبيهات */
+  .msg { margin-top:14px; padding:12px 14px; border-radius:10px; font-size:.93rem; }
+  .msg.err { background:var(--errbg); color:var(--err); }
+  .msg.wait { background:var(--warnbg); color:var(--warn); }
+  .msg.ok { background:var(--okbg); color:var(--ok); }
+  .note { display:flex; gap:10px; align-items:flex-start; background:#eaf2f8; border-right:4px solid var(--main2); padding:11px 13px; border-radius:10px; margin-top:16px; font-size:.9rem; color:var(--main); }
+  .note .ic { font-size:1.2rem; line-height:1.3; }
+
+  /* شاشة الكود */
+  .success-ic { width:64px; height:64px; margin:0 auto 10px; border-radius:50%; background:var(--okbg); color:var(--ok); display:flex; align-items:center; justify-content:center; font-size:32px; }
+  .center { text-align:center; }
+  .code-box { margin:14px 0; padding:18px 12px; background:linear-gradient(135deg,#eaf2f8,#f6fbff); border:2px dashed var(--main2); border-radius:14px; text-align:center; }
+  .code-box small { color:var(--muted); display:block; margin-bottom:4px; }
+  .code-box .code { font-size:2.3rem; font-weight:bold; letter-spacing:4px; color:var(--main); direction:ltr; font-family:Consolas, monospace; }
+  .keep-alert { background:var(--warnbg); border:1.5px solid #f5cd79; color:var(--warn); border-radius:12px; padding:14px; margin-top:14px; font-size:.95rem; }
+  .keep-alert b { display:block; margin-bottom:6px; font-size:1rem; }
+  .keep-alert ul { margin:6px 0 0; padding-right:20px; }
+
+  /* الإجابة */
+  .q-block, .a-block { white-space:pre-wrap; line-height:1.9; padding:14px; border-radius:10px; margin-top:6px; }
+  .q-block { background:#f3f6f9; border-right:4px solid #aab7c4; }
+  .a-block { background:var(--okbg); border-right:4px solid var(--ok); }
+  .cat-tag { display:inline-block; background:#d6eaf8; color:var(--main); border-radius:20px; padding:3px 13px; font-size:.78rem; font-weight:bold; margin-bottom:8px; }
+  .status-pill { display:inline-block; padding:3px 12px; border-radius:20px; font-size:.8rem; font-weight:bold; }
+  .status-pill.done { background:var(--okbg); color:var(--ok); }
+  .status-pill.pending { background:var(--warnbg); color:var(--warn); }
+
+  /* الأسئلة الشائعة */
+  details { background:var(--card); border-radius:12px; margin-bottom:10px; box-shadow:0 2px 8px rgba(21,67,96,.07); overflow:hidden; }
+  summary { padding:14px 16px; cursor:pointer; font-weight:bold; list-style:none; display:flex; justify-content:space-between; gap:10px; align-items:center; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"＋"; color:var(--main2); font-size:1.2rem; flex-shrink:0; }
+  details[open] summary::after { content:"－"; }
+  details[open] summary { background:#f3f8fc; }
+  details .inner { padding:14px 16px 16px; }
+  .count { color:var(--muted); font-size:.85rem; margin:0 4px 10px; }
+
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1c2833; color:#fff; padding:11px 22px; border-radius:30px; font-size:.92rem; opacity:0; pointer-events:none; transition:.3s; z-index:99; }
+  .toast.show { opacity:1; }
+  .spin { display:inline-block; width:15px; height:15px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite; vertical-align:middle; margin-left:6px; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+  footer { text-align:center; color:var(--muted); font-size:.8rem; padding-bottom:20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">💬</div>
+  <h1>الاستفسارات والأسئلة</h1>
+  <p>اكتب سؤالك وسيتم الرد عليك في أقرب وقت</p>
+</header>
+
+<div class="wrap">
+
+  <div class="tabs">
+    <button id="t-ask" class="active" onclick="showTab('ask')">✍️ إرسال سؤال</button>
+    <button id="t-view" onclick="showTab('view')">🔍 عرض إجابتي</button>
+    <button id="t-pub" onclick="showTab('pub')">📚 الأسئلة الشائعة</button>
+  </div>
+
+  <!-- إرسال سؤال -->
+  <div id="p-ask" class="card">
+    <div id="askForm">
+      <h2>إرسال سؤال جديد</h2>
+      <p class="sub">املأ البيانات التالية ثم اكتب سؤالك بوضوح.</p>
+
+      <label for="name">الاسم</label>
+      <input id="name" maxlength="100" autocomplete="name" placeholder="اكتب اسمك">
+
+      <label for="phone">رقم الموبايل <span style="font-weight:normal;color:var(--muted)">(اختياري)</span></label>
+      <input id="phone" type="tel" maxlength="20" inputmode="tel" placeholder="01XXXXXXXXX">
+
+      <label for="question">سؤالك</label>
+      <textarea id="question" maxlength="2000" placeholder="اكتب سؤالك هنا..." oninput="updCount()"></textarea>
+      <div class="counter"><span id="cnt">0</span> / 2000</div>
+
+      <div class="note">
+        <span class="ic">🔑</span>
+        <span>بعد إرسال السؤال سيظهر لك <b>كود خاص بسؤالك</b>. احتفظ به جيدًا، فهو الطريقة الوحيدة للرجوع لإجابتك لاحقًا.</span>
+      </div>
+
+      <button class="btn" id="sendBtn" onclick="sendQuestion()">إرسال السؤال</button>
+      <div id="askMsg"></div>
+    </div>
+
+    <div id="askDone" class="hidden">
+      <div class="center">
+        <div class="success-ic">✓</div>
+        <h2>تم استلام سؤالك بنجاح</h2>
+        <p class="sub">من فضلك انتظر الرد على سؤالك، وسيظهر لك في تبويب "عرض إجابتي".</p>
+      </div>
+
+      <div class="code-box">
+        <small>كود سؤالك</small>
+        <div class="code" id="myCode"></div>
+      </div>
+
+      <div class="keep-alert">
+        <b>⚠️ مهم جدًا: احتفظ بهذا الكود</b>
+        ستحتاجه للرجوع لإجابة سؤالك لاحقًا. يُفضّل أن:
+        <ul>
+          <li>تنسخه وتحفظه في ملاحظات هاتفك أو رسالة لنفسك.</li>
+          <li>أو تلتقط له صورة شاشة (Screenshot).</li>
+        </ul>
+      </div>
+
+      <button class="btn" onclick="copyCode()">📋 نسخ الكود</button>
+      <button class="btn sec" onclick="goView()">🔍 الذهاب لعرض الإجابة</button>
+      <button class="btn sec" onclick="newQuestion()">✍️ إرسال سؤال آخر</button>
+    </div>
+  </div>
+
+  <!-- عرض الإجابة -->
+  <div id="p-view" class="card hidden">
+    <h2>عرض إجابة سؤالك</h2>
+    <p class="sub">أدخل الكود الذي ظهر لك بعد إرسال السؤال.</p>
+    <label for="lookupCode">كود السؤال</label>
+    <input id="lookupCode" placeholder="Q-XXXXX" style="direction:ltr;text-align:center;font-size:1.3rem;letter-spacing:3px;text-transform:uppercase;font-family:Consolas,monospace" maxlength="7" onkeydown="if(event.key==='Enter')lookup()">
+    <button class="btn" id="lookupBtn" onclick="lookup()">عرض الإجابة</button>
+    <div id="viewResult"></div>
+  </div>
+
+  <!-- الأسئلة الشائعة -->
+  <div id="p-pub" class="hidden">
+    <div class="card" style="margin-bottom:14px">
+      <h2>الأسئلة الشائعة</h2>
+      <p class="sub">إجابات الأسئلة المتكررة مصنفة حسب الموضوع.</p>
+      <label for="catSelect">اختر التصنيف</label>
+      <select id="catSelect" onchange="renderPublic()"></select>
+    </div>
+    <div id="pubList"></div>
+  </div>
+</div>
+
+<footer>نظام الاستفسارات</footer>
+<div id="toast" class="toast"></div>
+
+<script>
+  // ضع هنا رابط الـ Web App (ينتهي بـ /exec)
+  const API_URL = 'PUT_YOUR_WEB_APP_URL_HERE';
+  const LS_KEY = 'my_question_codes';
+  let pubData = null;
+
+  const $ = id => document.getElementById(id);
+
+  function toast(t) {
+    const el = $('toast'); el.textContent = t; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function msg(el, text, cls) {
+    el.innerHTML = '';
+    if (!text) return;
+    const d = document.createElement('div');
+    d.className = 'msg ' + cls; d.textContent = text; el.appendChild(d);
+  }
+
+  function updCount() { $('cnt').textContent = $('question').value.length; }
+
+  function showTab(t) {
+    ['ask','view','pub'].forEach(k => {
+      $('p-' + k).classList.toggle('hidden', k !== t);
+      $('t-' + k).classList.toggle('active', k === t);
+    });
+    if (t === 'pub' && !pubData) loadPublic();
+    if (t === 'view') {
+      const last = lastCode();
+      if (last && !$('lookupCode').value) $('lookupCode').value = last;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function lastCode() {
+    try { const a = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); return a[a.length - 1] || ''; }
+    catch (e) { return ''; }
+  }
+  function saveCode(c) {
+    try {
+      const a = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); a.push(c);
+      localStorage.setItem(LS_KEY, JSON.stringify(a.slice(-20)));
+    } catch (e) {}
+  }
+
+  async function sendQuestion() {
+    const name = $('name').value.trim(), phone = $('phone').value.trim(), question = $('question').value.trim();
+    if (!name || !question) return msg($('askMsg'), 'من فضلك اكتب الاسم والسؤال', 'err');
+    const btn = $('sendBtn');
+    btn.disabled = true; btn.innerHTML = 'جارٍ الإرسال <span class="spin"></span>';
+    msg($('askMsg'), '');
+    try {
+      // text/plain لتجنب مشاكل CORS مع Apps Script
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'submit', name, phone, question })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'تعذر الإرسال');
+      saveCode(data.code);
+      $('myCode').textContent = data.code;
+      $('askForm').classList.add('hidden'); $('askDone').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {
+      msg($('askMsg'), e.message || 'تعذر الإرسال، حاول مرة أخرى', 'err');
+    } finally {
+      btn.disabled = false; btn.textContent = 'إرسال السؤال';
+    }
+  }
+
+  function copyCode() {
+    const c = $('myCode').textContent;
+    const done = () => toast('تم نسخ الكود ✓ ' + c);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(c).then(done, () => toast('انسخ الكود يدويًا: ' + c));
+    } else { toast('انسخ الكود يدويًا: ' + c); }
+  }
+  function goView() { $('lookupCode').value = $('myCode').textContent; showTab('view'); lookup(); }
+  function newQuestion() {
+    $('question').value = ''; updCount();
+    $('askDone').classList.add('hidden'); $('askForm').classList.remove('hidden');
+  }
+
+  async function lookup() {
+    const code = $('lookupCode').value.trim().toUpperCase();
+    const out = $('viewResult');
+    if (!/^Q-[A-Z0-9]{5}$/.test(code)) return msg(out, 'الكود غير صحيح (مثال: Q-7K3MX)', 'err');
+    const btn = $('lookupBtn');
+    btn.disabled = true; msg(out, 'جارٍ البحث...', 'wait');
+    try {
+      const res = await fetch(API_URL + '?action=lookup&code=' + encodeURIComponent(code));
+      const data = await res.json();
+      if (!data.ok) return msg(out, data.error || 'لم يتم العثور على السؤال', 'err');
+      out.innerHTML = '';
+
+      const pill = document.createElement('div'); pill.style.marginTop = '16px';
+      const sp = document.createElement('span');
+      sp.className = 'status-pill ' + (data.answered ? 'done' : 'pending');
+      sp.textContent = data.answered ? 'تم الرد' : 'قيد الانتظار';
+      pill.appendChild(sp); out.appendChild(pill);
+
+      const addBlock = (title, text, cls) => {
+        const h = document.createElement('label'); h.textContent = title;
+        const b = document.createElement('div'); b.className = cls; b.textContent = text;
+        out.append(h, b);
+      };
+      addBlock('سؤالك', data.question, 'q-block');
+
+      if (data.answered) {
+        if (data.category) {
+          const t = document.createElement('div'); t.style.marginTop = '14px';
+          const tag = document.createElement('span'); tag.className = 'cat-tag'; tag.textContent = data.category;
+          t.appendChild(tag); out.appendChild(t);
+        }
+        addBlock('الإجابة', data.answer, 'a-block');
+      } else {
+        const w = document.createElement('div'); out.appendChild(w);
+        msg(w, 'لم يتم الرد على سؤالك بعد. من فضلك عاود المحاولة لاحقًا بنفس الكود.', 'wait');
+      }
+    } catch (e) {
+      msg(out, 'تعذر الاتصال، حاول مرة أخرى', 'err');
+    } finally { btn.disabled = false; }
+  }
+
+  async function loadPublic() {
+    $('pubList').innerHTML = '<div class="msg wait">جارٍ التحميل...</div>';
+    try {
+      const res = await fetch(API_URL + '?action=public');
+      pubData = await res.json();
+      if (!pubData.ok) throw new Error();
+      const sel = $('catSelect'); sel.innerHTML = '';
+      sel.add(new Option('كل التصنيفات', ''));
+      const used = new Set(pubData.items.map(i => i.category));
+      pubData.categories.filter(c => used.has(c)).forEach(c => sel.add(new Option(c, c)));
+      if (used.has('أخرى')) sel.add(new Option('أخرى', 'أخرى'));
+      renderPublic();
+    } catch (e) {
+      pubData = null; msg($('pubList'), 'تعذر تحميل الأسئلة', 'err');
+    }
+  }
+
+  function renderPublic() {
+    const cat = $('catSelect').value, list = $('pubList'); list.innerHTML = '';
+    const items = pubData.items.filter(i => !cat || i.category === cat);
+    if (!items.length) return msg(list, 'لا توجد أسئلة منشورة في هذا التصنيف حاليًا', 'wait');
+    const c = document.createElement('div'); c.className = 'count'; c.textContent = items.length + ' سؤال';
+    list.appendChild(c);
+    items.forEach(i => {
+      const d = document.createElement('details');
+      const s = document.createElement('summary');
+      const st = document.createElement('span'); st.textContent = i.question; s.appendChild(st);
+      const inner = document.createElement('div'); inner.className = 'inner';
+      const tag = document.createElement('span'); tag.className = 'cat-tag'; tag.textContent = i.category;
+      const a = document.createElement('div'); a.className = 'a-block'; a.textContent = i.answer;
+      inner.append(tag, a); d.append(s, inner); list.appendChild(d);
+    });
+  }
+</script>
+</body>
+</html>
