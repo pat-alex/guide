@@ -45,7 +45,7 @@
       font-weight: 600;
       color: #555;
     }
-    input[type="text"], input[type="tel"], input[type="date"] {
+    input[type="text"], input[type="tel"], input[type="date"], select {
       width: 100%;
       padding: 12px;
       border: 1px solid #ced4da;
@@ -54,7 +54,8 @@
       font-family: inherit;
       transition: border-color 0.3s;
     }
-    input:focus {
+    select { background-color: #fff; color: #333; cursor: pointer; }
+    input:focus, select:focus {
       border-color: #007bff;
       outline: none;
       box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
@@ -208,6 +209,13 @@
         <input type="text" id="userName" name="userName" maxlength="100" required placeholder="مثال: محمد أحمد علي" autocomplete="name">
       </div>
 
+      <div class="form-group" id="examGroup" style="display:none;">
+        <label for="examType">نوع الاختبار:</label>
+        <select id="examType" name="examType" required>
+          <option value="">اختر نوع الاختبار</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label for="userMobile">رقم الموبايل:</label>
         <input type="tel" id="userMobile" class="num" name="userMobile" inputmode="numeric" maxlength="13" required placeholder="01012345678" autocomplete="tel">
@@ -249,6 +257,8 @@
     const slotsLoader = el('slotsLoader');
     const userName = el('userName');
     const userMobile = el('userMobile');
+    const examGroup = el('examGroup');
+    const examType = el('examType');
     const submitButton = el('submitButton');
     const submitText = el('submitText');
     const submitLoader = el('submitLoader');
@@ -332,6 +342,36 @@
       return res.json();
     }
 
+    // ---------- قائمة أنواع الاختبارات (تأتي من شيت الإعدادات) ----------
+    function populateExams(list) {
+      list = Array.isArray(list) ? list : [];
+      const prev = examType.value;
+      examType.innerHTML = '';
+      const ph = document.createElement('option');
+      ph.value = '';
+      ph.textContent = 'اختر نوع الاختبار';
+      examType.appendChild(ph);
+      list.forEach(n => {
+        const o = document.createElement('option');
+        o.value = n;
+        o.textContent = n;
+        examType.appendChild(o);
+      });
+      if (prev && list.indexOf(prev) !== -1) examType.value = prev;
+      examGroup.style.display = list.length ? 'block' : 'none';
+    }
+
+    // يُستدعى لو الخادم أبلغ أن نوع الاختبار المختار لم يعد في القائمة
+    async function refreshExams() {
+      try {
+        const cfg = await apiGet({ action: 'config' });
+        if (cfg.success && cfg.open && CONFIG) {
+          CONFIG.exams = cfg.exams || [];
+          populateExams(CONFIG.exams);
+        }
+      } catch (err) { /* تجاهل: يمكن للمستخدم تحديث الصفحة */ }
+    }
+
     // ---------- بدء الصفحة: قراءة الإعدادات والفترة ----------
     async function init() {
       if (!/^https:\/\//.test(API_URL)) {
@@ -360,6 +400,7 @@
         }
 
         bookingForm.style.display = 'block';
+        populateExams(cfg.exams);
         dateInput.min = cfg.minDate;
         if (cfg.maxDate) dateInput.max = cfg.maxDate;
         daysHint.textContent = cfg.daysLabel ? ('الأيام المتاحة للحجز: ' + cfg.daysLabel) : '';
@@ -372,6 +413,7 @@
           setSlotsPlaceholder('لا توجد أيام متاحة للحجز حالياً.');
         }
       } catch (err) {
+        console.error('init error:', err);
         pageLoader.style.display = 'none';
         closedBox.textContent = 'تعذر تحميل بيانات الحجز. حدّث الصفحة وحاول مرة أخرى.';
         closedBox.style.display = 'block';
@@ -472,12 +514,16 @@
       if (!/^[\u0621-\u064Aa-zA-Z][\u0621-\u064Aa-zA-Z\s.'\-]*$/.test(name) || name.split(' ').length < 2) {
         showMessage('اكتب الاسم بالكامل (اسمان على الأقل) بالحروف.'); userName.focus(); return;
       }
+      const exam = examType.value;
+      if (CONFIG && CONFIG.exams && CONFIG.exams.length && !exam) {
+        showMessage('الرجاء اختيار نوع الاختبار.'); examType.focus(); return;
+      }
       if (!/^01[0125]\d{8}$/.test(mobile)) {
         showMessage('رقم الموبايل يجب أن يكون 11 رقماً ويبدأ بـ 01.'); userMobile.focus(); return;
       }
 
       userMobile.value = mobile;
-      send({ action: 'book', name: name, mobile: mobile, date: date, time: selectedSlot });
+      send({ action: 'book', name: name, exam: exam, mobile: mobile, date: date, time: selectedSlot });
     });
 
     async function send(payload) {
@@ -506,6 +552,7 @@
         showResult(res);
         userName.value = '';
         userMobile.value = '';
+        examType.value = '';
         if (dateInput.value) fetchSlots(dateInput.value);
         resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
@@ -521,22 +568,25 @@
       decisionBox.style.display = 'none';
       showMessage(res.error || 'تعذر إتمام الحجز.');
       if (res.refresh && dateInput.value) fetchSlots(dateInput.value);
+      if (res.reloadConfig) refreshExams();
     }
 
     function showResult(res) {
       resultArea.innerHTML = '';
       const card = mk('div', 'result-card');
 
-      const titles = { new: 'تم تأكيد حجزك', update: 'تم تغيير موعدك', same: 'حجزك كما هو' };
+      const titles = { new: 'تم تأكيد حجزك', update: 'تم تغيير موعدك', same: 'حجزك كما هو', exam: 'تم تغيير نوع الاختبار' };
       card.appendChild(mk('h2', '', titles[res.mode] || 'تم الحجز'));
 
       const rows = [
         ['الاسم:', res.name],
+        ['نوع الاختبار:', res.exam],
         ['اليوم:', res.dateLabel],
         ['الموعد:', res.label],
         ['رقم الحجز:', res.bookingId]
       ];
       rows.forEach(r => {
+        if (r[0] === 'نوع الاختبار:' && !r[1]) return;   // لا يظهر لو القائمة غير مفعّلة
         const row = mk('div', 'row');
         row.appendChild(mk('b', '', r[0]));
         row.appendChild(mk('span', '', r[1] || ''));
@@ -546,8 +596,15 @@
       if (res.mode === 'update' && res.previous) {
         card.appendChild(mk('div', 'prev', 'موعدك السابق (أُلغي): ' + res.previous.dateLabel + ' - ' + res.previous.label));
       }
-      if (res.mode === 'same') {
+      if (res.mode === 'update' && res.previous && res.previous.exam && res.exam &&
+          res.previous.exam !== res.exam) {
+        card.appendChild(mk('div', 'prev', 'نوع الاختبار السابق: ' + res.previous.exam));
+      }
+      if (res.mode === 'same' || res.mode === 'exam') {
         card.appendChild(mk('div', 'prev', res.message || ''));
+      }
+      if (res.mode === 'exam' && res.previousExam) {
+        card.appendChild(mk('div', 'prev', 'نوع الاختبار السابق: ' + res.previousExam));
       }
       card.appendChild(mk('div', 'note', 'احتفظ برقم الحجز. ولتغيير موعدك لاحقاً احجز مرة أخرى بنفس رقم الموبايل.'));
       resultArea.appendChild(card);
