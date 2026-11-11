@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>احجز ساعة حضورك لاختبار الأكاديمية</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      margin: 0;
+      padding: 20px 14px;
+      color: #333;
+      overflow-x: hidden;
+    }
+    .container {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #007bff;
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+      line-height: 1.5;
+    }
+    .period {
+      text-align: center;
+      color: #555;
+      font-weight: 600;
+      margin: 0 0 22px;
+      min-height: 1.4em;
+    }
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="text"], input[type="tel"], input[type="date"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+    }
+    input.num { direction: ltr; text-align: right; }
+    .hint { display: block; margin-top: 6px; font-size: 0.88rem; color: #6c757d; line-height: 1.6; }
+
+    .slots-container {
+      border: 1px solid #eee;
+      padding: 12px;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+      min-height: 56px;
+    }
+    .slots-placeholder { margin: 6px 0; color: #6c757d; text-align: center; line-height: 1.7; }
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 10px 6px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .slot:hover:not(:disabled):not(.selected) { background-color: #e9ecef; }
+    .slot .t { font-weight: 700; }
+    .slot .i { font-size: 0.82rem; color: #6c757d; }
+    .slot.selected { background-color: #007bff; border-color: #007bff; color: #fff; }
+    .slot.selected .i { color: #e7f1ff; }
+    .slot:disabled { background-color: #f1f3f5; color: #adb5bd; cursor: not-allowed; }
+    .slot:disabled .i { color: #adb5bd; }
+
+    .button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-family: inherit;
+      width: 100%;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .button:hover:not(:disabled) { background-color: #0056b3; }
+    .button:disabled { background-color: #cccccc; cursor: not-allowed; }
+    .button.secondary { background-color: #6c757d; }
+    .button.secondary:hover:not(:disabled) { background-color: #565e64; }
+
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #007bff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+      display: none;
+      flex-shrink: 0;
+    }
+    .button .loader { border-color: rgba(255,255,255,.4); border-top-color: #fff; }
+    .center-loader { margin: 10px auto; }
+
+    .message-area {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 500;
+      line-height: 1.7;
+    }
+    .message-area.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .message-area.error   { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .message-area.info    { background-color: #e7f1ff; color: #084298; border: 1px solid #b6d4fe; }
+
+    .result-card {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      line-height: 1.9;
+    }
+    .result-card h2 { margin: 0 0 8px; font-size: 1.15rem; }
+    .result-card .row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .result-card .row b { color: #0f3d1c; }
+    .result-card .prev { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #9fd3ac; font-size: 0.95rem; }
+    .result-card .note { margin-top: 8px; font-size: 0.88rem; color: #3b6b47; }
+
+    .decision {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      background-color: #fff3cd;
+      border: 1px solid #ffe69c;
+      color: #664d03;
+      line-height: 1.8;
+    }
+    .decision p { margin: 0 0 12px; font-weight: 600; }
+    .decision .actions { display: flex; flex-direction: column; gap: 8px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 480px) {
+      .container { padding: 18px 14px; }
+      h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="pageTitle">احجز ساعة حضورك لاختبار الأكاديمية</h1>
+    <p id="periodText" class="period"></p>
+
+    <div id="pageLoader" class="loader center-loader" style="display:block;"></div>
+    <div id="closedBox" class="message-area error" style="display:none;"></div>
+
+    <form id="bookingForm" novalidate style="display:none;">
+      <div class="form-group">
+        <label for="testDate">اختر تاريخ الحضور:</label>
+        <input type="date" id="testDate" name="testDate" required>
+        <small class="hint" id="daysHint"></small>
+      </div>
+
+      <div class="form-group">
+        <label>المواعيد المتاحة:</label>
+        <div id="slotsContainer" class="slots-container">
+          <p class="slots-placeholder" id="slotsPlaceholder">الرجاء اختيار تاريخ لعرض المواعيد المتاحة.</p>
+        </div>
+        <div id="slotsLoader" class="loader center-loader"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="userName">الاسم بالكامل:</label>
+        <input type="text" id="userName" name="userName" maxlength="100" required placeholder="مثال: محمد أحمد علي" autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label for="userMobile">رقم الموبايل:</label>
+        <input type="tel" id="userMobile" class="num" name="userMobile" inputmode="numeric" maxlength="13" required placeholder="01012345678" autocomplete="tel">
+        <small class="hint">11 رقماً يبدأ بـ 01. وإذا حجزت من قبل، فاحجز مرة أخرى بنفس الرقم لتغيير موعدك دون حجز جديد.</small>
+      </div>
+
+      <button type="submit" id="submitButton" class="button">
+        <span id="submitText">تأكيد الحجز</span>
+        <span id="submitLoader" class="loader"></span>
+      </button>
+    </form>
+
+    <div id="decisionBox" class="decision" style="display:none;">
+      <p id="decisionText"></p>
+      <div class="actions">
+        <button type="button" id="decisionUpdate" class="button">أنا نفس الشخص، غيّر موعدي</button>
+        <button type="button" id="decisionNew" class="button secondary">أنا شخص آخر أستخدم نفس الرقم، احجز لي موعداً جديداً</button>
+        <button type="button" id="decisionCancel" class="button secondary">إلغاء</button>
+      </div>
+    </div>
+
+    <div id="resultArea"></div>
+    <div id="messageArea" class="message-area" style="display:none;"></div>
+  </div>
+
+  <script>
+    // ضع هنا رابط النشر (Web App) الخاص بسكريبت الحجز، وينتهي بـ /exec
+    const API_URL = 'ضع_هنا_رابط_النشر_الجديد';
+
+    const el = id => document.getElementById(id);
+    const pageTitle = el('pageTitle');
+    const periodText = el('periodText');
+    const pageLoader = el('pageLoader');
+    const closedBox = el('closedBox');
+    const bookingForm = el('bookingForm');
+    const dateInput = el('testDate');
+    const daysHint = el('daysHint');
+    const slotsContainer = el('slotsContainer');
+    const slotsLoader = el('slotsLoader');
+    const userName = el('userName');
+    const userMobile = el('userMobile');
+    const submitButton = el('submitButton');
+    const submitText = el('submitText');
+    const submitLoader = el('submitLoader');
+    const decisionBox = el('decisionBox');
+    const decisionText = el('decisionText');
+    const resultArea = el('resultArea');
+    const messageArea = el('messageArea');
+
+    let CONFIG = null;
+    let selectedSlot = '';
+    let slotsRequestId = 0;
+    let pendingPayload = null;
+
+    // ---------- أدوات ----------
+    function toEnDigits(s) {
+      return String(s == null ? '' : s)
+        .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+        .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    }
+
+    function normalizeMobile(s) {
+      let d = toEnDigits(s).replace(/\D/g, '');
+      if (d.indexOf('0020') === 0 && d.length === 14) d = '0' + d.slice(4);
+      else if (d.indexOf('20') === 0 && d.length === 12) d = '0' + d.slice(2);
+      else if (d.length === 10 && d.charAt(0) === '1') d = '0' + d;
+      return d;
+    }
+
+    function weekdayOf(ds) {
+      const p = ds.split('-').map(Number);
+      return new Date(Date.UTC(p[0], p[1] - 1, p[2])).getUTCDay();
+    }
+
+    function addDays(ds, n) {
+      const p = ds.split('-').map(Number);
+      const d = new Date(Date.UTC(p[0], p[1] - 1, p[2] + n));
+      return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') + '-' + String(d.getUTCDate()).padStart(2, '0');
+    }
+
+    function mk(tag, className, text) {
+      const n = document.createElement(tag);
+      if (className) n.className = className;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    }
+
+    function showMessage(text, type) {
+      messageArea.textContent = text;
+      messageArea.className = 'message-area ' + (type || 'error');
+      messageArea.style.display = 'block';
+    }
+
+    function clearMessages() {
+      messageArea.style.display = 'none';
+      messageArea.textContent = '';
+      resultArea.innerHTML = '';
+      decisionBox.style.display = 'none';
+    }
+
+    function setSlotsPlaceholder(text) {
+      slotsContainer.innerHTML = '';
+      const p = mk('p', 'slots-placeholder', text);
+      slotsContainer.appendChild(p);
+    }
+
+    async function apiGet(params) {
+      const qs = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
+      const res = await fetch(API_URL + '?' + qs);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    async function apiPost(body) {
+      // text/plain يتجنب طلب التحقق المسبق (preflight) مع Apps Script
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    // ---------- بدء الصفحة: قراءة الإعدادات والفترة ----------
+    async function init() {
+      if (!/^https:\/\//.test(API_URL)) {
+        pageLoader.style.display = 'none';
+        closedBox.textContent = 'الصفحة غير مربوطة بالخادم بعد. تواصل مع إدارة الأكاديمية.';
+        closedBox.style.display = 'block';
+        return;
+      }
+
+      try {
+        const cfg = await apiGet({ action: 'config' });
+        pageLoader.style.display = 'none';
+        if (!cfg.success) throw new Error(cfg.error || 'config');
+        CONFIG = cfg;
+
+        if (cfg.title) {
+          pageTitle.textContent = cfg.title;
+          document.title = cfg.title;
+        }
+        periodText.textContent = cfg.periodText || '';
+
+        if (!cfg.open) {
+          closedBox.textContent = cfg.message || 'الحجز مغلق حالياً.';
+          closedBox.style.display = 'block';
+          return;
+        }
+
+        bookingForm.style.display = 'block';
+        dateInput.min = cfg.minDate;
+        if (cfg.maxDate) dateInput.max = cfg.maxDate;
+        daysHint.textContent = cfg.daysLabel ? ('الأيام المتاحة للحجز: ' + cfg.daysLabel) : '';
+
+        const first = firstAllowedDate(cfg);
+        if (first) {
+          dateInput.value = first;
+          fetchSlots(first);
+        } else {
+          setSlotsPlaceholder('لا توجد أيام متاحة للحجز حالياً.');
+        }
+      } catch (err) {
+        pageLoader.style.display = 'none';
+        closedBox.textContent = 'تعذر تحميل بيانات الحجز. حدّث الصفحة وحاول مرة أخرى.';
+        closedBox.style.display = 'block';
+      }
+    }
+
+    function firstAllowedDate(cfg) {
+      for (let i = 0; i < 120; i++) {
+        const d = addDays(cfg.minDate, i);
+        if (cfg.maxDate && d > cfg.maxDate) return '';
+        if (cfg.weekdays.indexOf(weekdayOf(d)) !== -1) return d;
+      }
+      return '';
+    }
+
+    // ---------- المواعيد ----------
+    dateInput.addEventListener('change', function () {
+      clearMessages();
+      selectedSlot = '';
+      const d = this.value;
+      if (!d || !CONFIG) { setSlotsPlaceholder('الرجاء اختيار تاريخ لعرض المواعيد المتاحة.'); return; }
+
+      if (d < CONFIG.minDate || (CONFIG.maxDate && d > CONFIG.maxDate)) {
+        setSlotsPlaceholder('هذا التاريخ خارج فترة الحجز.' + (CONFIG.periodText ? ' فترة الحجز ' + CONFIG.periodText + '.' : ''));
+        return;
+      }
+      if (CONFIG.weekdays.indexOf(weekdayOf(d)) === -1) {
+        setSlotsPlaceholder('هذا اليوم غير متاح للحجز. الأيام المتاحة: ' + CONFIG.daysLabel + '.');
+        return;
+      }
+      fetchSlots(d);
+    });
+
+    async function fetchSlots(d) {
+      const myId = ++slotsRequestId;
+      selectedSlot = '';
+      slotsContainer.innerHTML = '';
+      slotsLoader.style.display = 'block';
+      try {
+        const data = await apiGet({ action: 'slots', date: d });
+        if (myId !== slotsRequestId) return; // وصل رد أقدم من آخر طلب
+        slotsLoader.style.display = 'none';
+        if (!data.success) { setSlotsPlaceholder(data.error || 'تعذر جلب المواعيد.'); return; }
+        renderSlots(data);
+      } catch (err) {
+        if (myId !== slotsRequestId) return;
+        slotsLoader.style.display = 'none';
+        setSlotsPlaceholder('تعذر جلب المواعيد. حدّث الصفحة وحاول مرة أخرى.');
+      }
+    }
+
+    function renderSlots(data) {
+      slotsContainer.innerHTML = '';
+      const slots = data.slots || [];
+      if (!slots.length) {
+        setSlotsPlaceholder(data.message || 'لا توجد مواعيد متاحة في هذا اليوم. اختر يوماً آخر.');
+        return;
+      }
+      const grid = mk('div', 'slots-grid');
+      slots.forEach(s => {
+        const btn = mk('button', 'slot');
+        btn.type = 'button';
+        btn.dataset.slot = s.slot;
+        btn.appendChild(mk('span', 't', s.label));
+        btn.appendChild(mk('span', 'i', s.available > 0 ? ('متاح: ' + s.available) : 'ممتلئ'));
+        if (s.available <= 0) {
+          btn.disabled = true;
+        } else {
+          btn.addEventListener('click', function () {
+            const cur = grid.querySelector('.slot.selected');
+            if (cur) cur.classList.remove('selected');
+            this.classList.add('selected');
+            selectedSlot = this.dataset.slot;
+          });
+        }
+        grid.appendChild(btn);
+      });
+      slotsContainer.appendChild(grid);
+    }
+
+    // ---------- الموبايل: تحويل الأرقام العربية وحذف أي حرف ----------
+    userMobile.addEventListener('input', function () {
+      const cleaned = toEnDigits(this.value).replace(/[^\d+]/g, '');
+      if (this.value !== cleaned) this.value = cleaned;
+    });
+
+    // ---------- الإرسال ----------
+    bookingForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearMessages();
+
+      const name = userName.value.replace(/\s+/g, ' ').trim();
+      const mobile = normalizeMobile(userMobile.value);
+      const date = dateInput.value;
+
+      if (!date) { showMessage('الرجاء اختيار تاريخ الحضور.'); dateInput.focus(); return; }
+      if (!selectedSlot) { showMessage('الرجاء اختيار الموعد من المواعيد المتاحة.'); return; }
+      if (!/^[\u0621-\u064Aa-zA-Z][\u0621-\u064Aa-zA-Z\s.'\-]*$/.test(name) || name.split(' ').length < 2) {
+        showMessage('اكتب الاسم بالكامل (اسمان على الأقل) بالحروف.'); userName.focus(); return;
+      }
+      if (!/^01[0125]\d{8}$/.test(mobile)) {
+        showMessage('رقم الموبايل يجب أن يكون 11 رقماً ويبدأ بـ 01.'); userMobile.focus(); return;
+      }
+
+      userMobile.value = mobile;
+      send({ action: 'book', name: name, mobile: mobile, date: date, time: selectedSlot });
+    });
+
+    async function send(payload) {
+      pendingPayload = payload;
+      setBusy(true);
+      try {
+        const res = await apiPost(payload);
+        handleResponse(res, payload);
+      } catch (err) {
+        showMessage('تعذر إرسال الحجز. تحقق من الاتصال بالإنترنت وحاول مرة أخرى.');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function setBusy(busy) {
+      submitButton.disabled = busy;
+      submitLoader.style.display = busy ? 'inline-block' : 'none';
+      submitText.textContent = busy ? 'جارٍ الإرسال...' : 'تأكيد الحجز';
+      ['decisionUpdate', 'decisionNew', 'decisionCancel'].forEach(id => { el(id).disabled = busy; });
+    }
+
+    function handleResponse(res, payload) {
+      if (res.success) {
+        decisionBox.style.display = 'none';
+        showResult(res);
+        userName.value = '';
+        userMobile.value = '';
+        if (dateInput.value) fetchSlots(dateInput.value);
+        resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      if (res.needsDecision) {
+        decisionText.textContent = res.message || 'هذا الرقم مسجَّل بحجز سابق. هل أنت نفس الشخص؟';
+        decisionBox.style.display = 'block';
+        decisionBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      decisionBox.style.display = 'none';
+      showMessage(res.error || 'تعذر إتمام الحجز.');
+      if (res.refresh && dateInput.value) fetchSlots(dateInput.value);
+    }
+
+    function showResult(res) {
+      resultArea.innerHTML = '';
+      const card = mk('div', 'result-card');
+
+      const titles = { new: 'تم تأكيد حجزك', update: 'تم تغيير موعدك', same: 'حجزك كما هو' };
+      card.appendChild(mk('h2', '', titles[res.mode] || 'تم الحجز'));
+
+      const rows = [
+        ['الاسم:', res.name],
+        ['اليوم:', res.dateLabel],
+        ['الموعد:', res.label],
+        ['رقم الحجز:', res.bookingId]
+      ];
+      rows.forEach(r => {
+        const row = mk('div', 'row');
+        row.appendChild(mk('b', '', r[0]));
+        row.appendChild(mk('span', '', r[1] || ''));
+        card.appendChild(row);
+      });
+
+      if (res.mode === 'update' && res.previous) {
+        card.appendChild(mk('div', 'prev', 'موعدك السابق (أُلغي): ' + res.previous.dateLabel + ' - ' + res.previous.label));
+      }
+      if (res.mode === 'same') {
+        card.appendChild(mk('div', 'prev', res.message || ''));
+      }
+      card.appendChild(mk('div', 'note', 'احتفظ برقم الحجز. ولتغيير موعدك لاحقاً احجز مرة أخرى بنفس رقم الموبايل.'));
+      resultArea.appendChild(card);
+    }
+
+    // ---------- قرار الرقم المشترك ----------
+    el('decisionUpdate').addEventListener('click', function () {
+      if (pendingPayload) send(Object.assign({}, pendingPayload, { decision: 'update' }));
+    });
+    el('decisionNew').addEventListener('click', function () {
+      if (pendingPayload) send(Object.assign({}, pendingPayload, { decision: 'new' }));
+    });
+    el('decisionCancel').addEventListener('click', function () {
+      decisionBox.style.display = 'none';
+      pendingPayload = null;
+    });
+
+    init();
+  </script>
+</body>
+</html>
