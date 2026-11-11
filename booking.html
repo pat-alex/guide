@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> الأكاديمية المهنية للمعلمين بالإسكندرية</title>
+  <title>احجز ساعة حضورك لاختبار الأكاديمية</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -161,18 +161,6 @@
     .result-card .prev { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #9fd3ac; font-size: 0.95rem; }
     .result-card .note { margin-top: 8px; font-size: 0.88rem; color: #3b6b47; }
 
-    .decision {
-      margin-top: 20px;
-      padding: 16px;
-      border-radius: 8px;
-      background-color: #fff3cd;
-      border: 1px solid #ffe69c;
-      color: #664d03;
-      line-height: 1.8;
-    }
-    .decision p { margin: 0 0 12px; font-weight: 600; }
-    .decision .actions { display: flex; flex-direction: column; gap: 8px; }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 480px) {
@@ -183,11 +171,10 @@
 </head>
 <body>
   <div class="container">
-    <h1 id="pageTitle"> الأكاديمية المهنية للمعلمين بالإسكندرية</h1>
-    <h1 id="pageTitle">احجز ساعة حضورك لأداء الاختبار </h1>
-        <h1 id="pageTitle">ـــــــــــــــــــــــــــ</h1>
-    <h1 id="pageTitle">يجب سداد الرسوم أولاً على الموقع الرسمي للأكاديمية</h1>
+        <h1 id="pageTitle">احجز ساعة حضورك لاختبار الأكاديمية بالإسكندرية</h1>
+        <h1 id="pageTitle">ــــــــــــــــــــــــــــــــ</h1>
 
+    <h1 id="pageTitle">يجب سداد الرسوم و تحديد يوم الاختبار أولاً على الموقع الرسمي للأكاديمية</h1>
     <p id="periodText" class="period"></p>
 
     <div id="pageLoader" class="loader center-loader" style="display:block;"></div>
@@ -232,22 +219,13 @@
       </button>
     </form>
 
-    <div id="decisionBox" class="decision" style="display:none;">
-      <p id="decisionText"></p>
-      <div class="actions">
-        <button type="button" id="decisionUpdate" class="button">أنا نفس الشخص، غيّر موعدي</button>
-        <button type="button" id="decisionNew" class="button secondary">أنا شخص آخر أستخدم نفس الرقم، احجز لي موعداً جديداً</button>
-        <button type="button" id="decisionCancel" class="button secondary">إلغاء</button>
-      </div>
-    </div>
-
     <div id="resultArea"></div>
     <div id="messageArea" class="message-area" style="display:none;"></div>
   </div>
 
   <script>
     // ضع هنا رابط النشر (Web App) الخاص بسكريبت الحجز، وينتهي بـ /exec
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwsYKG2UpaCYLCJ4PWRO8aoRVYzk4l8rZm0Fb7ISTDGEF4J2eCy2RAH38L-hRLUrmy_/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxkLJa9xvXSh9JB04c76lxJRv_5c0OWu6gxjUGrtW7gf0KoxLrvHfK778zAUoJKsyVo/exec';
 
     const el = id => document.getElementById(id);
     const pageTitle = el('pageTitle');
@@ -266,15 +244,12 @@
     const submitButton = el('submitButton');
     const submitText = el('submitText');
     const submitLoader = el('submitLoader');
-    const decisionBox = el('decisionBox');
-    const decisionText = el('decisionText');
     const resultArea = el('resultArea');
     const messageArea = el('messageArea');
 
     let CONFIG = null;
     let selectedSlot = '';
     let slotsRequestId = 0;
-    let pendingPayload = null;
 
     // ---------- أدوات ----------
     function toEnDigits(s) {
@@ -319,7 +294,6 @@
       messageArea.style.display = 'none';
       messageArea.textContent = '';
       resultArea.innerHTML = '';
-      decisionBox.style.display = 'none';
     }
 
     function setSlotsPlaceholder(text) {
@@ -531,7 +505,6 @@
     });
 
     async function send(payload) {
-      pendingPayload = payload;
       setBusy(true);
       try {
         const res = await apiPost(payload);
@@ -547,12 +520,10 @@
       submitButton.disabled = busy;
       submitLoader.style.display = busy ? 'inline-block' : 'none';
       submitText.textContent = busy ? 'جارٍ الإرسال...' : 'تأكيد الحجز';
-      ['decisionUpdate', 'decisionNew', 'decisionCancel'].forEach(id => { el(id).disabled = busy; });
     }
 
     function handleResponse(res, payload) {
       if (res.success) {
-        decisionBox.style.display = 'none';
         showResult(res);
         userName.value = '';
         userMobile.value = '';
@@ -562,14 +533,6 @@
         return;
       }
 
-      if (res.needsDecision) {
-        decisionText.textContent = res.message || 'هذا الرقم مسجَّل بحجز سابق. هل أنت نفس الشخص؟';
-        decisionBox.style.display = 'block';
-        decisionBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-
-      decisionBox.style.display = 'none';
       showMessage(res.error || 'تعذر إتمام الحجز.');
       if (res.refresh && dateInput.value) fetchSlots(dateInput.value);
       if (res.reloadConfig) refreshExams();
@@ -579,7 +542,7 @@
       resultArea.innerHTML = '';
       const card = mk('div', 'result-card');
 
-      const titles = { new: 'تم تأكيد حجزك', update: 'تم تغيير موعدك', same: 'حجزك كما هو', exam: 'تم تغيير نوع الاختبار' };
+      const titles = { new: 'تم تأكيد حجزك', update: 'تم تحديث موعد الحضور', same: 'تم تحديث موعد الحضور' };
       card.appendChild(mk('h2', '', titles[res.mode] || 'تم الحجز'));
 
       const rows = [
@@ -600,31 +563,9 @@
       if (res.mode === 'update' && res.previous) {
         card.appendChild(mk('div', 'prev', 'موعدك السابق (أُلغي): ' + res.previous.dateLabel + ' - ' + res.previous.label));
       }
-      if (res.mode === 'update' && res.previous && res.previous.exam && res.exam &&
-          res.previous.exam !== res.exam) {
-        card.appendChild(mk('div', 'prev', 'نوع الاختبار السابق: ' + res.previous.exam));
-      }
-      if (res.mode === 'same' || res.mode === 'exam') {
-        card.appendChild(mk('div', 'prev', res.message || ''));
-      }
-      if (res.mode === 'exam' && res.previousExam) {
-        card.appendChild(mk('div', 'prev', 'نوع الاختبار السابق: ' + res.previousExam));
-      }
       card.appendChild(mk('div', 'note', 'احتفظ برقم الحجز. ولتغيير موعدك لاحقاً احجز مرة أخرى بنفس رقم الموبايل.'));
       resultArea.appendChild(card);
     }
-
-    // ---------- قرار الرقم المشترك ----------
-    el('decisionUpdate').addEventListener('click', function () {
-      if (pendingPayload) send(Object.assign({}, pendingPayload, { decision: 'update' }));
-    });
-    el('decisionNew').addEventListener('click', function () {
-      if (pendingPayload) send(Object.assign({}, pendingPayload, { decision: 'new' }));
-    });
-    el('decisionCancel').addEventListener('click', function () {
-      decisionBox.style.display = 'none';
-      pendingPayload = null;
-    });
 
     init();
   </script>
