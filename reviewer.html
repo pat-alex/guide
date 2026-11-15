@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>منظومة مراجعة ملفات المعلم المساعد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #dbeafe;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+
+    /* ---------- شاشة الدخول ---------- */
+    .login-screen {
+      position: fixed; inset: 0; z-index: 3000; display: none;
+      align-items: center; justify-content: center; padding: 16px;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    }
+    .login-card {
+      background: #fff; width: 100%; max-width: 400px; border-radius: 18px;
+      padding: 28px 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    .login-card h2 { margin: 0 0 4px; font-size: 1.25rem; font-weight: 800; color: var(--primary); text-align: center; }
+    .login-card p.sub { margin: 0 0 18px; text-align: center; color: var(--muted); font-size: 0.88rem; }
+    .login-card label { display: block; font-size: 0.85rem; font-weight: 700; margin: 12px 0 5px; color: #334155; }
+    .login-msg { margin-top: 12px; color: #b91c1c; font-weight: 700; font-size: 0.88rem; min-height: 20px; text-align: center; }
+
+    /* ---------- الشريط العلوي ---------- */
+    .topbar {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .topbar h1 { margin: 0; font-size: 1.2rem; font-weight: 800; }
+    .conn-pill {
+      background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px;
+      font-size: 0.82rem; font-weight: 700;
+    }
+    .user-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .user-chip { background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.92rem; }
+    .btn-top { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+
+    .container { max-width: 1350px; margin: 18px auto; padding: 0 16px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 14px 18px;
+      border-right: 5px solid var(--primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .stat-card.green { border-color: var(--success); }
+    .stat-card.amber { border-color: var(--warning); }
+    .stat-card.purple { border-color: #7c3aed; }
+    .stat-title { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+    .stat-num { font-size: 1.65rem; font-weight: 800; margin-top: 2px; }
+
+    .tabs { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 10px 18px; border: none; border-radius: 10px; background: #e2e8f0;
+      color: var(--text); font-weight: 700; cursor: pointer; font-size: 0.95rem; transition: 0.2s;
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+
+    .filters-bar {
+      background: var(--card); padding: 14px; border-radius: 12px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px;
+      margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    @media (max-width: 768px) { .filters-bar { grid-template-columns: 1fr; } }
+    input, select {
+      padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.92rem; width: 100%; background: #fff;
+    }
+    input:focus, select:focus { outline: none; border-color: var(--primary); }
+
+    .btn {
+      padding: 9px 16px; border: none; border-radius: 8px; font-weight: 700;
+      cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-whatsapp { background: #16a34a; color: #fff; }
+    .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--text); }
+    .btn-sm { padding: 5px 10px; font-size: 0.82rem; }
+
+    .table-wrap {
+      background: var(--card); border-radius: 12px; overflow-x: auto;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 980px; }
+    th, td { padding: 11px 14px; text-align: right; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
+    th { background: #f8fafc; font-weight: 700; color: #334155; }
+    tr.row-complete { background-color: #eff6ff; }
+    tr:hover { background-color: #f1f5f9; }
+    .empty-row td { text-align: center; color: var(--muted); padding: 30px; font-weight: 700; }
+    .reviewer-cell { font-size: 0.78rem; color: var(--muted); }
+
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; display: inline-block; }
+    .badge-complete { background: var(--primary-light); color: var(--primary); }
+    .badge-reg { background: var(--success-bg); color: var(--success); }
+    .badge-missing { background: var(--warning-bg); color: var(--warning); }
+    .badge-new { background: #e2e8f0; color: #475569; }
+    .copyable { cursor: pointer; text-decoration: underline; }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.6);
+      display: none; justify-content: center; align-items: flex-start;
+      padding: 20px 10px; overflow-y: auto; z-index: 1000;
+    }
+    .modal {
+      background: #fff; width: 100%; max-width: 860px; border-radius: 16px;
+      padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); position: relative;
+    }
+    .modal.small { max-width: 420px; margin-top: 60px; }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 16px;
+    }
+    .teacher-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; font-size: 0.88rem; color: var(--muted); }
+    .meta-pill { background: #f1f5f9; padding: 3px 10px; border-radius: 6px; color: var(--text); font-weight: 600; }
+
+    .section-title {
+      font-size: 1rem; font-weight: 800; color: var(--primary);
+      margin: 16px 0 10px; display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .checks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    .check-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; transition: 0.15s;
+      user-select: none; font-weight: 600; font-size: 0.9rem;
+    }
+    .check-item input[type="checkbox"] { width: 19px; height: 19px; accent-color: var(--primary); cursor: pointer; }
+    .check-item.checked { border-color: var(--primary); background: #eff6ff; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .field-group label { display: block; font-size: 0.84rem; font-weight: 700; margin-bottom: 4px; color: #334155; }
+
+    .modal-footer {
+      margin-top: 20px; padding-top: 14px; border-top: 2px solid #f1f5f9;
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
+    }
+
+    .error-box { background: #fee2e2; color: #991b1b; padding: 18px; border-radius: 12px; font-weight: 700; margin-bottom: 16px; display: none; line-height: 1.8; }
+    .toast {
+      position: fixed; bottom: 20px; left: 20px; background: #0f172a; color: #fff;
+      padding: 12px 20px; border-radius: 10px; font-weight: 700; display: none; z-index: 4000;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================= شاشة تسجيل الدخول ================= -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h2>📋 منظومة مراجعة ملفات المعلم المساعد</h2>
+    <p class="sub">سجّل الدخول باسمك وكلمة المرور الخاصة بك</p>
+
+    <label for="loginUser">المستخدم</label>
+    <select id="loginUser"><option value="">جاري تحميل الأسماء...</option></select>
+
+    <label for="loginPass">كلمة المرور</label>
+    <input type="password" id="loginPass" autocomplete="current-password" placeholder="••••••••">
+
+    <button class="btn btn-primary" id="btnLogin" style="width:100%; margin-top:16px;" onclick="doLogin()">دخول</button>
+    <div class="login-msg" id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- ================= التطبيق ================= -->
+<div id="appRoot" style="display:none;">
+  <div class="topbar">
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <h1>📋 منظومة استلام ومراجعة ملفات المعلم المساعد</h1>
+      <span class="conn-pill" id="connStatus">جاري التهيئة...</span>
+    </div>
+    <div class="user-box">
+      <span class="user-chip">👤 <span id="userLabel">-</span></span>
+      <button class="btn btn-sm btn-top" onclick="openPwdModal()">🔑 تغيير كلمة المرور</button>
+      <button class="btn btn-sm btn-top" onclick="doLogout()">خروج</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="errorBox" class="error-box"></div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-title">إجمالي المعلمين</div>
+        <div class="stat-num" id="stTotal">-</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-title">ملفات مكتملة 100%</div>
+        <div class="stat-num" id="stComplete">-</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-title">جاهز للتسجيل على الموقع الآن</div>
+        <div class="stat-num" id="stReady">-</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-title">ملفات بها نواقص / لم تُراجع</div>
+        <div class="stat-num" id="stIncomplete">-</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-title">تم التسجيل بالموقع الرسمي</div>
+        <div class="stat-num" id="stReg">-</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tabAll" onclick="switchTab('all')">🗂️ قائمة المراجعة الشاملة</button>
+      <button class="tab-btn" id="tabReady" onclick="switchTab('ready')">🚀 جاهز للتسجيل على الموقع الرسمي (<span id="readyBadge">0</span>)</button>
+    </div>
+
+    <div class="filters-bar">
+      <input type="text" id="searchInput" placeholder="ابحث بالاسم أو كود المعلم أو الرقم القومي..." oninput="renderTable()">
+      <select id="adminFilter" onchange="renderTable()">
+        <option value="">كل الإدارات التعليمية</option>
+      </select>
+      <select id="statusFilter" onchange="renderTable()">
+        <option value="">كل الحالات</option>
+        <option value="ready">مكتمل 100% (جاهز للتسجيل)</option>
+        <option value="registered">تم التسجيل بالموقع</option>
+        <option value="missing">ملف ناقص</option>
+        <option value="unreviewed">لم يُراجع بعد</option>
+      </select>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-outline" id="btnRefresh" onclick="refreshData()">🔄 تحديث</button>
+        <button class="btn btn-primary" id="btnCopyBatch" style="display:none;" onclick="copyReadyBatch()">📋 نسخ بيانات الجاهزين</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="teachersTable">
+        <thead>
+          <tr>
+            <th>الإدارة</th>
+            <th>اسم المعلم</th>
+            <th>الكود</th>
+            <th>الرقم القومي</th>
+            <th>نسبة الاكتمال</th>
+            <th>الحالة / النواقص</th>
+            <th>آخر تعديل</th>
+            <th>إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr class="empty-row"><td colspan="8">جاري تحميل البيانات من الشيت...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة المراجعة -->
+<div class="modal-backdrop" id="reviewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 style="margin:0; font-size:1.2rem;" id="mName">-</h2>
+        <div class="teacher-meta">
+          <span class="meta-pill">الإدارة: <span id="mAdmin">-</span></span>
+          <span class="meta-pill">الكود: <span id="mCode">-</span></span>
+          <span class="meta-pill">الرقم القومي: <span id="mNid">-</span></span>
+          <span class="meta-pill">واتس: <span id="mWa">-</span></span>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">✕ إغلاق</button>
+    </div>
+
+    <div class="section-title">
+      <span>1. المستندات الورقية (مربعات الاختيار)</span>
+      <button type="button" class="btn btn-outline btn-sm" onclick="checkAllBoxes(true)">✓ تحديد الكل كمستوفى</button>
+    </div>
+
+    <div class="checks-grid" id="checksContainer">
+      <label class="check-item"><input type="checkbox" id="chk_folder" onchange="syncCheckUI(this)"> دوسيه ورقي</label>
+      <label class="check-item"><input type="checkbox" id="chk_statusSheet" onchange="syncCheckUI(this)"> صحيفة أحوال</label>
+      <label class="check-item"><input type="checkbox" id="chk_contract" onchange="syncCheckUI(this)"> صورة طبق الأصل للعقد</label>
+      <label class="check-item"><input type="checkbox" id="chk_pedApp" onchange="syncCheckUI(this)"> شهادة تطبيقات تربوية</label>
+      <label class="check-item"><input type="checkbox" id="chk_principal" onchange="syncCheckUI(this)"> تقرير المدير</label>
+      <label class="check-item"><input type="checkbox" id="chk_supervisor" onchange="syncCheckUI(this)"> تقرير الموجه</label>
+      <label class="check-item"><input type="checkbox" id="chk_nomination" onchange="syncCheckUI(this)"> خطاب ترشيح</label>
+      <label class="check-item"><input type="checkbox" id="chk_salary" onchange="syncCheckUI(this)"> مفردات مرتب</label>
+      <label class="check-item"><input type="checkbox" id="chk_nidCopy" onchange="syncCheckUI(this)"> صورة الرقم القومي</label>
+    </div>
+
+    <div class="section-title"><span>2. المؤهل الدراسي وشهادة الحاسب الآلي</span></div>
+    <div class="form-grid">
+      <div class="field-group">
+        <label>صورة المؤهل (O)</label>
+        <select id="sel_qual" onchange="toggleDiplomaNotice()">
+          <option value="">-- اختر --</option>
+          <option value="تربوى">تربوى</option>
+          <option value="غير تربوى">غير تربوى</option>
+          <option value="غير موجود">غير موجود</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label id="lbl_diploma">الدبلوم العام في التربية (P)</label>
+        <select id="sel_diploma">
+          <option value="">-- اختر --</option>
+          <option value="موجود">موجود</option>
+          <option value="تربوى">تربوى</option>
+          <option value="غير موجود">غير موجود</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>شهادة اختبار الحاسب (K)</label>
+        <select id="sel_computer">
+          <option value="">-- غير موجودة --</option>
+          <option value="ICDL">ICDL</option>
+          <option value="ICDL TEACHER">ICDL TEACHER</option>
+          <option value="التحول الرقمى ">التحول الرقمى</option>
+          <option value="AITC">AITC</option>
+          <option value="IC3 PLUS">IC3 PLUS</option>
+          <option value="MICIT">MICIT</option>
+          <option value="Cambridge IT Skills">Cambridge IT Skills</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title"><span>3. بيانات العقد وتواريخ الشهادات (الأعمدة X إلى AD)</span></div>
+    <div class="form-grid">
+      <div class="field-group">
+        <label>سنة التعاقد</label>
+        <input type="text" id="inp_contractYear" placeholder="مثال: 2023">
+      </div>
+      <div class="field-group">
+        <label>المرحلة</label>
+        <input type="text" id="inp_stage" placeholder="رياض أطفال / ابتدائي...">
+      </div>
+      <div class="field-group">
+        <label>التخصص المعتمد بالعقد</label>
+        <input type="text" id="inp_specialty" placeholder="التخصص المكتوب بخط اليد">
+      </div>
+      <div class="field-group">
+        <label>تاريخ الحصول على التطبيقات التربوية</label>
+        <input type="date" id="inp_pedAppDate">
+      </div>
+      <div class="field-group">
+        <label>تاريخ المؤهل التربوي</label>
+        <input type="date" id="inp_qualDate">
+      </div>
+      <div class="field-group">
+        <label>تاريخ الحصول على ICDL أو ما يعادلها</label>
+        <input type="date" id="inp_icdlDate">
+      </div>
+      <div class="field-group">
+        <label>رقم شهادة ICDL أو ما يعادلها</label>
+        <input type="text" id="inp_icdlNum" placeholder="رقم الشهادة">
+      </div>
+      <div class="field-group">
+        <label>تاريخ الاستلام</label>
+        <input type="date" id="inp_receiptDate">
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-top:12px;">
+      <div class="field-group" style="grid-column: span 2;">
+        <label>ملاحظات المراجعة (اكتب "مرفوض" إذا كانت هناك شهادة مرفوضة)</label>
+        <input type="text" id="inp_notes" placeholder="أي ملاحظات أو نواقص...">
+      </div>
+      <div class="field-group" style="display:flex; align-items:flex-end;">
+        <label class="check-item" style="width:100%; margin:0;">
+          <input type="checkbox" id="chk_registered" onchange="syncCheckUI(this)"> تم التسجيل على الموقع الرسمي
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-whatsapp" onclick="sendWhatsAppMissing()">📲 إرسال النواقص واتساب</button>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">إلغاء</button>
+        <button type="button" class="btn btn-primary" id="btnSave" onclick="submitReview()">💾 حفظ المراجعة</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تغيير كلمة المرور -->
+<div class="modal-backdrop" id="pwdModal" style="z-index:2500;">
+  <div class="modal small">
+    <div class="modal-header">
+      <h2 style="margin:0; font-size:1.1rem;">🔑 تغيير كلمة المرور</h2>
+      <button class="btn btn-outline btn-sm" onclick="closePwdModal()">✕</button>
+    </div>
+    <div class="field-group">
+      <label>كلمة المرور الحالية</label>
+      <input type="password" id="pwdOld" autocomplete="current-password">
+    </div>
+    <div class="field-group" style="margin-top:10px;">
+      <label>كلمة المرور الجديدة (6 أحرف على الأقل)</label>
+      <input type="password" id="pwdNew" autocomplete="new-password">
+    </div>
+    <div class="field-group" style="margin-top:10px;">
+      <label>تأكيد كلمة المرور الجديدة</label>
+      <input type="password" id="pwdNew2" autocomplete="new-password">
+    </div>
+    <div class="login-msg" id="pwdMsg"></div>
+    <button class="btn btn-primary" id="btnPwd" style="width:100%; margin-top:8px;" onclick="submitPwd()">حفظ كلمة المرور</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ================================================================
+     ضع هنا رابط الويب أب (ينتهي بـ /exec) بعد نشر Code_API.gs
+     ================================================================ */
+  const API_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
+  let allTeachers = [];
+  let currentTab = 'all';
+  let activeTeacher = null;
+  let token = null;
+  let currentUser = null;
+
+  /* ---------- تخزين الجلسة (ينتهي بإغلاق التبويب) ---------- */
+  function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  function ssDel(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  /* ---------- الاتصال بالسيرفر ---------- */
+  async function api(action, data) {
+    if (!API_URL || API_URL.indexOf('PASTE_') === 0) {
+      throw new Error('لم يتم ضبط رابط الخدمة API_URL في أعلى الـ script.');
+    }
+    const body = Object.assign({ action: action, token: token }, data || {});
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    });
+    let json;
+    try {
+      json = await res.json();
+    } catch (e) {
+      throw new Error('رد غير صالح من الخدمة. تأكد أن الويب أب منشور بصلاحية Anyone وأنك نشرت نسخة جديدة بعد آخر تعديل.');
+    }
+    if (!json.success) {
+      const err = new Error(json.error || 'فشل تنفيذ العملية');
+      err.code = json.code;
+      throw err;
+    }
+    return json;
+  }
+
+  /* ---------- أدوات صغيرة ---------- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function todayYMD() {
+    const d = new Date();
+    const p = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  function setConn(txt) { document.getElementById('connStatus').textContent = txt; }
+
+  function showError(msg) {
+    const eb = document.getElementById('errorBox');
+    eb.style.display = 'block';
+    eb.textContent = msg;
+  }
+  function hideError() { document.getElementById('errorBox').style.display = 'none'; }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () { t.style.display = 'none'; }, 3200);
+  }
+
+  function copyToClipboard(text, okMsg) {
+    const done = function () { showToast(okMsg || ('تم النسخ: ' + text)); };
+    const fallback = function () {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch (e) { showToast('تعذر النسخ تلقائياً'); }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else {
+      fallback();
+    }
+  }
+
+  /* ---------- تسجيل الدخول والخروج ---------- */
+  function showLogin(msg) {
+    document.getElementById('appRoot').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginMsg').textContent = msg || '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+  }
+
+  async function loadUsers() {
+    const sel = document.getElementById('loginUser');
+    try {
+      const res = await api('users');
+      const last = lsGet('rv_last_user') || '';
+      sel.innerHTML = '<option value="">-- اختر اسمك --</option>' +
+        res.users.map(function (u) { return '<option value="' + esc(u) + '">' + esc(u) + '</option>'; }).join('');
+      if (last && res.users.indexOf(last) !== -1) sel.value = last;
+    } catch (err) {
+      sel.innerHTML = '<option value="">تعذر تحميل الأسماء</option>';
+      document.getElementById('loginMsg').textContent = 'تعذر الاتصال بالخدمة: ' + err.message;
+    }
+  }
+
+  async function doLogin() {
+    const user = document.getElementById('loginUser').value;
+    const password = document.getElementById('loginPass').value;
+    const msg = document.getElementById('loginMsg');
+    if (!user) { msg.textContent = 'اختر اسمك أولاً.'; return; }
+    if (!password) { msg.textContent = 'اكتب كلمة المرور.'; return; }
+
+    const btn = document.getElementById('btnLogin');
+    btn.disabled = true;
+    btn.textContent = 'جاري الدخول...';
+    msg.textContent = '';
+    try {
+      const res = await api('login', { user: user, password: password });
+      token = res.token;
+      currentUser = res.user;
+      ssSet('rv_token', token);
+      ssSet('rv_user', currentUser);
+      lsSet('rv_last_user', currentUser);
+      enterApp();
+    } catch (err) {
+      msg.textContent = err.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'دخول';
+    }
+  }
+
+  function enterApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appRoot').style.display = 'block';
+    document.getElementById('userLabel').textContent = currentUser || '';
+    loadData(false);
+  }
+
+  function clearSession() {
+    token = null;
+    currentUser = null;
+    ssDel('rv_token');
+    ssDel('rv_user');
+  }
+
+  async function doLogout() {
+    const t = token;
+    clearSession();
+    allTeachers = [];
+    closeModal();
+    showLogin('');
+    try { await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'logout', token: t }) }); } catch (e) {}
+  }
+
+  function forceLogout(msg) {
+    clearSession();
+    showLogin(msg || 'انتهت الجلسة، سجّل الدخول مرة أخرى.');
+  }
+
+  /* ---------- تغيير كلمة المرور ---------- */
+  function openPwdModal() {
+    ['pwdOld', 'pwdNew', 'pwdNew2'].forEach(function (id) { document.getElementById(id).value = ''; });
+    document.getElementById('pwdMsg').textContent = '';
+    document.getElementById('pwdModal').style.display = 'flex';
+  }
+  function closePwdModal() { document.getElementById('pwdModal').style.display = 'none'; }
+
+  async function submitPwd() {
+    const o = document.getElementById('pwdOld').value;
+    const n = document.getElementById('pwdNew').value;
+    const n2 = document.getElementById('pwdNew2').value;
+    const msg = document.getElementById('pwdMsg');
+    if (!o || !n) { msg.textContent = 'املأ كل الخانات.'; return; }
+    if (n.length < 6) { msg.textContent = 'كلمة المرور الجديدة لا تقل عن 6 أحرف.'; return; }
+    if (n !== n2) { msg.textContent = 'تأكيد كلمة المرور غير مطابق.'; return; }
+
+    const btn = document.getElementById('btnPwd');
+    btn.disabled = true;
+    try {
+      await api('changePassword', { oldPassword: o, newPassword: n });
+      closePwdModal();
+      showToast('تم تغيير كلمة المرور بنجاح.');
+    } catch (err) {
+      if (err.code === 'SESSION') { closePwdModal(); forceLogout(err.message); }
+      else msg.textContent = err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  /* ---------- تحميل البيانات ---------- */
+  async function loadData(showMsg) {
+    setConn('🔄 جاري تحميل البيانات من الشيت...');
+    hideError();
+    const btn = document.getElementById('btnRefresh');
+    btn.disabled = true;
+    try {
+      const res = await api('list');
+      allTeachers = Array.isArray(res.data) ? res.data : [];
+      setConn('✅ متصل بالشيت (' + allTeachers.length + ' معلم)');
+      populateAdmins();
+      updateStats();
+      renderTable();
+      if (showMsg) showToast('تم تحديث البيانات من الشيت.');
+    } catch (err) {
+      if (err.code === 'SESSION') { forceLogout(err.message); return; }
+      setConn('⚠️ خطأ في الاتصال');
+      showError('تعذر قراءة الشيت: ' + err.message);
+      document.getElementById('tableBody').innerHTML =
+        '<tr class="empty-row"><td colspan="8">لم يتم تحميل البيانات.</td></tr>';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function refreshData() { return loadData(true); }
+
+  function populateAdmins() {
+    const sel = document.getElementById('adminFilter');
+    const prev = sel.value;
+    const admins = Array.from(new Set(allTeachers.map(function (t) { return t.admin; }).filter(Boolean))).sort();
+    sel.innerHTML = '<option value="">كل الإدارات التعليمية</option>' +
+      admins.map(function (a) { return '<option value="' + esc(a) + '">' + esc(a) + '</option>'; }).join('');
+    sel.value = prev;
+  }
+
+  function updateStats() {
+    const total = allTeachers.length;
+    const complete = allTeachers.filter(function (t) { return t.isComplete; }).length;
+    const ready = allTeachers.filter(function (t) { return t.isComplete && !t.registered; }).length;
+    const reg = allTeachers.filter(function (t) { return t.registered; }).length;
+
+    document.getElementById('stTotal').textContent = total;
+    document.getElementById('stComplete').textContent = complete;
+    document.getElementById('stReady').textContent = ready;
+    document.getElementById('stIncomplete').textContent = total - complete;
+    document.getElementById('stReg').textContent = reg;
+    document.getElementById('readyBadge').textContent = ready;
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tabAll').classList.toggle('active', tab === 'all');
+    document.getElementById('tabReady').classList.toggle('active', tab === 'ready');
+    document.getElementById('statusFilter').style.display = (tab === 'ready') ? 'none' : 'block';
+    document.getElementById('btnCopyBatch').style.display = (tab === 'ready') ? 'inline-flex' : 'none';
+    renderTable();
+  }
+
+  function getFilteredList() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const admin = document.getElementById('adminFilter').value;
+    const status = document.getElementById('statusFilter').value;
+
+    return allTeachers.filter(function (t) {
+      if (admin && t.admin !== admin) return false;
+      if (q && !(t.name.toLowerCase().indexOf(q) !== -1 || t.code.indexOf(q) !== -1 || t.nid.indexOf(q) !== -1)) return false;
+
+      if (currentTab === 'ready') return t.isComplete && !t.registered;
+      if (status === 'ready') return t.isComplete && !t.registered;
+      if (status === 'registered') return t.registered;
+      if (status === 'missing') return !t.isComplete && t.pct > 0;
+      if (status === 'unreviewed') return t.pct === 0;
+      return true;
+    });
+  }
+
+  function renderTable() {
+    const list = getFilteredList();
+    const tbody = document.getElementById('tableBody');
+
+    if (!list.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">لا توجد نتائج مطابقة.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(function (t) {
+      let statusHtml = '';
+      if (t.registered) {
+        statusHtml = '<span class="badge badge-reg">✓ تم التسجيل بالموقع</span>';
+      } else if (t.isComplete) {
+        statusHtml = '<span class="badge badge-complete">مكتمل 100% - جاهز</span>';
+      } else if (t.pct === 0) {
+        statusHtml = '<span class="badge badge-new">لم يُراجع بعد</span>';
+      } else {
+        const missText = t.missing.slice(0, 3).join('، ') + (t.missing.length > 3 ? ' (+' + (t.missing.length - 3) + ')' : '');
+        statusHtml = '<span class="badge badge-missing">ناقص (' + t.missing.length + ')</span>' +
+          '<div style="font-size:0.78rem; color:#92400e; margin-top:3px;">' + esc(missText) + '</div>';
+      }
+
+      const actionBtns = (currentTab === 'ready')
+        ? '<button class="btn btn-success btn-sm" data-act="register" data-row="' + t.row + '">✓ تأكيد التسجيل</button> ' +
+          '<button class="btn btn-outline btn-sm" data-act="review" data-row="' + t.row + '">عرض</button>'
+        : '<button class="btn btn-primary btn-sm" data-act="review" data-row="' + t.row + '">مراجعة الملف</button>';
+
+      return '<tr class="' + (t.isComplete ? 'row-complete' : '') + '">' +
+        '<td>' + esc(t.admin) + '</td>' +
+        '<td style="font-weight:700;">' + esc(t.name) + '</td>' +
+        '<td><span class="copyable" title="اضغط للنسخ" data-act="copy" data-val="' + esc(t.code) + '">' + esc(t.code) + '</span></td>' +
+        '<td><span class="copyable" title="اضغط للنسخ" data-act="copy" data-val="' + esc(t.nid) + '">' + esc(t.nid) + '</span></td>' +
+        '<td style="font-weight:800; color:' + (t.isComplete ? '#1e40af' : '#475569') + ';">' + t.pct + '%</td>' +
+        '<td>' + statusHtml + '</td>' +
+        '<td class="reviewer-cell">' + esc(t.reviewer || '—') + '</td>' +
+        '<td>' + actionBtns + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  function copyReadyBatch() {
+    const list = getFilteredList();
+    if (!list.length) return showToast('لا توجد ملفات جاهزة حالياً.');
+    const formatted = list.map(function (t) {
+      return "['" + t.name + "', '" + t.code + "', '" + t.nid + "'],";
+    }).join('\n');
+    copyToClipboard(formatted, 'تم نسخ بيانات ' + list.length + ' معلم جاهز للتسجيل!');
+  }
+
+  /* ---------- نافذة المراجعة ---------- */
+  function openReview(row) {
+    activeTeacher = allTeachers.find(function (t) { return t.row === row; });
+    if (!activeTeacher) return;
+
+    document.getElementById('mName').textContent = activeTeacher.name;
+    document.getElementById('mAdmin').textContent = activeTeacher.admin;
+    document.getElementById('mCode').textContent = activeTeacher.code;
+    document.getElementById('mNid').textContent = activeTeacher.nid;
+    document.getElementById('mWa').textContent = activeTeacher.whatsapp || 'غير مسجل';
+
+    const d = activeTeacher.docs;
+    const map = {
+      folder: d.folder, statusSheet: d.statusSheet, contract: d.contract,
+      pedApp: d.pedApp, principal: d.principal, supervisor: d.supervisor,
+      nomination: d.nomination, salary: d.salary, nidCopy: d.nidCopy
+    };
+    Object.keys(map).forEach(function (k) {
+      const el = document.getElementById('chk_' + k);
+      el.checked = !!map[k];
+      syncCheckUI(el);
+    });
+
+    document.getElementById('sel_qual').value = d.qual || '';
+    document.getElementById('sel_diploma').value = d.diploma || '';
+    document.getElementById('sel_computer').value = d.computer || '';
+    toggleDiplomaNotice();
+
+    document.getElementById('inp_contractYear').value = activeTeacher.contractYear || '';
+    document.getElementById('inp_stage').value = activeTeacher.stage || '';
+    document.getElementById('inp_specialty').value = activeTeacher.specialty || '';
+    document.getElementById('inp_pedAppDate').value = activeTeacher.pedAppDate || '';
+    document.getElementById('inp_qualDate').value = activeTeacher.qualDate || '';
+    document.getElementById('inp_icdlDate').value = activeTeacher.icdlDate || '';
+    document.getElementById('inp_icdlNum').value = activeTeacher.icdlNum || '';
+    document.getElementById('inp_receiptDate').value = activeTeacher.receiptDate || todayYMD();
+    document.getElementById('inp_notes').value = activeTeacher.notes || '';
+
+    const regEl = document.getElementById('chk_registered');
+    regEl.checked = !!activeTeacher.registered;
+    syncCheckUI(regEl);
+
+    document.getElementById('reviewModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('reviewModal').style.display = 'none';
+    activeTeacher = null;
+  }
+
+  function syncCheckUI(el) {
+    el.closest('.check-item').classList.toggle('checked', el.checked);
+  }
+
+  function checkAllBoxes(state) {
+    document.querySelectorAll('#checksContainer input[type="checkbox"]').forEach(function (cb) {
+      cb.checked = state;
+      syncCheckUI(cb);
+    });
+  }
+
+  function toggleDiplomaNotice() {
+    const q = document.getElementById('sel_qual').value;
+    const lbl = document.getElementById('lbl_diploma');
+    lbl.innerHTML = (q === 'غير تربوى')
+      ? 'الدبلوم العام في التربية (P) <span style="color:#b91c1c;">* مطلوب للمؤهل غير التربوي</span>'
+      : 'الدبلوم العام في التربية (P)';
+  }
+
+  function collectCurrentMissing() {
+    const miss = [];
+    if (!document.getElementById('chk_folder').checked) miss.push('دوسيه ورقي');
+    if (!document.getElementById('chk_statusSheet').checked) miss.push('صحيفة أحوال');
+    if (!document.getElementById('chk_contract').checked) miss.push('صورة طبق الأصل للعقد');
+    if (!document.getElementById('chk_pedApp').checked) miss.push('شهادة تطبيقات تربوية');
+    if (!document.getElementById('sel_computer').value) miss.push('شهادة اختبار الحاسب (ICDL أو ما يعادلها)');
+    if (!document.getElementById('chk_principal').checked) miss.push('تقرير المدير');
+    if (!document.getElementById('chk_supervisor').checked) miss.push('تقرير الموجه');
+    if (!document.getElementById('chk_nomination').checked) miss.push('خطاب ترشيح');
+
+    const qual = document.getElementById('sel_qual').value;
+    const dip = document.getElementById('sel_diploma').value;
+    if (!qual || qual === 'غير موجود') miss.push('صورة المؤهل');
+    else if (qual === 'غير تربوى' && (!dip || dip === 'غير موجود')) miss.push('الدبلوم العام في التربية');
+
+    if (!document.getElementById('chk_salary').checked) miss.push('مفردات مرتب');
+    if (!document.getElementById('chk_nidCopy').checked) miss.push('صورة الرقم القومي');
+    return miss;
+  }
+
+  function sendWhatsAppMissing() {
+    if (!activeTeacher || !activeTeacher.whatsapp) {
+      return showToast('لا يوجد رقم واتساب مسجل لهذا المعلم.');
+    }
+    const miss = collectCurrentMissing();
+    let phone = activeTeacher.whatsapp.replace(/\D/g, '');
+    if (phone.indexOf('20') === 0 && phone.length >= 12) { /* بالفعل بصيغة دولية */ }
+    else if (phone.indexOf('01') === 0) phone = '2' + phone;
+    else if (phone.indexOf('1') === 0) phone = '20' + phone;
+
+    const msg = miss.length > 0
+      ? 'تحية طيبة أ/ ' + activeTeacher.name + '،\nبشأن مراجعة ملف التثبيت (المعلم المساعد)، يرجى سرعة استكمال المستندات التالية:\n- ' + miss.join('\n- ') + '\nمع خالص التقدير.'
+      : 'تحية طيبة أ/ ' + activeTeacher.name + '،\nتمت مراجعة ملف التثبيت الخاص بكم وهو مكتمل ومستوفٍ لكافة المستندات.';
+
+    window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  async function submitReview() {
+    if (!activeTeacher) return;
+    const btn = document.getElementById('btnSave');
+    btn.disabled = true;
+    btn.textContent = 'جاري الحفظ...';
+
+    const payload = {
+      row: activeTeacher.row,
+      code: activeTeacher.code,
+      registered: document.getElementById('chk_registered').checked,
+      docs: {
+        folder: document.getElementById('chk_folder').checked,
+        statusSheet: document.getElementById('chk_statusSheet').checked,
+        contract: document.getElementById('chk_contract').checked,
+        pedApp: document.getElementById('chk_pedApp').checked,
+        computer: document.getElementById('sel_computer').value,
+        principal: document.getElementById('chk_principal').checked,
+        supervisor: document.getElementById('chk_supervisor').checked,
+        nomination: document.getElementById('chk_nomination').checked,
+        qual: document.getElementById('sel_qual').value,
+        diploma: document.getElementById('sel_diploma').value,
+        salary: document.getElementById('chk_salary').checked,
+        nidCopy: document.getElementById('chk_nidCopy').checked
+      },
+      receiptDate: document.getElementById('inp_receiptDate').value,
+      notes: document.getElementById('inp_notes').value.trim(),
+      contractYear: document.getElementById('inp_contractYear').value.trim(),
+      stage: document.getElementById('inp_stage').value.trim(),
+      specialty: document.getElementById('inp_specialty').value.trim(),
+      pedAppDate: document.getElementById('inp_pedAppDate').value,
+      qualDate: document.getElementById('inp_qualDate').value,
+      icdlDate: document.getElementById('inp_icdlDate').value,
+      icdlNum: document.getElementById('inp_icdlNum').value.trim()
+    };
+
+    try {
+      const res = await api('save', { payload: payload });
+      closeModal();
+      showToast(res.unchanged ? 'لا توجد تغييرات لحفظها.' : 'تم حفظ مراجعة الملف باسم ' + currentUser + '.');
+      await loadData(false);
+    } catch (err) {
+      if (err.code === 'SESSION') {
+        forceLogout('انتهت الجلسة. سجّل الدخول ثم أعد فتح الملف واحفظ مرة أخرى.');
+      } else {
+        alert('حدث خطأ أثناء الحفظ: ' + err.message);
+      }
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 حفظ المراجعة';
+    }
+  }
+
+  async function quickRegister(row) {
+    const t = allTeachers.find(function (x) { return x.row === row; });
+    if (!t) return;
+    try {
+      await api('register', { row: row, code: t.code });
+      showToast('تم تأكيد التسجيل على الموقع الرسمي باسم ' + currentUser + '.');
+      await loadData(false);
+    } catch (err) {
+      if (err.code === 'SESSION') forceLogout(err.message);
+      else alert(err.message);
+    }
+  }
+
+  /* ---------- التشغيل ---------- */
+  window.addEventListener('DOMContentLoaded', async function () {
+    document.getElementById('tableBody').addEventListener('click', function (e) {
+      const el = e.target.closest('[data-act]');
+      if (!el) return;
+      const act = el.getAttribute('data-act');
+      const row = Number(el.getAttribute('data-row'));
+      if (act === 'review') openReview(row);
+      else if (act === 'register') quickRegister(row);
+      else if (act === 'copy') copyToClipboard(el.getAttribute('data-val'));
+    });
+
+    document.getElementById('loginPass').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    const savedToken = ssGet('rv_token');
+    if (savedToken) {
+      token = savedToken;
+      currentUser = ssGet('rv_user');
+      enterApp();
+    } else {
+      showLogin('');
+    }
+    loadUsers();
+  });
+</script>
+</body>
+</html>
