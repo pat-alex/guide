@@ -127,9 +127,11 @@
     .plan .idle { margin: 6px 0; color: var(--muted); text-align: center; }
     .plan.ok { background: var(--brand-soft); border-color: var(--brand-line); }
     .plan.full { background: var(--bad-bg); border-color: var(--bad-line); color: var(--bad-ink); }
-    .plan .plan-label { font-weight: 600; color: var(--muted); }
-    .plan .range { font-size: 1.4rem; font-weight: 700; color: var(--brand-dark); margin: 2px 0 4px; }
-    .plan .calc { font-size: 0.92rem; color: var(--muted); }
+    .plan .plan-label { font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .plan .plan-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+    .plan .plan-row b { color: var(--ink); }
+    .plan .plan-row .v { font-weight: 700; color: var(--brand-dark); font-size: 1.15rem; }
+    .plan .plan-row.main .v { font-size: 1.4rem; }
     .plan .must {
       margin-top: 10px;
       padding-top: 10px;
@@ -229,7 +231,7 @@
       .head { padding: 20px 16px 16px; }
       .body { padding: 18px 16px 22px; }
       h1 { font-size: 1.25rem; }
-      .plan .range { font-size: 1.2rem; }
+      .plan .plan-row.main .v { font-size: 1.2rem; }
     }
   </style>
 </head>
@@ -521,15 +523,35 @@
       planBox.appendChild(mk('p', 'full-msg', text));
     }
 
+    const LATE_RULE = 'لن يُقبل التأخر عن موعد الحضور المسجل، وسيتم التوجيه لتحديد موعد آخر.';
+
+    // 125 => "ساعتان و5 دقائق" | 45 => "45 دقيقة" | 60 => "ساعة"
+    function durationText(min) {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      const hText = h === 1 ? 'ساعة' : h === 2 ? 'ساعتان' : (h >= 3 && h <= 10) ? h + ' ساعات' : h + ' ساعة';
+      const mText = m === 1 ? 'دقيقة' : m === 2 ? 'دقيقتان' : (m >= 3 && m <= 10) ? m + ' دقائق' : m + ' دقيقة';
+      if (h === 0) return mText;
+      return m === 0 ? hText : hText + ' و' + mText;
+    }
+
+    // صف في بطاقة الموعد: عنوان + قيمة
+    function planRow(parent, label, value, className) {
+      const row = mk('div', 'plan-row' + (className ? ' ' + className : ''));
+      row.appendChild(mk('b', '', label));
+      row.appendChild(mk('span', 'v', value));
+      parent.appendChild(row);
+    }
+
     function setPlanOk(p) {
       currentPlan = p;
       planBox.className = 'plan ok';
       planBox.innerHTML = '';
       planBox.appendChild(mk('div', 'plan-label', p.dateLabel));
-      planBox.appendChild(mk('div', 'range', 'من ' + p.startLabel + ' إلى ' + p.endLabel));
-      planBox.appendChild(mk('div', 'calc',
-        p.count + ' ملف × ' + p.perFile + ' دقائق = ' + p.minutes + ' دقيقة تقريباً'));
-      planBox.appendChild(mk('div', 'must', 'الحضور في هذا الموعد إلزامي.'));
+      planRow(planBox, 'موعد الحضور:', p.startLabel, 'main');
+      planRow(planBox, 'الوقت المستغرق في المراجعة والتسجيل:', durationText(p.minutes));
+      planRow(planBox, 'الانصراف:', p.endLabel);
+      planBox.appendChild(mk('div', 'must', LATE_RULE));
     }
 
     // يطلب الموعد المقترح للتاريخ وعدد الملفات الحاليين
@@ -687,10 +709,17 @@
         card.appendChild(row);
       });
 
-      const timeRow = mk('div', 'row time-row');
-      timeRow.appendChild(mk('b', '', 'موعد حضورك:'));
-      timeRow.appendChild(mk('span', '', 'من ' + res.startLabel + ' إلى ' + res.endLabel));
-      card.appendChild(timeRow);
+      const timeRows = [
+        ['موعد الحضور:', res.startLabel],
+        ['الوقت المستغرق في المراجعة والتسجيل:', durationText(res.minutes)],
+        ['الانصراف:', res.endLabel]
+      ];
+      timeRows.forEach(r => {
+        const row = mk('div', 'row time-row');
+        row.appendChild(mk('b', '', r[0]));
+        row.appendChild(mk('span', '', r[1]));
+        card.appendChild(row);
+      });
 
       // رقم الحجز + زر نسخ
       const idRow = mk('div', 'row id-row');
@@ -713,7 +742,7 @@
           'موعدك السابق (أُلغي): ' + res.previous.dateLabel + ' - ' + res.previous.label +
           (res.previous.count ? ' (' + res.previous.count + ' ملف)' : '')));
       }
-      card.appendChild(mk('div', 'must', 'الحضور في الموعد المحدد إلزامي.'));
+      card.appendChild(mk('div', 'must', LATE_RULE));
       card.appendChild(mk('div', 'note', 'احتفظ برقم الحجز. ولتغيير موعدك لاحقاً احجز مرة أخرى بنفس رقم الموبايل.'));
       resultArea.appendChild(card);
     }
