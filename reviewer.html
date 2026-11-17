@@ -97,6 +97,9 @@
       font-size: 0.92rem; width: 100%; background: #fff;
     }
     input:focus, select:focus { outline: none; border-color: var(--primary); }
+    input.invalid { border-color: #dc2626; background: #fef2f2; }
+    .field-error { color: #b91c1c; font-weight: 700; font-size: 0.82rem; min-height: 0; margin-top: 4px; }
+    .field-hint { color: var(--muted); font-size: 0.78rem; margin-top: 3px; }
 
     .btn {
       padding: 9px 16px; border: none; border-radius: 8px; font-weight: 700;
@@ -348,16 +351,19 @@
     <div class="section-title"><span>3. بيانات العقد وتواريخ الشهادات (الأعمدة X إلى AD)</span></div>
     <div class="form-grid">
       <div class="field-group">
-        <label>سنة التعاقد</label>
-        <input type="text" id="inp_contractYear" placeholder="مثال: 2023">
+        <label>تاريخ العقد</label>
+        <input type="date" id="inp_contractDate" oninput="validateContractDate(false)" onblur="validateContractDate(true)">
+        <div class="field-error" id="contractDateMsg"></div>
+        <div class="field-hint" id="contractDateHint"></div>
+        <div class="field-hint" id="contractLegacyNote"></div>
       </div>
       <div class="field-group">
         <label>المرحلة</label>
-        <input type="text" id="inp_stage" placeholder="رياض أطفال / ابتدائي...">
+        <select id="inp_stage"><option value="">-- اختر --</option></select>
       </div>
       <div class="field-group">
         <label>التخصص المعتمد بالعقد</label>
-        <input type="text" id="inp_specialty" placeholder="التخصص المكتوب بخط اليد">
+        <select id="inp_specialty"><option value="">-- اختر --</option></select>
       </div>
       <div class="field-group">
         <label>تاريخ الحصول على التطبيقات التربوية</label>
@@ -435,13 +441,34 @@
   /* ================================================================
      ضع هنا رابط الويب أب (ينتهي بـ /exec) بعد نشر Code_API.gs
      ================================================================ */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyB1DGNqkxqLB37V1outdjTskUxbd3-u1EGMePsGXuGX6CcfI3hLv7ZhC8crkrm9ESq/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwdH0cai6hC4raiSy8tz-vyJ45RTyUS_BfDoUaYjsWroSBxhveG6fT4-4yBbtBE8sbG/exec';
 
   let allTeachers = [];
   let currentTab = 'all';
   let activeTeacher = null;
   let token = null;
   let currentUser = null;
+
+  /* ---------- قوائم المرحلة والتخصص (عدّل القوائم هنا لو احتجت) ---------- */
+  const STAGES = ['رياض أطفال', 'ابتدائي'];
+  const SPECIALTIES = [
+    'لغة عربية',
+    'لغة إنجليزية',
+    'رياضيات',
+    'علوم',
+    'دراسات اجتماعية',
+    'تربية إسلامية',
+    'تربية مسيحية',
+    'تربية فنية',
+    'تربية موسيقية',
+    'تربية رياضية',
+    'حاسب آلي',
+    'رياض أطفال'
+  ];
+
+  /* ---------- قاعدة تاريخ العقد (بتيجي من السيرفر مع قائمة المعلمين) ---------- */
+  let contractRule = null;       // { min: 'yyyy-mm-dd', max: 'yyyy-mm-dd' }
+  let legacyContract = '';       // قيمة قديمة غير تاريخ موجودة في الشيت (تتحفظ كما هي لو متغيرتش)
 
   /* ---------- تخزين الجلسة (ينتهي بإغلاق التبويب) ---------- */
   function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
@@ -643,6 +670,7 @@
     try {
       const res = await api('list');
       allTeachers = Array.isArray(res.data) ? res.data : [];
+      applyRules(res.rules);
       setConn('✅ متصل بالشيت (' + allTeachers.length + ' معلم)');
       populateAdmins();
       updateStats();
@@ -789,9 +817,9 @@
     document.getElementById('sel_computer').value = d.computer || '';
     toggleDiplomaNotice();
 
-    document.getElementById('inp_contractYear').value = activeTeacher.contractYear || '';
-    document.getElementById('inp_stage').value = activeTeacher.stage || '';
-    document.getElementById('inp_specialty').value = activeTeacher.specialty || '';
+    setContractDateField(activeTeacher.contractDate);
+    setSelectValue('inp_stage', activeTeacher.stage);
+    setSelectValue('inp_specialty', activeTeacher.specialty);
     document.getElementById('inp_pedAppDate').value = activeTeacher.pedAppDate || '';
     document.getElementById('inp_qualDate').value = activeTeacher.qualDate || '';
     document.getElementById('inp_icdlDate').value = activeTeacher.icdlDate || '';
@@ -870,6 +898,11 @@
 
   async function submitReview() {
     if (!activeTeacher) return;
+    if (!validateContractDate(false)) {
+      showToast('التاريخ غير مقبول — صحّح تاريخ العقد ثم احفظ.');
+      document.getElementById('inp_contractDate').focus();
+      return;
+    }
     const btn = document.getElementById('btnSave');
     btn.disabled = true;
     btn.textContent = 'جاري الحفظ...';
@@ -894,7 +927,7 @@
       },
       receiptDate: document.getElementById('inp_receiptDate').value,
       notes: document.getElementById('inp_notes').value.trim(),
-      contractYear: document.getElementById('inp_contractYear').value.trim(),
+      contractDate: document.getElementById('inp_contractDate').value || legacyContract,
       stage: document.getElementById('inp_stage').value.trim(),
       specialty: document.getElementById('inp_specialty').value.trim(),
       pedAppDate: document.getElementById('inp_pedAppDate').value,
@@ -933,8 +966,106 @@
     }
   }
 
+  /* ---------- المرحلة / التخصص / تاريخ العقد ---------- */
+  function fillSelect(id, items) {
+    const sel = document.getElementById(id);
+    items.forEach(function (it) {
+      const o = document.createElement('option');
+      o.value = it;
+      o.textContent = it;
+      sel.appendChild(o);
+    });
+  }
+
+  // لو القيمة المخزنة في الشيت مش في القائمة (قيمة قديمة مكتوبة بخط اليد) بنضيفها كخيار عشان ماتتمسحش
+  function setSelectValue(id, val) {
+    const sel = document.getElementById(id);
+    Array.from(sel.querySelectorAll('option[data-legacy]')).forEach(function (o) { o.remove(); });
+    val = String(val || '').trim();
+    if (val && !Array.from(sel.options).some(function (o) { return o.value === val; })) {
+      const o = document.createElement('option');
+      o.value = val;
+      o.textContent = val + ' (قيمة قديمة)';
+      o.setAttribute('data-legacy', '1');
+      sel.appendChild(o);
+    }
+    sel.value = val;
+  }
+
+  function fmtDMY(ymd) {
+    const p = String(ymd).split('-');
+    return p.length === 3 ? (p[2] + '/' + p[1] + '/' + p[0]) : ymd;
+  }
+
+  function applyRules(rules) {
+    const inp = document.getElementById('inp_contractDate');
+    const hint = document.getElementById('contractDateHint');
+    if (rules && rules.contractMin && rules.contractMax) {
+      contractRule = { min: rules.contractMin, max: rules.contractMax };
+      inp.min = contractRule.min;
+      inp.max = contractRule.max;
+      inp.disabled = false;
+      hint.textContent = 'المسموح: من ' + fmtDMY(contractRule.min) + ' إلى ' + fmtDMY(contractRule.max);
+    } else {
+      contractRule = null;
+      inp.disabled = true;
+      hint.textContent = '';
+      showError('خدمة الشيت (Code_API.gs) لم تُحدَّث بعد، لذلك حقل تاريخ العقد معطّل. الصق النسخة الجديدة وانشرها كنسخة جديدة (New version).');
+    }
+  }
+
+  function isContractDateOk(v) {
+    return !!contractRule && /^\d{4}-\d{2}-\d{2}$/.test(v) && v >= contractRule.min && v <= contractRule.max;
+  }
+
+  // final = true عند الخروج من الحقل: التاريخ المرفوض بيتمسح. أثناء الكتابة بنظهر الرسالة بس.
+  function validateContractDate(final) {
+    const inp = document.getElementById('inp_contractDate');
+    const msg = document.getElementById('contractDateMsg');
+    const v = inp.value;
+    if (!v) {
+      if (!final) { msg.textContent = ''; inp.classList.remove('invalid'); }
+      return true;
+    }
+    if (isContractDateOk(v)) {
+      msg.textContent = '';
+      inp.classList.remove('invalid');
+      return true;
+    }
+    inp.classList.add('invalid');
+    msg.textContent = 'التاريخ غير مقبول';
+    if (final) {
+      inp.value = '';
+      showToast('التاريخ غير مقبول');
+    }
+    return false;
+  }
+
+  function setContractDateField(raw) {
+    const inp = document.getElementById('inp_contractDate');
+    const note = document.getElementById('contractLegacyNote');
+    document.getElementById('contractDateMsg').textContent = '';
+    inp.classList.remove('invalid');
+    note.textContent = '';
+    legacyContract = '';
+    raw = String(raw || '').trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+      inp.value = raw;
+      validateContractDate(false);
+    } else {
+      inp.value = '';
+      if (raw) {
+        legacyContract = raw;
+        note.textContent = 'قيمة قديمة في الشيت: ' + raw + ' (تُستبدل عند اختيار تاريخ)';
+      }
+    }
+  }
+
   /* ---------- التشغيل ---------- */
   window.addEventListener('DOMContentLoaded', async function () {
+    fillSelect('inp_stage', STAGES);
+    fillSelect('inp_specialty', SPECIALTIES);
+
     document.getElementById('tableBody').addEventListener('click', function (e) {
       const el = e.target.closest('[data-act]');
       if (!el) return;
