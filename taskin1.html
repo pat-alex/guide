@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطوات الترشح للتسكين على كادر المعلم لأول مرة - الأكاديمية المهنية للمعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           نفس متغيرات وتنسيقات قالب "دليل حجز موعد الاختبار"
+           ========================================================= */
+        :root {
+            --primary-color: #0b5394;
+            --secondary-color: #3d85c6;
+            --accent-color: #e69138;
+            --text-dark: #333333;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --warning-bg: #fff3e0;
+            --border-radius: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: transparent;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 10px;
+            /* منع التمرير العرضي تماماً */
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .main-header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .main-header h1 {
+            font-weight: 900;
+            font-size: 2em;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+
+        .main-header h2 {
+            font-weight: 700;
+            font-size: 1.25em;
+            color: var(--secondary-color);
+        }
+
+        .important-dates {
+            background-color: #e8f4f8;
+            border-right: 5px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .important-dates h2 {
+            color: var(--primary-color);
+            font-size: 1.35em;
+        }
+
+        .date-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .date-item {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .date-item h3 {
+            color: var(--primary-color);
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .status-closed-badge {
+            display: inline-block;
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 1.05em;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            color: #d35400;
+            border-right: 5px solid var(--accent-color);
+        }
+
+        .alert-success {
+            background-color: #e8f8f5;
+            color: var(--success-color);
+            border-right: 5px solid var(--success-color);
+        }
+
+        .alert-danger-box {
+            background-color: #fee2e2;
+            border-right: 5px solid #ef4444;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        .target-section {
+            background-color: var(--bg-light);
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .target-section h2 {
+            color: var(--primary-color);
+            font-size: 1.35em;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .target-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .target-fallback {
+            display: none;
+            text-align: right;
+            background: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .step-container {
+            margin-bottom: 30px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            background-color: var(--primary-color);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.4em;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .step-content {
+            background-color: var(--white);
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 20px;
+        }
+
+        .ui-badge {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px dashed #94a3b8;
+            cursor: default;
+            margin: 0 4px;
+        }
+
+        .action-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            word-break: break-all;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        ul.styled-list {
+            list-style-type: none;
+            padding-right: 0;
+        }
+
+        ul.styled-list li {
+            position: relative;
+            padding-right: 25px;
+            margin-bottom: 10px;
+        }
+
+        ul.styled-list li::before {
+            content: "✓";
+            position: absolute;
+            right: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 0; }
+            .container { padding: 10px; border-radius: 0; }
+            .step-content { padding: 15px; }
+            .main-header h1 { font-size: 1.5em; }
+            .step-title { font-size: 1.2em; }
+            .step-number { width: 35px; height: 35px; font-size: 1.2em; margin-left: 10px; }
+            .date-item { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <a href="index.html" class="back-link">→ الخدمات الإلكترونية</a>
+
+        <header class="main-header">
+            <h1>خطوات الترشح للتسكين على كادر المعلم لأول مرة</h1>
+            <h2>(التسكين على كادر المعلم لأول مرة)</h2>
+        </header>
+
+        <!-- حالة الموقع ومواعيد الترشح -->
+        <section class="important-dates">
+            <h2>📅 مواعيد وحالة التسجيل</h2>
+            <div class="date-box">
+                <div class="date-item">
+                    <h3>حالة الموقع الإلكتروني</h3>
+                    <p><span class="status-closed-badge">⛔ الموقع غير متاح الآن</span></p>
+                </div>
+                <div class="date-item">
+                    <h3>فترة تسجيل الترشح المعلنة</h3>
+                    <p>بداية من: <strong>يوم 18 يناير 2026</strong></p>
+                    <p>إلى: <strong>يوم 22 يوليو 2026</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- تنويه هام بشأن المواعيد -->
+        <div class="alert alert-warning">
+            <strong>⚠️ تنويه هام:</strong> تسجيل البيانات قبل أو بعد المواعيد المعلنة كل عام لا يعتد به، ويُعتبر كأن لم يكن، وستنتظر فتح الموقع العام التالي.
+        </div>
+
+        <!-- قسم الفئات المستهدفة -->
+        <section class="target-section">
+            <h2>👥 الفئات المستهدفة</h2>
+            <img
+                src="https://sites.google.com/u/0/sitesv-images-rt/APXyLQf55OaHGOvBh1rvh56xVQPi9Vu4k2FqwvvrfatPiQjOKhKmOUCIq096-HeuV5o-2YbhPm5wq8HwBVFe8QG_uy4_pfYpfE5YHfOrICra5TJrhpAFuWQtJXPYnw7tpVZFwydNx18so_JNeEMZKci6hhM5JXRi8aPziR9RlE8pdRbHiaAAqmze5mzSqwnMv18H-LqlCKc_ztL70xgqoasylWVSeB3RYigyTDJvwrGj=w1280"
+                alt="الفئات المستهدفة للترشح للتسكين على كادر المعلم لأول مرة"
+                onerror="this.style.display='none'; document.getElementById('targetFallback').style.display='block';"
+            >
+            <div class="target-fallback" id="targetFallback">
+                <ul class="styled-list">
+                    <li>شاغلو وظائف التعليم المعينون على درجات مالية دائمة ولم يسبق تسكينهم على وظائف الكادر.</li>
+                    <li>المستوفون لشروط المؤهل العالي والتربوي وفقاً للفاكس الرسمي المنظم.</li>
+                    <li>يُرجى مراجعة قسم الإحصاء بالإدارة التعليمية للتأكد من إدراج اسمك ضمن الفئات المستهدفة.</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+        <!-- الخطوة 1 -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h3 class="step-title">دخول الموقع الإلكترونى</h3>
+            </div>
+            <div class="step-content">
+                <p>يتم التسجيل من خلال الرابط التالى للموقع الإلكترونى للأكاديمية:</p>
+                <a href="http://academy.emis.gov.eg/academy/" target="_blank" rel="noopener" class="action-button" style="direction: ltr;">http://academy.emis.gov.eg/academy/</a>
+
+                <div class="alert-danger-box">
+                    <p style="margin-bottom: 8px;">🛑 <strong>تنبيه هام بخصوص الدخول للموقع:</strong></p>
+                    <p style="margin-bottom: 8px;">إذا واجهتك صعوبة فى دخول الموقع بالإيميل الموحد أو ظهرت لك أى رسالة خطأ أو رسالة تفيد بأنه ليس لك صلاحية الدخول، تواصل فوراً مع <strong>(مسئول الحكومة الإلكترونية بمدرستك أو مسئول الإحصاء بالإدارة أو مدير الإحصاء بالمديرية)</strong>.</p>
+                    <p style="margin: 0; text-decoration: underline;">ليس للأكاديمية علاقة بدخول هذا الموقع أو ظهور أى رسالة خطأ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الخطوة 2 -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h3 class="step-title">مراجعة البيانات الموضحة بصفحتك</h3>
+            </div>
+            <div class="step-content">
+                <ul class="styled-list">
+                    <li>بعد دخول صفحتك ستظهر بياناتك الشخصية والوظيفية.</li>
+                    <li>تأكد أن جميع بياناتك المكتوبة صحيحة، وفى حالة وجود خطأ <strong>لا تقم بحفظ البيانات إلا بعد تعديلها</strong>.</li>
+                    <li>يتم التعديل من خلال <strong>مسئول الإحصاء بإدارتك</strong> بعد إطلاعه على المستندات الرسمية التى تثبت البيانات المطلوب تعديلها.</li>
+                </ul>
+
+                <div class="alert alert-warning" style="margin-top: 15px; margin-bottom: 0;">
+                    <strong>⚠️ تنبيه هام:</strong> لا تضغط <span class="ui-badge">حفظ البيانات</span> إلا بعد التأكد التام من صحة بياناتك، وخاصة <strong>(الكفاءة التربوية)</strong> و<strong>(التخصص)</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- الخطوة 3 -->
+        <div class="step-container">
+            <div class="step-header">
+                <div class="step-number" style="background-color: var(--accent-color);">3</div>
+                <h3 class="step-title" style="color: var(--accent-color);">حفظ البيانات المسجلة</h3>
+            </div>
+            <div class="step-content" style="border-color: var(--accent-color);">
+                <ul class="styled-list">
+                    <li>بعد التأكد من صحة جميع البيانات، اضغط على زر <span class="ui-badge">حفظ</span>.</li>
+                    <li>بعد الضغط على زر الحفظ، ستظهر لك رسالة أسفل الزر تؤكد إتمام التسجيل:</li>
+                </ul>
+
+                <div class="alert alert-success" style="text-align: center; font-size: 1.15em; font-weight: 900;">
+                    ✅ تم الحفظ بنجاح
+                </div>
+
+                <div style="margin-top: 15px; padding: 12px; background-color: #f0f7ff; border-right: 4px solid var(--primary-color); border-radius: 6px;">
+                    <p style="color: var(--primary-color); font-size: 1.05em; font-weight: bold; margin: 0;">
+                        💡 ملحوظة: قم بطباعة استمارة الترشح والاحتفاظ بها، مع المتابعة المستمرة مع قسم الإحصاء بإدارتك التعليمية لمعرفة موعد صدور فاكس التدريب والاختبار (الخطوة الثانية).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
