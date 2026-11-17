@@ -384,150 +384,6 @@
     }
     .btn:hover { background: linear-gradient(135deg, var(--primary), #2C8A72); box-shadow: 0 10px 26px rgba(31,111,92,0.35); transform: scale(1.04); color: var(--surface); }
 
-    /* زر ثانوي */
-    .btn-unavailable {
-      background: var(--bg);
-      color: var(--muted);
-      border: 1px solid var(--line);
-      box-shadow: none;
-    }
-    .btn-unavailable:hover {
-      background: var(--gold-tint);
-      color: var(--gold-dark);
-      border-color: var(--gold-line);
-      box-shadow: 0 6px 16px rgba(138, 90, 34, 0.12);
-      transform: scale(1.02);
-    }
-
-    /* صفحة حالة الخدمة غير المتاحة (جاهزة للتفعيل مستقبلاً) */
-    .service-status-page {
-      display: none;
-      min-height: 82vh;
-      padding: 36px 20px 64px;
-      background: var(--bg);
-      animation: fadeUp 0.4s ease both;
-    }
-    .service-status-page.active {
-      display: block;
-    }
-    .status-page-inner {
-      max-width: 780px;
-      margin: 0 auto;
-    }
-    .status-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .back-home-btn {
-      font-family: 'Tajawal', sans-serif;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 50px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      color: var(--primary-dark);
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: all 0.25s ease;
-    }
-    .back-home-btn:hover {
-      background: var(--primary-tint);
-      border-color: var(--primary);
-      transform: translateX(3px);
-    }
-    .status-breadcrumb {
-      font-size: 0.88rem;
-      color: var(--muted);
-      font-weight: 500;
-    }
-    .status-card-box {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: 44px 36px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-    .status-service-icon {
-      width: 78px;
-      height: 78px;
-      margin: 0 auto 20px;
-      border-radius: 22px;
-      background: var(--primary-tint);
-      border: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: var(--primary-dark);
-    }
-    .status-card-box h2 {
-      font-family: 'Tajawal', sans-serif;
-      font-size: clamp(1.45rem, 3.5vw, 1.95rem);
-      font-weight: 800;
-      color: var(--ink);
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
-    .status-alert-banner {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 24px;
-      border-radius: 14px;
-      background: var(--warn-tint);
-      border: 1px solid var(--warn-line);
-      color: var(--warn-dark);
-      font-weight: 800;
-      font-size: 1.08rem;
-      margin-bottom: 24px;
-    }
-    .status-desc {
-      font-size: 1.05rem;
-      color: var(--ink);
-      line-height: 1.85;
-      max-width: 58ch;
-      margin: 0 auto 22px;
-    }
-    .status-hint-box {
-      text-align: right;
-      background: var(--gold-tint);
-      border: 1px solid var(--gold-line);
-      border-right: 5px solid var(--gold);
-      border-radius: 16px;
-      padding: 20px 24px;
-      margin: 0 auto 30px;
-      max-width: 620px;
-    }
-    .status-hint-box strong {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--gold-dark);
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-    .status-hint-box p {
-      margin: 0;
-      color: #6B4B23;
-      font-size: 0.95rem;
-      line-height: 1.75;
-    }
-    .status-actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-    }
-
     .note-wrap {
       max-width: 850px;
       margin: 10px auto 20px;
@@ -841,9 +697,8 @@
             <div class="card-icon"><i class="fas fa-file-signature"></i></div>
             <h4>الخطوة الأولى : تسجيل الترشح للتسكين على الكادر</h4>
             <p>تسجيل بيانات الترشح للتسكين على وظائف المعلمين خلال المواعيد الرسمية المعلنة بالفاكس.</p>
-            <button type="button" class="btn" data-open-service="taskeenNomination">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="taskin.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
 
           <!-- الخدمة 2 -->
@@ -852,9 +707,8 @@
             <div class="card-icon"><i class="fas fa-user-check"></i></div>
             <h4>الخطوة الثانية : حجز اختبار التسكين على الكادر لأول مرة</h4>
             <p>متابعة مواعيد التدريب وحجز اختبار الصلاحية للتسكين على وظائف المعلمين لأول مرة.</p>
-            <button type="button" class="btn" data-open-service="taskeen">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="taskin-exam.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
 
           <!-- الخدمة 3 -->
@@ -863,9 +717,8 @@
             <div class="card-icon"><i class="fas fa-rotate-left"></i></div>
             <h4>حجز اختبار إعادة التعيين</h4>
             <p>الخدمات الإلكترونية الخاصة بحجز اختبارات الصلاحية لإعادة التعيين على الكادر.</p>
-            <button type="button" class="btn" data-open-service="reappoint">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="reappoint.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
         </div>
       </section>
@@ -896,9 +749,8 @@
             <div class="card-icon"><i class="fas fa-chart-line"></i></div>
             <h4>حجز اختبار الترقي على الكادر</h4>
             <p>حجز اختبارات الصلاحية للترقي على وظائف الكادر للدفعات المستحقة.</p>
-            <button type="button" class="btn" data-open-service="tarqi">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="taqy-exam.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
 
           <!-- الخدمة 3 -->
@@ -907,9 +759,8 @@
             <div class="card-icon"><i class="fas fa-right-left"></i></div>
             <h4>حجز اختبار تغيير المسمى الوظيفي</h4>
             <p>التقديم لحجز تدريبات واختبارات تغيير المسمى الوظيفي وفقاً لشروط ومواعيد التنسيق.</p>
-            <button type="button" class="btn" data-open-service="jobTitle">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="change.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
 
           <!-- الخدمة 4 -->
@@ -918,9 +769,8 @@
             <div class="card-icon"><i class="fas fa-atom"></i></div>
             <h4>حجز اختبار التقدم لمدارس المتفوقين STEM</h4>
             <p>اختبارات الصلاحية للمتقدمين للعمل بمدارس المتفوقين في العلوم والتكنولوجيا STEM.</p>
-            <button type="button" class="btn" data-open-service="stem">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="stem.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
 
           <!-- الخدمة 5 -->
@@ -929,9 +779,8 @@
             <div class="card-icon"><i class="fas fa-certificate"></i></div>
             <h4>التقدم للاعتماد (مدرب - مراجع - معد برامج)</h4>
             <p>برامج الاعتماد المهني للمدربين والمراجعين الخارجيين ومعدي الحقائب التدريبية.</p>
-            <button type="button" class="btn" data-open-service="accreditation">
-              عرض الخطوات <i class="fas fa-arrow-left"></i>
-            </button>
+            <!-- ضع رابط الصفحة في خاصية href لتفعيل الزر -->
+            <a href="acc.html" class="btn" target="_blank">عرض الخطوات <i class="fas fa-arrow-left"></i></a>
           </div>
         </div>
       </section>
@@ -1214,56 +1063,6 @@
     <p class="closing-note">إذا كانت لديك أسئلة أخرى، راجع الموضوعات بالأعلى بالضغط عليها — فقد تكون إجابة سؤالك موجودة بالفعل ولا تحتاج لانتظار الرد.</p>
   </div>
 
-  <!-- =======================================================
-       القسم الثالث: صفحة حالة الخدمة غير المتاحة (جاهزة للإضافة مستقبلاً)
-       ======================================================= -->
-  <section class="service-status-page" id="servicePageView" aria-live="polite">
-    <div class="status-page-inner">
-      <div class="status-topbar">
-        <button type="button" class="back-home-btn" id="backToHomeBtn">
-          <i class="fas fa-arrow-right"></i> العودة للرئيسية
-        </button>
-        <span class="status-breadcrumb" id="statusBreadcrumb">الخدمات الإلكترونية / حالة الخدمة</span>
-      </div>
-
-      <div class="status-card-box">
-        <div class="status-service-icon" id="statusServiceIcon">
-          <i class="fas fa-lock"></i>
-        </div>
-
-        <h2 id="statusServiceTitle">اسم الخدمة</h2>
-
-        <div class="status-alert-banner">
-          <i class="fas fa-circle-exclamation"></i>
-          <span>هذه الخدمة غير متاحة حالياً</span>
-        </div>
-
-        <p class="status-desc" id="statusServiceDesc">
-          الخدمة غير مفعّلة إلكترونياً في الوقت الحالي، وسيتم إتاحتها فور صدور التعليمات الرسمية.
-        </p>
-
-        <div class="status-hint-box">
-          <strong><i class="fas fa-lightbulb"></i> إرشادات هامة لحين إتاحة الخدمة</strong>
-          <p id="statusServiceHint">تابع الصفحة باستمرار لمعرفة موعد فتح باب الحجز.</p>
-        </div>
-
-        <!-- ==========================================================
-             منطقة إضافة كود وخطوات الخدمة مستقبلاً عند إتاحتها
-             ========================================================== -->
-        <div id="futureServiceContent"></div>
-
-        <div class="status-actions">
-          <button type="button" class="btn" id="statusHomeActionBtn">
-            <i class="fas fa-house"></i> العودة للصفحة الرئيسية
-          </button>
-          <button type="button" class="btn btn-unavailable" id="statusFaqActionBtn">
-            <i class="fas fa-question-circle"></i> تصفح الأسئلة الشائعة
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- تذييل الصفحة الموحد -->
   <footer>
     <p class="footer-brand">الأكاديمية المهنية للمعلمين — فرع الإسكندرية</p>
@@ -1276,141 +1075,6 @@
        ======================================================= -->
   <script>
   (function(){
-    // بيانات الخدمات غير المتاحة (جاهزة للتعديل وإضافة الكود أو الرابط عند الإتاحة)
-    var UNAVAILABLE_SERVICES = {
-      taskeenNomination: {
-        title: 'الخطوة الأولى : تسجيل الترشح للتسكين على الكادر',
-        icon: 'fa-file-signature',
-        desc: 'عذراً، خدمة تسجيل الترشح للتسكين على الكادر غير متاحة حالياً. سيتم تفعيل هذه الصفحة وإضافة خطوات التسجيل فور صدور الفاكس الرسمي المنظم لمواعيد الترشح.',
-        hint: 'تواصل مع قسم الإحصاء بإدارتك التعليمية لمعرفة مواعيد الترشح، مع مراعاة التسجيل خلال المواعيد المقررة بالفاكس فقط ومراجعة البيانات قبل الحفظ وطباعة استمارة الترشح والاحتفاظ بها.',
-        futureUrl: ''
-      },
-      tarqi: {
-        title: 'حجز اختبار الترقي على الكادر',
-        icon: 'fa-chart-line',
-        desc: 'عذراً، حجز اختبار الترقي على الكادر غير متاح حالياً. سيتم تفعيل هذه الصفحة وإضافة خطوات الحجز فور فتح باب التقديم رسمياً من قِبل الأكاديمية المهنية للمعلمين.',
-        hint: 'تأكد من تفعيل البريد الإلكتروني الموحد ومراجعة بياناتك مع مسئول الحكومة الإلكترونية بمدرستك أو مسئول الإحصاء بالإدارة التعليمية.',
-        // عند إتاحة الخدمة مستقبلاً: أضف رابط الصفحة هنا (مثال: 'tarqi-exam.html') أو أضف كود الخطوات
-        futureUrl: ''
-      },
-      taskeen: {
-        title: 'الخطوة الثانية : حجز اختبار التسكين على الكادر لأول مرة',
-        icon: 'fa-user-check',
-        desc: 'عذراً، خدمة حجز اختبار التسكين على الكادر لأول مرة غير متاحة حالياً. سيتم إتاحة خطوات الحجز هنا فور الانتهاء من مرحلة الترشح وصدور فاكس التدريب والاختبار.',
-        hint: 'تُستكمل هذه الخطوة بعد الانتهاء من الخطوة الأولى (تسجيل الترشح وطباعة الاستمارة). تابع باستمرار مع قسم الإحصاء بالإدارة التعليمية لمعرفة موعد إتاحة الحجز.',
-        futureUrl: ''
-      },
-      jobTitle: {
-        title: 'حجز اختبار تغيير المسمى الوظيفي',
-        icon: 'fa-right-left',
-        desc: 'عذراً، خدمة حجز اختبار تغيير المسمى الوظيفي غير متاحة حالياً. ستكون خطوات الحجز الإلكتروني متاحة في هذه الصفحة فور إعلان فتح الباب.',
-        hint: 'يمكنك التواصل مع قسم التنسيق بإدارتك التعليمية لمعرفة شروط التقديم والمستندات المطلوبة لتغيير المسمى الوظيفي.',
-        futureUrl: ''
-      },
-      stem: {
-        title: 'حجز اختبار التقدم لمدارس المتفوقين STEM',
-        icon: 'fa-atom',
-        desc: 'عذراً، خدمة حجز اختبار التقدم لمدارس المتفوقين STEM غير متاحة حالياً. سيتم تفعيل الصفحة وإضافة خطوات التقديم فور الإعلان الرسمي.',
-        hint: 'يتم الإعلان عن شروط ومواعيد التقدم لمدارس المتفوقين STEM بالمدارس والإدارات التعليمية في حينه.',
-        futureUrl: ''
-      },
-      reappoint: {
-        title: 'حجز اختبار إعادة التعيين',
-        icon: 'fa-rotate-left',
-        desc: 'عذراً، خدمة حجز اختبار إعادة التعيين غير متاحة حالياً. ستتوفر كافة خطوات الحجز الإلكتروني في هذه الصفحة فور إتاحتها.',
-        hint: 'تواصل مع قسم شئون العاملين بإدارتك التعليمية لمعرفة الإجراءات الإدارية الخاصة بإعادة التعيين وموقفك منها.',
-        futureUrl: ''
-      },
-      accreditation: {
-        title: 'التقدم للاعتماد (مدرب - مراجع - معد برامج)',
-        icon: 'fa-certificate',
-        desc: 'عذراً، التقدم لبرامج الاعتماد المهني (مدرب معتمد - مراجع خارجي - معد حقائب تدريبية) غير متاح حالياً.',
-        hint: 'لا يُتاح التقديم لهذه البرامج بشكل مفتوح طوال العام، بل يصدر بها إعلان رسمي وفقاً للاحتياجات الفعلية لوزارة التربية والتعليم والأكاديمية.',
-        futureUrl: ''
-      }
-    };
-
-    var mainPortalView = document.getElementById('mainPortalView');
-    var faqSection = document.getElementById('faqSection');
-    var servicePageView = document.getElementById('servicePageView');
-    var statusServiceIcon = document.getElementById('statusServiceIcon');
-    var statusServiceTitle = document.getElementById('statusServiceTitle');
-    var statusServiceDesc = document.getElementById('statusServiceDesc');
-    var statusServiceHint = document.getElementById('statusServiceHint');
-    var statusBreadcrumb = document.getElementById('statusBreadcrumb');
-
-    function openServiceStatus(serviceKey, updateHash) {
-      var data = UNAVAILABLE_SERVICES[serviceKey];
-      if (!data) return;
-
-      // إذا تم إضافة رابط صفحة للخدمة مستقبلاً يتم فتحها مباشرة
-      if (data.futureUrl) {
-        window.open(data.futureUrl, '_blank');
-        return;
-      }
-
-      statusServiceIcon.innerHTML = '<i class="fas ' + data.icon + '"></i>';
-      statusServiceTitle.textContent = data.title;
-      statusServiceDesc.textContent = data.desc;
-      statusServiceHint.textContent = data.hint;
-      statusBreadcrumb.textContent = 'الخدمات الإلكترونية / ' + data.title;
-
-      mainPortalView.style.display = 'none';
-      if (faqSection) faqSection.style.display = 'none';
-      servicePageView.classList.add('active');
-
-      if (updateHash !== false) {
-        history.pushState({ service: serviceKey }, '', '#service-' + serviceKey);
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function closeServiceStatus(scrollToFaq) {
-      servicePageView.classList.remove('active');
-      mainPortalView.style.display = '';
-      if (faqSection) faqSection.style.display = '';
-
-      if (window.location.hash && window.location.hash.indexOf('#service-') === 0) {
-        history.pushState(null, '', window.location.pathname + window.location.search);
-      }
-
-      if (scrollToFaq && faqSection) {
-        faqSection.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-
-    document.querySelectorAll('[data-open-service]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        openServiceStatus(btn.getAttribute('data-open-service'), true);
-      });
-    });
-
-    document.getElementById('backToHomeBtn').addEventListener('click', function(){
-      closeServiceStatus(false);
-    });
-    document.getElementById('statusHomeActionBtn').addEventListener('click', function(){
-      closeServiceStatus(false);
-    });
-    document.getElementById('statusFaqActionBtn').addEventListener('click', function(){
-      closeServiceStatus(true);
-    });
-
-    // دعم زر الرجوع في المتصفح والروابط المباشرة
-    window.addEventListener('popstate', function(){
-      var h = window.location.hash || '';
-      if (h.indexOf('#service-') === 0) {
-        openServiceStatus(h.replace('#service-', ''), false);
-      } else if (servicePageView.classList.contains('active')) {
-        closeServiceStatus(false);
-      }
-    });
-
-    if (window.location.hash && window.location.hash.indexOf('#service-') === 0) {
-      openServiceStatus(window.location.hash.replace('#service-', ''), false);
-    }
-
     // تصفية الخدمات المتاحة حسب الفئة الوظيفية
     var filterBtns = Array.from(document.querySelectorAll('.role-filter-btn'));
     var categories = Array.from(document.querySelectorAll('.service-category'));
