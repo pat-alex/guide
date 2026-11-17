@@ -454,6 +454,9 @@
       <button class="btn btn-outline btn-sm" onclick="closeRegModal()">✕ إغلاق</button>
     </div>
     <div class="copy-grid" id="regFields"></div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <button class="btn btn-success" id="btnRegConfirm" onclick="confirmRegFromView()">✓ تأكيد التسجيل</button>
+    </div>
   </div>
 </div>
 
@@ -487,7 +490,7 @@
   /* ================================================================
      ضع هنا رابط الويب أب (ينتهي بـ /exec) بعد نشر Code_API.gs
      ================================================================ */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzto2jgpiD8V9QzEZyQIhzVbd-TSuwhryO_WzhWlzUG-A85uy2DL1Oo3xWIQlxTnmfn/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyB1DGNqkxqLB37V1outdjTskUxbd3-u1EGMePsGXuGX6CcfI3hLv7ZhC8crkrm9ESq/exec';
 
   let allTeachers = [];
   let currentTab = 'all';
@@ -503,6 +506,11 @@
     'رياضيات',
     'علوم',
     'دراسات اجتماعية',
+    'تربية إسلامية',
+    'تربية مسيحية',
+    'تربية فنية',
+    'تربية موسيقية',
+    'تربية رياضية',
     'حاسب آلي',
     'رياض أطفال'
   ];
@@ -510,6 +518,7 @@
   /* ---------- قاعدة تاريخ العقد (بتيجي من السيرفر مع قائمة المعلمين) ---------- */
   let contractRule = null;       // { min: 'yyyy-mm-dd', max: 'yyyy-mm-dd' }
   let legacyContract = '';       // قيمة قديمة غير تاريخ موجودة في الشيت (تتحفظ كما هي لو متغيرتش)
+  let regViewRow = null;         // الصف المفتوح في نافذة عرض بيانات التسجيل
 
   /* ---------- تخزين الجلسة (ينتهي بإغلاق التبويب) ---------- */
   function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
@@ -810,13 +819,17 @@
       }
 
       const actionBtns = (currentTab === 'ready')
-        ? '<button class="btn btn-success btn-sm" data-act="register" data-row="' + t.row + '">✓ تأكيد التسجيل</button> ' +
-          '<button class="btn btn-outline btn-sm" data-act="regview" data-row="' + t.row + '">عرض</button>'
+        ? '<button class="btn btn-success btn-sm" data-act="register" data-row="' + t.row + '">✓ تأكيد التسجيل</button>'
         : '<button class="btn btn-primary btn-sm" data-act="review" data-row="' + t.row + '">مراجعة الملف</button>';
+
+      // في تبويب "جاهز للتسجيل": زر عرض على يمين الاسم مباشرة
+      const nameCell = (currentTab === 'ready')
+        ? '<button class="btn btn-outline btn-sm" style="margin-left:8px;" data-act="regview" data-row="' + t.row + '">عرض</button>' + esc(t.name)
+        : esc(t.name);
 
       return '<tr class="' + (t.ready ? 'row-complete' : '') + '">' +
         '<td>' + esc(t.admin) + '</td>' +
-        '<td style="font-weight:700;">' + esc(t.name) + '</td>' +
+        '<td style="font-weight:700;">' + nameCell + '</td>' +
         '<td><span class="copyable" title="اضغط للنسخ" data-act="copy" data-val="' + esc(t.code) + '">' + esc(t.code) + '</span></td>' +
         '<td><span class="copyable" title="اضغط للنسخ" data-act="copy" data-val="' + esc(t.nid) + '">' + esc(t.nid) + '</span></td>' +
         '<td style="font-weight:800; color:' + (t.isComplete ? '#1e40af' : '#475569') + ';">' + t.pct + '%</td>' +
@@ -1002,14 +1015,16 @@
 
   async function quickRegister(row) {
     const t = allTeachers.find(function (x) { return x.row === row; });
-    if (!t) return;
+    if (!t) return false;
     try {
       await api('register', { row: row, code: t.code });
       showToast('تم تأكيد التسجيل على الموقع الرسمي باسم ' + currentUser + '.');
       await loadData(false);
+      return true;
     } catch (err) {
       if (err.code === 'SESSION') forceLogout(err.message);
       else alert(err.message);
+      return false;
     }
   }
 
@@ -1229,20 +1244,14 @@
     if (!t) return;
     document.getElementById('rName').textContent = t.name;
 
+    regViewRow = row;
     const items = [
       ['الاسم', t.name],
-      ['الإدارة التعليمية', t.admin],
       ['كود المعلم', t.code],
-      ['الرقم القومي', t.nid],
-      ['رقم الموبايل', t.whatsapp],
-      ['تاريخ العقد', ymdToDmy(t.contractDate)],
       ['المرحلة', t.stage],
       ['التخصص المعتمد بالعقد', t.specialty],
-      ['المؤهل', t.docs.qual],
       ['تاريخ المؤهل التربوي', ymdToDmy(t.qualDate)],
-      ['الدبلوم العام في التربية', t.docs.diploma],
       ['تاريخ الحصول على التطبيقات التربوية', ymdToDmy(t.pedAppDate)],
-      ['شهادة الحاسب', t.docs.computer],
       ['تاريخ الحصول على الشهادة (ICDL أو ما يعادلها)', ymdToDmy(t.icdlDate)],
       ['رقم الشهادة (ICDL أو ما يعادلها)', t.icdlNum]
     ];
@@ -1277,6 +1286,20 @@
 
   function closeRegModal() {
     document.getElementById('regModal').style.display = 'none';
+    regViewRow = null;
+  }
+
+  // زر "تأكيد التسجيل" داخل نافذة العرض
+  async function confirmRegFromView() {
+    if (regViewRow == null) return;
+    const btn = document.getElementById('btnRegConfirm');
+    btn.disabled = true;
+    try {
+      const ok = await quickRegister(regViewRow);
+      if (ok) closeRegModal();
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   /* ---------- التشغيل ---------- */
