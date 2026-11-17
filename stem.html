@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز اختبار التقدم لمدارس المتفوقين STEM - الأكاديمية المهنية للمعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           نفس متغيرات وتنسيقات قالب "دليل حجز موعد الاختبار"
+           ========================================================= */
+        :root {
+            --primary-color: #0b5394;
+            --secondary-color: #3d85c6;
+            --accent-color: #e69138;
+            --text-dark: #333333;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --warning-bg: #fff3e0;
+            --danger-bg: #fee2e2;
+            --danger-color: #b91c1c;
+            --border-radius: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: transparent;
+            color: var(--text-dark);
+            line-height: 1.7;
+            padding: 10px;
+            /* منع التمرير العرضي تماماً */
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* ترويسة الصفحة */
+        .main-header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .main-header .org-badge {
+            display: inline-block;
+            background-color: #e8f4f8;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.95em;
+            padding: 5px 16px;
+            border-radius: 50px;
+            margin-bottom: 10px;
+        }
+
+        .main-header h1 {
+            font-weight: 900;
+            font-size: 2em;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+
+        .main-header h2 {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: var(--secondary-color);
+        }
+
+        /* صندوق حالة التقدم للاختبار */
+        .important-dates {
+            background-color: #e8f4f8;
+            border-right: 5px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .important-dates h2 {
+            color: var(--primary-color);
+            font-size: 1.35em;
+            margin-bottom: 5px;
+        }
+
+        .date-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .date-item {
+            flex: 1;
+            min-width: 260px;
+            background: var(--white);
+            padding: 22px 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .date-item h3 {
+            color: var(--primary-color);
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            font-size: 1.15em;
+        }
+
+        .status-closed-badge {
+            display: inline-block;
+            background-color: var(--danger-bg);
+            color: var(--danger-color);
+            border: 1px solid #fecaca;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+
+        .status-note {
+            font-size: 1.08em;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        /* تنويه المتابعة */
+        .alert {
+            padding: 16px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            color: #d35400;
+            border-right: 5px solid var(--accent-color);
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 0; }
+            .container { padding: 12px; border-radius: 0; }
+            .main-header h1 { font-size: 1.45em; }
+            .main-header h2 { font-size: 1.05em; }
+            .date-item { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- رابط العودة إلى صفحة الخدمات الإلكترونية -->
+        <a href="index.html" class="back-link">→ الخدمات الإلكترونية</a>
+
+        <!-- ترويسة الصفحة -->
+        <header class="main-header">
+            <div class="org-badge">الأكاديمية المهنية للمعلمين — فرع الإسكندرية</div>
+            <h1>حجز اختبار التقدم لمدارس المتفوقين STEM</h1>
+            <h2>اختبارات الصلاحية للعمل بمدارس المتفوقين في العلوم والتكنولوجيا STEM</h2>
+        </header>
+
+        <!-- قسم حالة التقدم للاختبار -->
+        <section class="important-dates">
+            <h2>📅 مواعيد وحالة التقدم للاختبار</h2>
+            <div class="date-box">
+                <div class="date-item">
+                    <h3>🗓️ موقف فتح باب التقديم الإلكتروني</h3>
+                    <p><span class="status-closed-badge">⛔ التقدم غير متاح الآن</span></p>
+                    <p class="status-note">التقدم غير متاح الآن، وستظهر هنا خطوات الحجز عند الإعلان الرسمي بجهة العمل.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- تنويه المتابعة بجهة العمل -->
+        <div class="alert alert-warning">
+            <strong>🔔 تنويه هام:</strong> يتم الإعلان عن مواعيد وشروط التقدم للعمل بمدارس المتفوقين في العلوم والتكنولوجيا (STEM) بالمدارس وجهات العمل في حينه، وستظهر هنا خطوات الحجز كاملة فور صدور الإعلان الرسمي.
+        </div>
+
+        <!-- =========================================================
+             باقي الصفحة خالٍ حالياً من خطوات التقديم والحجز،
+             وسيتم إضافة الخطوات هنا عند صدور الإعلان الرسمي بجهة العمل.
+             ========================================================= -->
+
+    </div>
+
+</body>
+</html>
