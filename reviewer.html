@@ -296,7 +296,6 @@
 
     <div class="section-title">
       <span>1. المستندات الورقية (مربعات الاختيار)</span>
-      <button type="button" class="btn btn-outline btn-sm" onclick="checkAllBoxes(true)">✓ تحديد الكل كمستوفى</button>
     </div>
 
     <div class="checks-grid" id="checksContainer">
@@ -863,7 +862,7 @@
     else if (phone.indexOf('1') === 0) phone = '20' + phone;
 
     const msg = miss.length > 0
-      ? 'تحية طيبة أ/ ' + activeTeacher.name + '،\nبشأن مراجعة ملف التثبيت (المعلم المساعد)، يرجى سرعة استكمال المستندات التالية:\n- ' + miss.join('\n- ') + '\nمع خالص التقدير.'
+      ? 'تحية طيبة أ/ ' + activeTeacher.name + '،\nبشأن مراجعة ملف التثبيت (المعلم المساعد)، يرجى سرعة استكمال المستندات التالية وتسليمها لمسئول التعيينات:\n- ' + miss.join('\n- ') + '\nمع خالص التقدير.'
       : 'تحية طيبة أ/ ' + activeTeacher.name + '،\nتمت مراجعة ملف التثبيت الخاص بكم وهو مكتمل ومستوفٍ لكافة المستندات.';
 
     window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
