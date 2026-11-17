@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز اختبار التسكين على الكادر - الأكاديمية المهنية للمعلمين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           نفس متغيرات وتنسيقات قالب "دليل حجز موعد الاختبار"
+           ========================================================= */
+        :root {
+            --primary-color: #0b5394;
+            --secondary-color: #3d85c6;
+            --accent-color: #e69138;
+            --text-dark: #333333;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --warning-bg: #fff3e0;
+            --border-radius: 12px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: transparent;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 10px;
+            /* منع التمرير العرضي تماماً */
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 12px;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .main-header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .main-header h1 {
+            font-weight: 900;
+            font-size: 2em;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .main-header h2 {
+            font-weight: 700;
+            font-size: 1.25em;
+            color: var(--secondary-color);
+        }
+
+        .important-dates {
+            background-color: #e8f4f8;
+            border-right: 5px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .important-dates h2 {
+            color: var(--primary-color);
+            font-size: 1.35em;
+        }
+
+        .date-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .date-item {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            padding: 18px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .date-item h3 {
+            color: var(--primary-color);
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .status-unavailable {
+            display: inline-block;
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 1.15em;
+        }
+
+        .alert {
+            padding: 18px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            color: #d35400;
+            border-right: 5px solid var(--accent-color);
+        }
+
+        .alert-success {
+            background-color: #e8f8f5;
+            color: var(--success-color);
+            border-right: 5px solid var(--success-color);
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 0; }
+            .container { padding: 10px; border-radius: 0; }
+            .main-header h1 { font-size: 1.5em; }
+            .date-item { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- رابط العودة إلى صفحة الخدمات الإلكترونية -->
+        <a href="pat.html" class="back-link">→ الخدمات الإلكترونية</a>
+
+        <!-- ترويسة الصفحة -->
+        <header class="main-header">
+            <h1>حجز اختبار التسكين على الكادر</h1>
+            <h2>(التسكين على كادر المعلم لأول مرة)</h2>
+        </header>
+
+        <!-- قسم حالة حجز الاختبار -->
+        <section class="important-dates">
+            <h2>📅 حالة حجز الاختبار</h2>
+            <div class="date-box">
+                <div class="date-item">
+                    <h3>موقف فتح باب الحجز الإلكتروني</h3>
+                    <p><span class="status-unavailable">⛔ حجز الاختبار غير متاح الآن</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- تنبيه المتابعة المستمرة لحين ظهور التعليمات وخطوات الحجز -->
+        <div class="alert alert-warning">
+            <strong>🔔 تنبيه هام:</strong> برجاء متابعة هذه الصفحة أولاً بأول حتى ظهور تعليمات وخطوات حجز الاختبار بالصفحة هنا، والالتزام بتنفيذ الخطوات فور الإعلان عن إتاحة الحجز.
+        </div>
+
+        <!-- =========================================================
+             باقي الصفحة خالٍ حالياً من خطوات ونظام الحجز،
+             وسيتم إضافة الخطوات هنا فور فتح باب حجز الاختبار رسمياً.
+             ========================================================= -->
+
+    </div>
+
+</body>
+</html>
