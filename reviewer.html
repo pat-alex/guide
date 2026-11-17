@@ -101,6 +101,37 @@
     .field-error { color: #b91c1c; font-weight: 700; font-size: 0.82rem; min-height: 0; margin-top: 4px; }
     .field-hint { color: var(--muted); font-size: 0.78rem; margin-top: 3px; }
 
+    /* حقل التاريخ: يوم/شهر/سنة + زر تقويم */
+    .date-field { position: relative; display: flex; gap: 6px; align-items: stretch; }
+    .date-field .date-text { flex: 1; direction: ltr; text-align: right; }
+    .date-field .date-btn {
+      border: 1px solid var(--border); background: #fff; border-radius: 8px;
+      padding: 0 12px; cursor: pointer; font-size: 1rem;
+    }
+    .date-field .date-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .date-field input.date-native {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; pointer-events: none; border: 0; padding: 0;
+    }
+
+    /* نافذة عرض بيانات التسجيل بالموقع الرسمي (اضغط على البيان لنسخه) */
+    .copy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+    .copy-item {
+      border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px;
+      cursor: pointer; transition: 0.15s; position: relative; background: #fff;
+    }
+    .copy-item:hover { border-color: var(--primary); background: #eff6ff; }
+    .copy-item.empty { cursor: default; background: #f8fafc; opacity: 0.7; }
+    .copy-item.empty:hover { border-color: var(--border); background: #f8fafc; }
+    .copy-item .c-label { font-size: 0.78rem; color: var(--muted); font-weight: 700; }
+    .copy-item .c-value { font-size: 1rem; font-weight: 800; margin-top: 3px; word-break: break-word; }
+    .copy-item .c-tag {
+      position: absolute; left: 10px; top: 10px; font-size: 0.75rem; font-weight: 700;
+      color: var(--success); display: none;
+    }
+    .copy-item.copied { border-color: var(--success); background: var(--success-bg); }
+    .copy-item.copied .c-tag { display: block; }
+
     .btn {
       padding: 9px 16px; border: none; border-radius: 8px; font-weight: 700;
       cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -248,7 +279,8 @@
       </select>
       <select id="statusFilter" onchange="renderTable()">
         <option value="">كل الحالات</option>
-        <option value="ready">مكتمل 100% (جاهز للتسجيل)</option>
+        <option value="ready">مكتمل وجاهز للتسجيل</option>
+        <option value="data">مستندات مكتملة وبيانات ناقصة</option>
         <option value="registered">تم التسجيل بالموقع</option>
         <option value="missing">ملف ناقص</option>
         <option value="unreviewed">لم يُراجع بعد</option>
@@ -352,7 +384,7 @@
     <div class="form-grid">
       <div class="field-group">
         <label>تاريخ العقد</label>
-        <input type="date" id="inp_contractDate" oninput="validateContractDate(false)" onblur="validateContractDate(true)">
+        <input type="date" id="inp_contractDate" data-dmy>
         <div class="field-error" id="contractDateMsg"></div>
         <div class="field-hint" id="contractDateHint"></div>
         <div class="field-hint" id="contractLegacyNote"></div>
@@ -367,15 +399,15 @@
       </div>
       <div class="field-group">
         <label>تاريخ الحصول على التطبيقات التربوية</label>
-        <input type="date" id="inp_pedAppDate">
+        <input type="date" id="inp_pedAppDate" data-dmy>
       </div>
       <div class="field-group">
         <label>تاريخ المؤهل التربوي</label>
-        <input type="date" id="inp_qualDate">
+        <input type="date" id="inp_qualDate" data-dmy>
       </div>
       <div class="field-group">
         <label>تاريخ الحصول على ICDL أو ما يعادلها</label>
-        <input type="date" id="inp_icdlDate">
+        <input type="date" id="inp_icdlDate" data-dmy>
       </div>
       <div class="field-group">
         <label>رقم شهادة ICDL أو ما يعادلها</label>
@@ -383,7 +415,7 @@
       </div>
       <div class="field-group">
         <label>تاريخ الاستلام</label>
-        <input type="date" id="inp_receiptDate">
+        <input type="date" id="inp_receiptDate" data-dmy>
       </div>
     </div>
 
@@ -408,6 +440,20 @@
         <button type="button" class="btn btn-primary" id="btnSave" onclick="submitReview()">💾 حفظ المراجعة</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- نافذة عرض بيانات التسجيل بالموقع الرسمي -->
+<div class="modal-backdrop" id="regModal" style="z-index:1100;">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 style="margin:0; font-size:1.2rem;" id="rName">-</h2>
+        <div class="teacher-meta"><span>اضغط على أي بيان لنسخه مباشرة ثم الصقه في خانة الموقع الرسمي</span></div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="closeRegModal()">✕ إغلاق</button>
+    </div>
+    <div class="copy-grid" id="regFields"></div>
   </div>
 </div>
 
@@ -441,7 +487,7 @@
   /* ================================================================
      ضع هنا رابط الويب أب (ينتهي بـ /exec) بعد نشر Code_API.gs
      ================================================================ */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyyC4htYYav55G3beog2rrkMvr47bdqmceEmyqn63uCTk7IubDXIH6g0YzrNetRLLT_/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzto2jgpiD8V9QzEZyQIhzVbd-TSuwhryO_WzhWlzUG-A85uy2DL1Oo3xWIQlxTnmfn/exec';
 
   let allTeachers = [];
   let currentTab = 'all';
@@ -700,8 +746,8 @@
 
   function updateStats() {
     const total = allTeachers.length;
-    const complete = allTeachers.filter(function (t) { return t.isComplete; }).length;
-    const ready = allTeachers.filter(function (t) { return t.isComplete && !t.registered; }).length;
+    const complete = allTeachers.filter(function (t) { return t.ready; }).length;
+    const ready = allTeachers.filter(function (t) { return t.ready && !t.registered; }).length;
     const reg = allTeachers.filter(function (t) { return t.registered; }).length;
 
     document.getElementById('stTotal').textContent = total;
@@ -730,8 +776,9 @@
       if (admin && t.admin !== admin) return false;
       if (q && !(t.name.toLowerCase().indexOf(q) !== -1 || t.code.indexOf(q) !== -1 || t.nid.indexOf(q) !== -1)) return false;
 
-      if (currentTab === 'ready') return t.isComplete && !t.registered;
-      if (status === 'ready') return t.isComplete && !t.registered;
+      if (currentTab === 'ready') return t.ready && !t.registered;
+      if (status === 'ready') return t.ready && !t.registered;
+      if (status === 'data') return t.isComplete && !t.dataComplete && !t.registered;
       if (status === 'registered') return t.registered;
       if (status === 'missing') return !t.isComplete && t.pct > 0;
       if (status === 'unreviewed') return t.pct === 0;
@@ -752,8 +799,13 @@
       let statusHtml = '';
       if (t.registered) {
         statusHtml = '<span class="badge badge-reg">✓ تم التسجيل بالموقع</span>';
+      } else if (t.ready) {
+        statusHtml = '<span class="badge badge-complete">مكتمل وجاهز للتسجيل</span>';
       } else if (t.isComplete) {
-        statusHtml = '<span class="badge badge-complete">مكتمل 100% - جاهز</span>';
+        const dm = (t.dataMissing || []);
+        const dmText = dm.slice(0, 3).join('، ') + (dm.length > 3 ? ' (+' + (dm.length - 3) + ')' : '');
+        statusHtml = '<span class="badge badge-missing">المستندات مكتملة — بيانات ناقصة (' + dm.length + ')</span>' +
+          '<div style="font-size:0.78rem; color:#92400e; margin-top:3px;">' + esc(dmText) + '</div>';
       } else if (t.pct === 0) {
         statusHtml = '<span class="badge badge-new">لم يُراجع بعد</span>';
       } else {
@@ -764,10 +816,10 @@
 
       const actionBtns = (currentTab === 'ready')
         ? '<button class="btn btn-success btn-sm" data-act="register" data-row="' + t.row + '">✓ تأكيد التسجيل</button> ' +
-          '<button class="btn btn-outline btn-sm" data-act="review" data-row="' + t.row + '">عرض</button>'
+          '<button class="btn btn-outline btn-sm" data-act="regview" data-row="' + t.row + '">عرض</button>'
         : '<button class="btn btn-primary btn-sm" data-act="review" data-row="' + t.row + '">مراجعة الملف</button>';
 
-      return '<tr class="' + (t.isComplete ? 'row-complete' : '') + '">' +
+      return '<tr class="' + (t.ready ? 'row-complete' : '') + '">' +
         '<td>' + esc(t.admin) + '</td>' +
         '<td style="font-weight:700;">' + esc(t.name) + '</td>' +
         '<td><span class="copyable" title="اضغط للنسخ" data-act="copy" data-val="' + esc(t.code) + '">' + esc(t.code) + '</span></td>' +
@@ -820,11 +872,11 @@
     setContractDateField(activeTeacher.contractDate);
     setSelectValue('inp_stage', activeTeacher.stage);
     setSelectValue('inp_specialty', activeTeacher.specialty);
-    document.getElementById('inp_pedAppDate').value = activeTeacher.pedAppDate || '';
-    document.getElementById('inp_qualDate').value = activeTeacher.qualDate || '';
-    document.getElementById('inp_icdlDate').value = activeTeacher.icdlDate || '';
+    setDateValue(document.getElementById('inp_pedAppDate'), activeTeacher.pedAppDate);
+    setDateValue(document.getElementById('inp_qualDate'), activeTeacher.qualDate);
+    setDateValue(document.getElementById('inp_icdlDate'), activeTeacher.icdlDate);
     document.getElementById('inp_icdlNum').value = activeTeacher.icdlNum || '';
-    document.getElementById('inp_receiptDate').value = activeTeacher.receiptDate || todayYMD();
+    setDateValue(document.getElementById('inp_receiptDate'), activeTeacher.receiptDate || todayYMD());
     document.getElementById('inp_notes').value = activeTeacher.notes || '';
 
     const regEl = document.getElementById('chk_registered');
@@ -1004,11 +1056,11 @@
       contractRule = { min: rules.contractMin, max: rules.contractMax };
       inp.min = contractRule.min;
       inp.max = contractRule.max;
-      inp.disabled = false;
+      setDateDisabled(inp, false);
       hint.textContent = 'المسموح: من ' + fmtDMY(contractRule.min) + ' إلى ' + fmtDMY(contractRule.max);
     } else {
       contractRule = null;
-      inp.disabled = true;
+      setDateDisabled(inp, true);
       hint.textContent = '';
       showError('خدمة الشيت (Code_API.gs) لم تُحدَّث بعد، لذلك حقل تاريخ العقد معطّل. الصق النسخة الجديدة وانشرها كنسخة جديدة (New version).');
     }
@@ -1024,18 +1076,18 @@
     const msg = document.getElementById('contractDateMsg');
     const v = inp.value;
     if (!v) {
-      if (!final) { msg.textContent = ''; inp.classList.remove('invalid'); }
+      if (!final) { msg.textContent = ''; markDateInvalid(inp, false); }
       return true;
     }
     if (isContractDateOk(v)) {
       msg.textContent = '';
-      inp.classList.remove('invalid');
+      markDateInvalid(inp, false);
       return true;
     }
-    inp.classList.add('invalid');
+    markDateInvalid(inp, true);
     msg.textContent = 'التاريخ غير مقبول';
     if (final) {
-      inp.value = '';
+      setDateValue(inp, '');
       showToast('التاريخ غير مقبول');
     }
     return false;
@@ -1045,15 +1097,15 @@
     const inp = document.getElementById('inp_contractDate');
     const note = document.getElementById('contractLegacyNote');
     document.getElementById('contractDateMsg').textContent = '';
-    inp.classList.remove('invalid');
+    markDateInvalid(inp, false);
     note.textContent = '';
     legacyContract = '';
     raw = String(raw || '').trim();
     if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
-      inp.value = raw;
+      setDateValue(inp, raw);
       validateContractDate(false);
     } else {
-      inp.value = '';
+      setDateValue(inp, '');
       if (raw) {
         legacyContract = raw;
         note.textContent = 'قيمة قديمة في الشيت: ' + raw + ' (تُستبدل عند اختيار تاريخ)';
@@ -1061,10 +1113,190 @@
     }
   }
 
+  /* ---------- حقول التاريخ بصيغة يوم/شهر/سنة (مع زر تقويم) ---------- */
+  function ymdToDmy(ymd) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(ymd || ''));
+    return m ? (m[3] + '/' + m[2] + '/' + m[1]) : '';
+  }
+
+  // 'dd/mm/yyyy' -> 'yyyy-mm-dd' (أو '' لو مش تاريخ حقيقي)
+  function dmyToYmd(txt) {
+    const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(txt || ''));
+    if (!m) return '';
+    const d = Number(m[1]), mo = Number(m[2]), y = Number(m[3]);
+    if (y < 1900 || y > 2100) return '';
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return '';
+    return m[3] + '-' + m[2] + '-' + m[1];
+  }
+
+  function toAsciiDigits(str) {
+    return String(str || '')
+      .replace(/[\u0660-\u0669]/g, function (c) { return String(c.charCodeAt(0) - 0x0660); })
+      .replace(/[\u06F0-\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); });
+  }
+
+  function maskDmy(raw) {
+    const d = toAsciiDigits(raw).replace(/\D/g, '').slice(0, 8);
+    let out = d.slice(0, 2);
+    if (d.length > 2) out += '/' + d.slice(2, 4);
+    if (d.length > 4) out += '/' + d.slice(4, 8);
+    return out;
+  }
+
+  function setDateValue(native, ymd) {
+    native.value = ymd || '';
+    if (native._txt) native._txt.value = ymd ? ymdToDmy(ymd) : '';
+  }
+
+  function markDateInvalid(native, bad) {
+    (native._txt || native).classList.toggle('invalid', !!bad);
+  }
+
+  function setDateDisabled(native, disabled) {
+    native.disabled = !!disabled;
+    if (native._txt) native._txt.disabled = !!disabled;
+    if (native._btn) native._btn.disabled = !!disabled;
+  }
+
+  function afterDateEdit(native, final) {
+    if (native.id === 'inp_contractDate') validateContractDate(final);
+  }
+
+  function initDateFields() {
+    document.querySelectorAll('input[type="date"][data-dmy]').forEach(function (native) {
+      const wrap = document.createElement('div');
+      wrap.className = 'date-field';
+
+      const txt = document.createElement('input');
+      txt.type = 'text';
+      txt.className = 'date-text';
+      txt.inputMode = 'numeric';
+      txt.maxLength = 10;
+      txt.autocomplete = 'off';
+      txt.placeholder = 'يوم/شهر/سنة';
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'date-btn';
+      btn.title = 'اختيار من التقويم';
+      btn.textContent = '📅';
+
+      native.parentNode.insertBefore(wrap, native);
+      wrap.appendChild(txt);
+      wrap.appendChild(btn);
+      wrap.appendChild(native);
+      native.classList.add('date-native');
+      native.tabIndex = -1;
+      native._txt = txt;
+      native._btn = btn;
+
+      txt.addEventListener('input', function () {
+        const masked = maskDmy(txt.value);
+        if (masked !== txt.value) txt.value = masked;
+        native.value = dmyToYmd(masked);   // فاضي لو التاريخ لسه ناقص أو مش حقيقي
+        afterDateEdit(native, false);
+      });
+
+      txt.addEventListener('blur', function () {
+        const t = txt.value.trim();
+        if (t && !dmyToYmd(t)) {
+          setDateValue(native, '');
+          if (native.id === 'inp_contractDate') {
+            markDateInvalid(native, true);
+            document.getElementById('contractDateMsg').textContent = 'التاريخ غير مقبول';
+            showToast('التاريخ غير مقبول');
+          } else {
+            showToast('تاريخ غير صحيح — اكتبه بصيغة يوم/شهر/سنة');
+          }
+          return;
+        }
+        afterDateEdit(native, true);
+      });
+
+      btn.addEventListener('click', function () {
+        if (native.disabled) return;
+        try { native.showPicker(); }
+        catch (e) { native.focus(); native.click(); }
+      });
+
+      // اختيار من التقويم
+      native.addEventListener('change', function () {
+        txt.value = ymdToDmy(native.value);
+        afterDateEdit(native, true);
+      });
+    });
+  }
+
+  /* ---------- عرض بيانات التسجيل بالموقع الرسمي (اضغط للنسخ) ---------- */
+  function openRegView(row) {
+    const t = allTeachers.find(function (x) { return x.row === row; });
+    if (!t) return;
+    document.getElementById('rName').textContent = t.name;
+
+    const items = [
+      ['الاسم', t.name],
+      ['الإدارة التعليمية', t.admin],
+      ['كود المعلم', t.code],
+      ['الرقم القومي', t.nid],
+      ['رقم الموبايل', t.whatsapp],
+      ['تاريخ العقد', ymdToDmy(t.contractDate)],
+      ['المرحلة', t.stage],
+      ['التخصص المعتمد بالعقد', t.specialty],
+      ['المؤهل', t.docs.qual],
+      ['تاريخ المؤهل التربوي', ymdToDmy(t.qualDate)],
+      ['الدبلوم العام في التربية', t.docs.diploma],
+      ['تاريخ الحصول على التطبيقات التربوية', ymdToDmy(t.pedAppDate)],
+      ['شهادة الحاسب', t.docs.computer],
+      ['تاريخ الحصول على الشهادة (ICDL أو ما يعادلها)', ymdToDmy(t.icdlDate)],
+      ['رقم الشهادة (ICDL أو ما يعادلها)', t.icdlNum]
+    ];
+
+    const box = document.getElementById('regFields');
+    box.innerHTML = '';
+    items.forEach(function (it) {
+      const val = String(it[1] == null ? '' : it[1]).trim();
+      const div = document.createElement('div');
+      div.className = 'copy-item' + (val ? '' : ' empty');
+      const l = document.createElement('div');
+      l.className = 'c-label';
+      l.textContent = it[0];
+      const v = document.createElement('div');
+      v.className = 'c-value';
+      v.textContent = val || '—';
+      const tag = document.createElement('div');
+      tag.className = 'c-tag';
+      tag.textContent = '✓ تم النسخ';
+      div.appendChild(l);
+      div.appendChild(v);
+      div.appendChild(tag);
+      if (val) {
+        div.setAttribute('data-val', val);
+        div.setAttribute('data-label', it[0]);
+      }
+      box.appendChild(div);
+    });
+
+    document.getElementById('regModal').style.display = 'flex';
+  }
+
+  function closeRegModal() {
+    document.getElementById('regModal').style.display = 'none';
+  }
+
   /* ---------- التشغيل ---------- */
   window.addEventListener('DOMContentLoaded', async function () {
     fillSelect('inp_stage', STAGES);
     fillSelect('inp_specialty', SPECIALTIES);
+    initDateFields();
+
+    document.getElementById('regFields').addEventListener('click', function (e) {
+      const el = e.target.closest('.copy-item[data-val]');
+      if (!el) return;
+      copyToClipboard(el.getAttribute('data-val'), 'تم نسخ ' + el.getAttribute('data-label') + ': ' + el.getAttribute('data-val'));
+      document.querySelectorAll('#regFields .copy-item.copied').forEach(function (x) { x.classList.remove('copied'); });
+      el.classList.add('copied');
+    });
 
     document.getElementById('tableBody').addEventListener('click', function (e) {
       const el = e.target.closest('[data-act]');
@@ -1072,6 +1304,7 @@
       const act = el.getAttribute('data-act');
       const row = Number(el.getAttribute('data-row'));
       if (act === 'review') openReview(row);
+      else if (act === 'regview') openRegView(row);
       else if (act === 'register') quickRegister(row);
       else if (act === 'copy') copyToClipboard(el.getAttribute('data-val'));
     });
