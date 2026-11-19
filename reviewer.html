@@ -201,6 +201,13 @@
       display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
     }
 
+    .pending-bar {
+      display: none; align-items: center; flex-wrap: wrap; gap: 10px;
+      background: #fef3c7; color: #92400e; border: 1px solid #f59e0b;
+      padding: 12px 16px; border-radius: 12px; font-weight: 700; margin-bottom: 16px; line-height: 1.8;
+    }
+    .pending-bar .pending-text { flex: 1; min-width: 220px; }
+
     .error-box { background: #fee2e2; color: #991b1b; padding: 18px; border-radius: 12px; font-weight: 700; margin-bottom: 16px; display: none; line-height: 1.8; }
     .toast {
       position: fixed; bottom: 20px; left: 20px; background: #0f172a; color: #fff;
@@ -243,6 +250,12 @@
 
   <div class="container">
     <div id="errorBox" class="error-box"></div>
+
+    <div id="pendingBar" class="pending-bar">
+      <span class="pending-text" id="pendingText"></span>
+      <button class="btn btn-sm btn-primary" id="btnPendingSend" onclick="flushPending(true)">📤 إرسال الآن</button>
+      <button class="btn btn-sm btn-outline" onclick="clearPending()">إلغاء المعلّق</button>
+    </div>
 
     <div class="stats-grid">
       <div class="stat-card">
@@ -533,16 +546,25 @@
       throw new Error('لم يتم ضبط رابط الخدمة API_URL في أعلى الـ script.');
     }
     const body = Object.assign({ action: action, token: token }, data || {});
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body)
-    });
+    let res;
+    try {
+      res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+    } catch (e) {
+      const ne = new Error('تعذر الاتصال بالخدمة. تأكد من الإنترنت (واقفل جلوبال كونكت لو شغّال).');
+      ne.network = true;   // مشكلة اتصال: التأكيد يتحفظ محلياً ويتبعت بعدين
+      throw ne;
+    }
     let json;
     try {
       json = await res.json();
     } catch (e) {
-      throw new Error('رد غير صالح من الخدمة. تأكد أن الويب أب منشور بصلاحية Anyone وأنك نشرت نسخة جديدة بعد آخر تعديل.');
+      const ne = new Error('رد غير صالح من الخدمة. تأكد أن الويب أب منشور بصلاحية Anyone وأنك نشرت نسخة جديدة بعد آخر تعديل.');
+      ne.network = true;
+      throw ne;
     }
     if (!json.success) {
       const err = new Error(json.error || 'فشل تنفيذ العملية');
@@ -656,7 +678,8 @@
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appRoot').style.display = 'block';
     document.getElementById('userLabel').textContent = currentUser || '';
-    loadData(false);
+    updatePendingBar();
+    loadData(false).then(function () { flushPending(false); });
   }
 
   function clearSession() {
@@ -664,9 +687,12 @@
     currentUser = null;
     ssDel('rv_token');
     ssDel('rv_user');
+    updatePendingBar();
   }
 
   async function doLogout() {
+    const mine = myPending();
+    if (mine.length && !confirm('عندك ' + mine.length + ' تأكيد تسجيل معلّق لم يصل للشيت. هيفضلوا محفوظين على الجهاز ويتبعتوا لما تسجل الدخول تاني بنفس اسمك. تخرج الآن؟')) return;
     const t = token;
     clearSession();
     allTeachers = [];
@@ -799,10 +825,16 @@
       return;
     }
 
+    const pendKeys = {};
+    myPending().forEach(function (p) { pendKeys[p.row + ':' + p.code] = true; });
+
     tbody.innerHTML = list.map(function (t) {
+      const pend = !t.registered && !!pendKeys[t.row + ':' + t.code];
       let statusHtml = '';
       if (t.registered) {
         statusHtml = '<span class="badge badge-reg">✓ تم التسجيل بالموقع</span>';
+      } else if (pend) {
+        statusHtml = '<span class="badge badge-missing">⏳ تأكيد التسجيل بانتظار الإرسال للشيت</span>';
       } else if (t.ready) {
         statusHtml = '<span class="badge badge-complete">مكتمل وجاهز للتسجيل</span>';
       } else if (t.isComplete) {
@@ -819,7 +851,9 @@
       }
 
       const actionBtns = (currentTab === 'ready')
-        ? '<button class="btn btn-success btn-sm" data-act="register" data-row="' + t.row + '">✓ تأكيد التسجيل</button>'
+        ? (pend
+            ? '<span class="reviewer-cell">⏳ بانتظار الإرسال</span>'
+            : '<button class="btn btn-success btn-sm" data-act="register" data-row="' + t.row + '">✓ تأكيد التسجيل</button>')
         : '<button class="btn btn-primary btn-sm" data-act="review" data-row="' + t.row + '">مراجعة الملف</button>';
 
       // في تبويب "جاهز للتسجيل": زر عرض على يمين الاسم مباشرة
@@ -1013,19 +1047,129 @@
     }
   }
 
+  // بترجع: 'sent' (اتسجل في الشيت) | 'queued' (محفوظ محلياً لحد ما الاتصال يرجع) | 'error'
   async function quickRegister(row) {
     const t = allTeachers.find(function (x) { return x.row === row; });
-    if (!t) return false;
+    if (!t) return 'error';
+    if (isPending(t)) {
+      showToast('هذا التأكيد معلّق بالفعل وبانتظار الإرسال.');
+      return 'queued';
+    }
     try {
       await api('register', { row: row, code: t.code });
       showToast('تم تأكيد التسجيل على الموقع الرسمي باسم ' + currentUser + '.');
       await loadData(false);
-      return true;
+      return 'sent';
     } catch (err) {
-      if (err.code === 'SESSION') forceLogout(err.message);
-      else alert(err.message);
-      return false;
+      if (err.code === 'SESSION') { forceLogout(err.message); return 'error'; }
+      if (err.network) {
+        addPending(t);
+        showToast('لا يوجد اتصال — اتحفظ التأكيد على جهازك وهيتبعت للشيت تلقائياً لما الاتصال يرجع.');
+        return 'queued';
+      }
+      alert(err.message);
+      return 'error';
     }
+  }
+
+  /* ---------- طابور التأكيدات المعلّقة (لو النت اتقطع وقت الضغط على تأكيد التسجيل) ---------- */
+  const PENDING_KEY = 'rv_pending_regs';
+  let pending = [];       // [{ row, code, name, user, at }]
+  let flushing = false;
+
+  function loadPending() {
+    try { pending = JSON.parse(lsGet(PENDING_KEY) || '[]'); } catch (e) { pending = []; }
+    if (!Array.isArray(pending)) pending = [];
+  }
+
+  function savePending() { lsSet(PENDING_KEY, JSON.stringify(pending)); }
+
+  // التأكيدات المعلّقة تخص المستخدم الحالي فقط (عشان المحاسبة: كل واحد يتبعت باسمه)
+  function myPending() {
+    return pending.filter(function (p) { return p.user === currentUser; });
+  }
+
+  function isPending(t) {
+    return myPending().some(function (p) { return p.row === t.row && p.code === t.code; });
+  }
+
+  function addPending(t) {
+    if (!isPending(t)) {
+      pending.push({ row: t.row, code: t.code, name: t.name, user: currentUser, at: Date.now() });
+      savePending();
+    }
+    updatePendingBar();
+    renderTable();
+  }
+
+  function removePending(item) {
+    pending = pending.filter(function (p) {
+      return !(p.row === item.row && p.code === item.code && p.user === item.user);
+    });
+    savePending();
+  }
+
+  function updatePendingBar() {
+    const bar = document.getElementById('pendingBar');
+    const mine = currentUser ? myPending() : [];
+    if (!mine.length) { bar.style.display = 'none'; return; }
+    const names = mine.slice(0, 5).map(function (p) { return p.name; }).join('، ') +
+      (mine.length > 5 ? ' (+' + (mine.length - 5) + ')' : '');
+    document.getElementById('pendingText').textContent =
+      '⏳ عندك ' + mine.length + ' تأكيد تسجيل لم يصل للشيت بعد: ' + names +
+      '. هيتبعتوا تلقائياً أول ما الاتصال يرجع، أو اضغط "إرسال الآن".';
+    bar.style.display = 'flex';
+  }
+
+  async function flushPending(manual) {
+    if (flushing || !token) return;
+    const mine = myPending();
+    if (!mine.length) return;
+
+    flushing = true;
+    let sent = 0;
+    const failed = [];
+    try {
+      for (let i = 0; i < mine.length; i++) {
+        const item = mine[i];
+        try {
+          await api('register', { row: item.row, code: item.code });
+          removePending(item);
+          sent++;
+        } catch (err) {
+          if (err.code === 'SESSION') { forceLogout(err.message); return; }
+          if (err.network) {
+            if (manual) showToast('لسه مفيش اتصال — التأكيدات محفوظة وهيتعاد الإرسال تلقائياً.');
+            break;
+          }
+          failed.push(item.name + ': ' + err.message);
+          removePending(item);   // رفضها السيرفر نهائياً، فمش هنكرر المحاولة
+        }
+      }
+    } finally {
+      flushing = false;
+    }
+
+    updatePendingBar();
+    if (sent) {
+      showToast('تم إرسال ' + sent + ' تأكيد تسجيل للشيت باسم ' + currentUser + '.');
+      await loadData(false);
+    } else {
+      renderTable();
+    }
+    if (failed.length) {
+      alert('تعذّر تأكيد التالي (اتشالت من المعلّق):\n' + failed.join('\n'));
+    }
+  }
+
+  function clearPending() {
+    const mine = myPending();
+    if (!mine.length) return;
+    if (!confirm('إلغاء ' + mine.length + ' تأكيد معلّق؟ مش هيتبعتوا للشيت، والملفات هتفضل في قائمة "جاهز للتسجيل".')) return;
+    pending = pending.filter(function (p) { return p.user !== currentUser; });
+    savePending();
+    updatePendingBar();
+    renderTable();
   }
 
   /* ---------- المرحلة / التخصص / تاريخ العقد ---------- */
@@ -1295,8 +1439,8 @@
     const btn = document.getElementById('btnRegConfirm');
     btn.disabled = true;
     try {
-      const ok = await quickRegister(regViewRow);
-      if (ok) closeRegModal();
+      const res = await quickRegister(regViewRow);
+      if (res === 'sent' || res === 'queued') closeRegModal();
     } finally {
       btn.disabled = false;
     }
@@ -1329,6 +1473,14 @@
 
     document.getElementById('loginPass').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') doLogin();
+    });
+
+    loadPending();
+    window.addEventListener('online', function () { flushPending(false); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) flushPending(false); });
+    setInterval(function () { flushPending(false); }, 15000);
+    window.addEventListener('beforeunload', function (e) {
+      if (currentUser && myPending().length) { e.preventDefault(); e.returnValue = ''; }
     });
 
     const savedToken = ssGet('rv_token');
