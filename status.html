@@ -350,7 +350,7 @@ const badge = p => `<span class="badge ${typeClass(p.type)}">${esc(p.label)}</sp
 const fig = (n, neg) => `<span class="fig num${neg ? ' neg' : ''}">${n == null ? '؟' : n}</span>`;
 const deductRule = r => r && r.deductionMode === 'PER_EXTRA'
   ? `كل إذن بعد ${r.permissionsPerMonth} في الشهر يخصم يوم من الاعتيادى.`
-  : `لو الأذونات في الشهر وصلت سبع ساعات  ${r ? r.permissionsPerMonth : 3} بيتخصم يوم واحد من الاعتيادى عن الشهر ده.`;
+  : `4 أذونات في الشهر لو وصلت سبع ساعات  بيتخصم يوم واحد من الاعتيادى عن الشهر ده.`;
 
 /* ============================== التوجيه ============================== */
 function route() {
