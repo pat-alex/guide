@@ -350,7 +350,7 @@ const badge = p => `<span class="badge ${typeClass(p.type)}">${esc(p.label)}</sp
 const fig = (n, neg) => `<span class="fig num${neg ? ' neg' : ''}">${n == null ? '؟' : n}</span>`;
 const deductRule = r => r && r.deductionMode === 'PER_EXTRA'
   ? `كل إذن بعد ${r.permissionsPerMonth} في الشهر يخصم يوم من الاعتيادى.`
-  : `لو الأذونات في الشهر زادت عن ${r ? r.permissionsPerMonth : 3} بيتخصم يوم واحد من الاعتيادى عن الشهر ده.`;
+  : `لو الأذونات في الشهر وصلت سبع ساعات  ${r ? r.permissionsPerMonth : 3} بيتخصم يوم واحد من الاعتيادى عن الشهر ده.`;
 
 /* ============================== التوجيه ============================== */
 function route() {
@@ -554,9 +554,7 @@ function renderEmployee() {
       <li>السنة المالية من ${fmtDMY(fy.from)} إلى ${fmtDMY(fy.to)} (شيت "${esc(fy.sheet.trim())}").</li>
       <li>العارضة ${rules.casualEntitlement} أيام في السنة.</li>
       <li>أيام الغياب (عارضة + اعتيادى) المسموحة في الشهر بدون خصم حوافز: ${ab.allowed == null ? 'غير محددة' : ab.allowed}.</li>
-      <li>الأذونات المسموحة ${rules.permissionsPerMonth} في الشهر. ${esc(deductRule(rules))}</li>
-      ${rules.nursingEveningExempt ? '<li>الإذن المسائى لصاحبة "ساعة رضاعة" مش بيتحسب من الأذونات.</li>' : ''}
-      ${!rules.insuranceCounts ? '<li>"إذن تأمينى" مش بيتحسب من الأذونات.</li>' : ''}
+      ${!rules.insuranceCounts ? '<li>"إذن تأمينى موثق" مش بيتحسب من الأذونات.</li>' : ''}
       ${!rules.lateCounts ? '<li>"تأخير" بيتسجل لكن مش بيتحسب كإذن.</li>' : ''}
       </ul></details>`);
 
