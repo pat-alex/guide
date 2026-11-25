@@ -201,6 +201,28 @@
       display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;
     }
 
+    /* مجموعات الإدخال (كل بيان مرتبط بغيره ورا بعضه) */
+    .group-card {
+      border: 1.5px solid #dbe4f0; background: #fafcff; border-radius: 12px;
+      padding: 12px 14px; margin-bottom: 12px;
+    }
+    .group-title { font-weight: 800; color: var(--primary); font-size: 0.98rem; margin-bottom: 10px; }
+    .group-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .group-fields.one { grid-template-columns: 1fr; max-width: 360px; }
+    @media (max-width: 640px) {
+      .group-fields { grid-template-columns: 1fr; }
+    }
+    .group-step { color: var(--muted); font-weight: 700; margin-left: 4px; }
+
+    .status-strip { padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; margin-bottom: 12px; line-height: 1.7; }
+    .status-strip.ok { background: var(--success-bg); color: var(--success); }
+    .status-strip.warn { background: var(--warning-bg); color: var(--warning); }
+
+    .gap-list { margin: 6px 0 12px; padding: 0 18px 0 0; line-height: 1.9; font-weight: 600; font-size: 0.92rem; }
+    .gap-head { font-weight: 800; font-size: 0.92rem; margin-top: 8px; }
+    .gap-head.doc { color: #92400e; }
+    .gap-head.data { color: #1e40af; }
+
     .pending-bar {
       display: none; align-items: center; flex-wrap: wrap; gap: 10px;
       background: #fef3c7; color: #92400e; border: 1px solid #f59e0b;
@@ -342,105 +364,119 @@
       <button class="btn btn-outline btn-sm" onclick="closeModal()">✕ إغلاق</button>
     </div>
 
-    <div class="section-title">
-      <span>1. المستندات الورقية (مربعات الاختيار)</span>
-    </div>
+    <div class="status-strip warn" id="statusStrip"></div>
 
-    <div class="checks-grid" id="checksContainer">
-      <label class="check-item"><input type="checkbox" id="chk_folder" onchange="syncCheckUI(this)"> دوسيه ورقي</label>
-      <label class="check-item"><input type="checkbox" id="chk_statusSheet" onchange="syncCheckUI(this)"> صحيفة أحوال</label>
-      <label class="check-item"><input type="checkbox" id="chk_contract" onchange="syncCheckUI(this)"> صورة طبق الأصل للعقد</label>
-      <label class="check-item"><input type="checkbox" id="chk_pedApp" onchange="syncCheckUI(this)"> شهادة تطبيقات تربوية</label>
-      <label class="check-item"><input type="checkbox" id="chk_principal" onchange="syncCheckUI(this)"> تقرير المدير</label>
-      <label class="check-item"><input type="checkbox" id="chk_supervisor" onchange="syncCheckUI(this)"> تقرير الموجه</label>
-      <label class="check-item"><input type="checkbox" id="chk_nomination" onchange="syncCheckUI(this)"> خطاب ترشيح</label>
-      <label class="check-item"><input type="checkbox" id="chk_salary" onchange="syncCheckUI(this)"> مفردات مرتب</label>
-      <label class="check-item"><input type="checkbox" id="chk_nidCopy" onchange="syncCheckUI(this)"> صورة الرقم القومي</label>
-    </div>
-
-    <div class="section-title"><span>2. المؤهل الدراسي وشهادة الحاسب الآلي</span></div>
-    <div class="form-grid">
-      <div class="field-group">
-        <label>صورة المؤهل (O)</label>
-        <select id="sel_qual" onchange="toggleDiplomaNotice()">
-          <option value="">-- اختر --</option>
-          <option value="تربوى">تربوى</option>
-          <option value="غير تربوى">غير تربوى</option>
-          <option value="غير موجود">غير موجود</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label id="lbl_diploma">الدبلوم العام في التربية (P)</label>
-        <select id="sel_diploma">
-          <option value="">-- اختر --</option>
-          <option value="موجود">موجود</option>
-          <option value="تربوى">تربوى</option>
-          <option value="غير موجود">غير موجود</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label>شهادة اختبار الحاسب (K)</label>
-        <select id="sel_computer">
-          <option value="">-- غير موجودة --</option>
-          <option value="ICDL">ICDL</option>
-          <option value="ICDL TEACHER">ICDL TEACHER</option>
-          <option value="التحول الرقمى ">التحول الرقمى</option>
-          <option value="AITC">AITC</option>
-          <option value="IC3 PLUS">IC3 PLUS</option>
-          <option value="MICIT">MICIT</option>
-          <option value="Cambridge IT Skills">Cambridge IT Skills</option>
-        </select>
+    <div class="group-card">
+      <div class="group-title">📁 المستندات (علامة صح)</div>
+      <div class="checks-grid" id="checksContainer">
+        <label class="check-item"><input type="checkbox" id="chk_folder" onchange="syncCheckUI(this)"> دوسيه ورقي</label>
+        <label class="check-item"><input type="checkbox" id="chk_statusSheet" onchange="syncCheckUI(this)"> صحيفة أحوال</label>
+        <label class="check-item"><input type="checkbox" id="chk_principal" onchange="syncCheckUI(this)"> تقرير المدير</label>
+        <label class="check-item"><input type="checkbox" id="chk_supervisor" onchange="syncCheckUI(this)"> تقرير الموجه</label>
+        <label class="check-item"><input type="checkbox" id="chk_nomination" onchange="syncCheckUI(this)"> خطاب ترشيح</label>
+        <label class="check-item"><input type="checkbox" id="chk_salary" onchange="syncCheckUI(this)"> مفردات مرتب</label>
+        <label class="check-item"><input type="checkbox" id="chk_nidCopy" onchange="syncCheckUI(this)"> صورة الرقم القومي</label>
       </div>
     </div>
 
-    <div class="section-title"><span>3. بيانات العقد وتواريخ الشهادات (الأعمدة X إلى AD)</span></div>
-    <div class="form-grid">
-      <div class="field-group">
-        <label>تاريخ العقد</label>
-        <input type="date" id="inp_contractDate" data-dmy>
-        <div class="field-error" id="contractDateMsg"></div>
-        <div class="field-hint" id="contractDateHint"></div>
-        <div class="field-hint" id="contractLegacyNote"></div>
-      </div>
-      <div class="field-group">
-        <label>المرحلة</label>
-        <select id="inp_stage"><option value="">-- اختر --</option></select>
-      </div>
-      <div class="field-group">
-        <label>التخصص المعتمد بالعقد</label>
-        <select id="inp_specialty"><option value="">-- اختر --</option></select>
-      </div>
-      <div class="field-group">
-        <label>تاريخ الحصول على التطبيقات التربوية</label>
-        <input type="date" id="inp_pedAppDate" data-dmy>
-      </div>
-      <div class="field-group">
-        <label>تاريخ المؤهل التربوي</label>
-        <input type="date" id="inp_qualDate" data-dmy>
-      </div>
-      <div class="field-group">
-        <label>تاريخ الحصول على ICDL أو ما يعادلها</label>
-        <input type="date" id="inp_icdlDate" data-dmy>
-      </div>
-      <div class="field-group">
-        <label>رقم شهادة ICDL أو ما يعادلها</label>
-        <input type="text" id="inp_icdlNum" placeholder="رقم الشهادة">
-      </div>
-      <div class="field-group">
-        <label>تاريخ الاستلام</label>
-        <input type="date" id="inp_receiptDate" data-dmy>
+    <div class="group-card">
+      <div class="group-title">📄 العقد <span class="group-step">(تاريخه ثم المرحلة ثم التخصص)</span></div>
+      <div class="group-fields">
+        <div class="field-group">
+          <label>تاريخ العقد</label>
+          <input type="date" id="inp_contractDate" data-dmy>
+          <div class="field-error" id="contractDateMsg"></div>
+          <div class="field-hint" id="contractDateHint"></div>
+          <div class="field-hint" id="contractLegacyNote"></div>
+        </div>
+        <div class="field-group">
+          <label>المرحلة</label>
+          <select id="inp_stage"><option value="">-- اختر --</option></select>
+        </div>
+        <div class="field-group">
+          <label>التخصص المعتمد بالعقد</label>
+          <select id="inp_specialty"><option value="">-- اختر --</option></select>
+        </div>
       </div>
     </div>
 
-    <div class="form-grid" style="margin-top:12px;">
-      <div class="field-group" style="grid-column: span 2;">
-        <label>ملاحظات المراجعة (اكتب "مرفوض" إذا كانت هناك شهادة مرفوضة)</label>
-        <input type="text" id="inp_notes" placeholder="أي ملاحظات أو نواقص...">
+    <div class="group-card">
+      <div class="group-title">🎓 المؤهل <span class="group-step">(المؤهل ثم الدبلوم ثم تاريخه)</span></div>
+      <div class="group-fields">
+        <div class="field-group">
+          <label>صورة المؤهل</label>
+          <select id="sel_qual" onchange="toggleDiplomaNotice()">
+            <option value="">-- اختر --</option>
+            <option value="تربوى">تربوى</option>
+            <option value="غير تربوى">غير تربوى</option>
+            <option value="غير موجود">غير موجود</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label id="lbl_diploma">الدبلوم العام في التربية</label>
+          <select id="sel_diploma">
+            <option value="">-- اختر --</option>
+            <option value="موجود">موجود</option>
+            <option value="تربوى">تربوى</option>
+            <option value="غير موجود">غير موجود</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>تاريخ المؤهل التربوي</label>
+          <input type="date" id="inp_qualDate" data-dmy>
+        </div>
       </div>
-      <div class="field-group" style="display:flex; align-items:flex-end;">
-        <label class="check-item" style="width:100%; margin:0;">
-          <input type="checkbox" id="chk_registered" onchange="syncCheckUI(this)"> تم التسجيل على الموقع الرسمي
-        </label>
+    </div>
+
+    <div class="group-card">
+      <div class="group-title">💻 شهادة الحاسب <span class="group-step">(نوعها ثم تاريخها ثم رقمها)</span></div>
+      <div class="group-fields">
+        <div class="field-group">
+          <label>نوع الشهادة</label>
+          <select id="sel_computer">
+            <option value="">-- غير موجودة --</option>
+            <option value="ICDL">ICDL</option>
+            <option value="ICDL TEACHER">ICDL TEACHER</option>
+            <option value="التحول الرقمى ">التحول الرقمى</option>
+            <option value="AITC">AITC</option>
+            <option value="IC3 PLUS">IC3 PLUS</option>
+            <option value="MICIT">MICIT</option>
+            <option value="Cambridge IT Skills">Cambridge IT Skills</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>تاريخ الحصول على الشهادة</label>
+          <input type="date" id="inp_icdlDate" data-dmy>
+        </div>
+        <div class="field-group">
+          <label>رقم الشهادة</label>
+          <input type="text" id="inp_icdlNum" dir="ltr" autocomplete="off" placeholder="EG123456" style="text-align:right;">
+          <div class="field-error" id="icdlNumMsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-title">📚 التطبيقات التربوية</div>
+      <div class="group-fields one">
+        <div class="field-group">
+          <label>تاريخ الحصول على شهادة التطبيقات التربوية</label>
+          <input type="date" id="inp_pedAppDate" data-dmy>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-card">
+      <div class="group-title">📝 الاستلام والملاحظات</div>
+      <div class="group-fields">
+        <div class="field-group">
+          <label>تاريخ الاستلام</label>
+          <input type="date" id="inp_receiptDate" data-dmy>
+        </div>
+        <div class="field-group" style="grid-column: span 2;">
+          <label>ملاحظات المراجعة (اكتب "مرفوض" إذا كانت هناك شهادة مرفوضة — وبتتبعت للمعلم ضمن رسالة الواتساب)</label>
+          <input type="text" id="inp_notes" placeholder="أي ملاحظات أو نواقص...">
+        </div>
       </div>
     </div>
 
@@ -452,6 +488,20 @@
         <button type="button" class="btn btn-outline" onclick="closeModal()">إلغاء</button>
         <button type="button" class="btn btn-primary" id="btnSave" onclick="submitReview()">💾 حفظ المراجعة</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- تنبيه نقص الملف عند الحفظ -->
+<div class="modal-backdrop" id="gapModal" style="z-index:1200;">
+  <div class="modal small" style="max-width:520px;">
+    <div class="modal-header">
+      <h2 style="margin:0; font-size:1.1rem;">⚠ الملف ناقص</h2>
+    </div>
+    <div id="gapBody"></div>
+    <div class="modal-footer" style="justify-content:space-between;">
+      <button type="button" class="btn btn-primary" onclick="closeGapModal()">✏️ رجوع لاستكمال البيانات</button>
+      <button type="button" class="btn btn-outline" id="btnSaveAnyway" style="border-color:#f59e0b; color:#92400e;" onclick="saveAnyway()">💾 حفظ رغم علمي بنقص الملف</button>
     </div>
   </div>
 </div>
@@ -503,7 +553,7 @@
   /* ================================================================
      ضع هنا رابط الويب أب (ينتهي بـ /exec) بعد نشر Code_API.gs
      ================================================================ */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbxHfHDTmsTieO-mKKOTpCTbq04QWiiDshUfuBF4i0mPmsZDMDsgB82zbo7ORgX37xtv/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyB1DGNqkxqLB37V1outdjTskUxbd3-u1EGMePsGXuGX6CcfI3hLv7ZhC8crkrm9ESq/exec';
 
   let allTeachers = [];
   let currentTab = 'all';
@@ -895,14 +945,9 @@
     document.getElementById('mWa').textContent = activeTeacher.whatsapp || 'غير مسجل';
 
     const d = activeTeacher.docs;
-    const map = {
-      folder: d.folder, statusSheet: d.statusSheet, contract: d.contract,
-      pedApp: d.pedApp, principal: d.principal, supervisor: d.supervisor,
-      nomination: d.nomination, salary: d.salary, nidCopy: d.nidCopy
-    };
-    Object.keys(map).forEach(function (k) {
+    ['folder', 'statusSheet', 'principal', 'supervisor', 'nomination', 'salary', 'nidCopy'].forEach(function (k) {
       const el = document.getElementById('chk_' + k);
-      el.checked = !!map[k];
+      el.checked = !!d[k];
       syncCheckUI(el);
     });
 
@@ -918,18 +963,17 @@
     setDateValue(document.getElementById('inp_qualDate'), activeTeacher.qualDate);
     setDateValue(document.getElementById('inp_icdlDate'), activeTeacher.icdlDate);
     document.getElementById('inp_icdlNum').value = activeTeacher.icdlNum || '';
+    checkIcdlNum();
     setDateValue(document.getElementById('inp_receiptDate'), activeTeacher.receiptDate || todayYMD());
     document.getElementById('inp_notes').value = activeTeacher.notes || '';
 
-    const regEl = document.getElementById('chk_registered');
-    regEl.checked = !!activeTeacher.registered;
-    syncCheckUI(regEl);
-
+    updateStatusStrip();
     document.getElementById('reviewModal').style.display = 'flex';
   }
 
   function closeModal() {
     document.getElementById('reviewModal').style.display = 'none';
+    document.getElementById('gapModal').style.display = 'none';
     activeTeacher = null;
   }
 
@@ -942,98 +986,248 @@
       cb.checked = state;
       syncCheckUI(cb);
     });
+    updateStatusStrip();
   }
 
   function toggleDiplomaNotice() {
     const q = document.getElementById('sel_qual').value;
     const lbl = document.getElementById('lbl_diploma');
     lbl.innerHTML = (q === 'غير تربوى')
-      ? 'الدبلوم العام في التربية (P) <span style="color:#b91c1c;">* مطلوب للمؤهل غير التربوي</span>'
-      : 'الدبلوم العام في التربية (P)';
+      ? 'الدبلوم العام في التربية <span style="color:#b91c1c;">* مطلوب للمؤهل غير التربوي</span>'
+      : 'الدبلوم العام في التربية';
   }
 
-  function collectCurrentMissing() {
-    const miss = [];
-    if (!document.getElementById('chk_folder').checked) miss.push('دوسيه ورقي');
-    if (!document.getElementById('chk_statusSheet').checked) miss.push('صحيفة أحوال');
-    if (!document.getElementById('chk_contract').checked) miss.push('صورة طبق الأصل للعقد');
-    if (!document.getElementById('chk_pedApp').checked) miss.push('شهادة تطبيقات تربوية');
-    if (!document.getElementById('sel_computer').value) miss.push('شهادة اختبار الحاسب (ICDL أو ما يعادلها)');
-    if (!document.getElementById('chk_principal').checked) miss.push('تقرير المدير');
-    if (!document.getElementById('chk_supervisor').checked) miss.push('تقرير الموجه');
-    if (!document.getElementById('chk_nomination').checked) miss.push('خطاب ترشيح');
-
-    const qual = document.getElementById('sel_qual').value;
-    const dip = document.getElementById('sel_diploma').value;
-    if (!qual || qual === 'غير موجود') miss.push('صورة المؤهل');
-    else if (qual === 'غير تربوى' && (!dip || dip === 'غير موجود')) miss.push('الدبلوم العام في التربية');
-
-    if (!document.getElementById('chk_salary').checked) miss.push('مفردات مرتب');
-    if (!document.getElementById('chk_nidCopy').checked) miss.push('صورة الرقم القومي');
-    return miss;
+  // رقم الشهادة لازم يكون بحروف وأرقام إنجليزية (بيمنع الحروف العربية اللي بتطلع لو الكيبورد عربي)
+  function checkIcdlNum() {
+    const inp = document.getElementById('inp_icdlNum');
+    const msg = document.getElementById('icdlNumMsg');
+    const bad = /[\u0600-\u06FF]/.test(inp.value);
+    inp.classList.toggle('invalid', bad);
+    msg.textContent = bad ? 'رقم الشهادة لازم يكون بحروف وأرقام إنجليزية — بدّل لغة الكيبورد' : '';
+    return !bad;
   }
 
+  /* ---------- قراءة الفورم وحساب النواقص ---------- */
+  function readForm() {
+    const g = function (id) { return document.getElementById(id); };
+    return {
+      folder: g('chk_folder').checked,
+      statusSheet: g('chk_statusSheet').checked,
+      principal: g('chk_principal').checked,
+      supervisor: g('chk_supervisor').checked,
+      nomination: g('chk_nomination').checked,
+      salary: g('chk_salary').checked,
+      nidCopy: g('chk_nidCopy').checked,
+      qual: g('sel_qual').value,
+      diploma: g('sel_diploma').value,
+      computer: g('sel_computer').value,
+      contractDate: g('inp_contractDate').value,
+      stage: g('inp_stage').value.trim(),
+      specialty: g('inp_specialty').value.trim(),
+      pedAppDate: g('inp_pedAppDate').value,
+      qualDate: g('inp_qualDate').value,
+      icdlDate: g('inp_icdlDate').value,
+      icdlNum: g('inp_icdlNum').value.trim(),
+      receiptDate: g('inp_receiptDate').value,
+      notes: g('inp_notes').value.trim()
+    };
+  }
+
+  // kind: doc = مستند ناقص (بيتبعت للمعلم) | data = بيان لم يُدخل | note = ملاحظة "مرفوض"
+  function computeFormGaps() {
+    const v = readForm();
+    const gaps = [];
+    const doc = function (name, hint) { gaps.push({ name: name, hint: hint || '', kind: 'doc' }); };
+    const dat = function (name) { gaps.push({ name: name, hint: '', kind: 'data' }); };
+
+    if (!v.folder) doc('دوسيه ورقي');
+    if (!v.statusSheet) doc('صحيفة أحوال');
+
+    // العقد: تاريخه هو دليل وجوده
+    if (!v.contractDate) {
+      doc('صورة طبق الأصل للعقد', 'تاريخ العقد غير مُدخل');
+    } else {
+      if (!v.stage) dat('المرحلة');
+      if (!v.specialty) dat('التخصص المعتمد بالعقد');
+    }
+
+    // المؤهل ثم الدبلوم ثم تاريخه
+    if (!v.qual || v.qual === 'غير موجود') {
+      doc('صورة المؤهل', 'لم يُختر');
+    } else if (v.qual === 'غير تربوى' && (!v.diploma || v.diploma === 'غير موجود')) {
+      doc('الدبلوم العام في التربية', 'مطلوب للمؤهل غير التربوي');
+    } else if (!v.qualDate) {
+      dat('تاريخ المؤهل التربوي');
+    }
+
+    // شهادة الحاسب: نوعها ثم تاريخها ثم رقمها
+    if (!v.computer) {
+      doc('شهادة اختبار الحاسب (ICDL أو ما يعادلها)', 'لم يُختر نوعها');
+    } else {
+      if (!v.icdlDate) dat('تاريخ شهادة الحاسب');
+      if (!v.icdlNum) dat('رقم شهادة الحاسب');
+    }
+
+    // التطبيقات التربوية: تاريخها هو دليل وجودها
+    if (!v.pedAppDate) doc('شهادة تطبيقات تربوية', 'تاريخ الحصول غير مُدخل');
+
+    if (!v.principal) doc('تقرير المدير');
+    if (!v.supervisor) doc('تقرير الموجه');
+    if (!v.nomination) doc('خطاب ترشيح');
+    if (!v.salary) doc('مفردات مرتب');
+    if (!v.nidCopy) doc('صورة الرقم القومي');
+
+    if (v.notes.indexOf('مرفوض') !== -1) {
+      gaps.push({ name: 'الملاحظات فيها كلمة «مرفوض» — الملف يُعتبر غير مكتمل', hint: '', kind: 'note' });
+    }
+    return gaps;
+  }
+
+  function updateStatusStrip() {
+    const el = document.getElementById('statusStrip');
+    if (!el) return;
+    const gaps = computeFormGaps();
+    if (!gaps.length) {
+      el.className = 'status-strip ok';
+      el.textContent = '✓ الملف مستكمل — كل المستندات والبيانات موجودة';
+      return;
+    }
+    const names = gaps.slice(0, 3).map(function (g) { return g.name; }).join('، ') +
+      (gaps.length > 3 ? ' (+' + (gaps.length - 3) + ')' : '');
+    el.className = 'status-strip warn';
+    el.textContent = '⚠ الملف ناقص (' + gaps.length + '): ' + names;
+  }
+
+  /* ---------- رسالة الواتساب للمعلم: المستندات الناقصة + ملاحظات المراجعة ---------- */
   function sendWhatsAppMissing() {
     if (!activeTeacher || !activeTeacher.whatsapp) {
       return showToast('لا يوجد رقم واتساب مسجل لهذا المعلم.');
     }
-    const miss = collectCurrentMissing();
+    const docs = computeFormGaps().filter(function (g) { return g.kind === 'doc'; }).map(function (g) { return g.name; });
+    const notes = document.getElementById('inp_notes').value.trim();
+
     let phone = activeTeacher.whatsapp.replace(/\D/g, '');
     if (phone.indexOf('20') === 0 && phone.length >= 12) { /* بالفعل بصيغة دولية */ }
     else if (phone.indexOf('01') === 0) phone = '2' + phone;
     else if (phone.indexOf('1') === 0) phone = '20' + phone;
 
-    const msg = miss.length > 0
-      ? 'تحية طيبة أ/ ' + activeTeacher.name + '،\nبشأن مراجعة ملف التثبيت (المعلم المساعد)، يرجى سرعة استكمال المستندات التالية وتسليمها لمسئول التعيينات:\n- ' + miss.join('\n- ') + '\nمع خالص التقدير.'
-      : 'تحية طيبة أ/ ' + activeTeacher.name + '،\nتمت مراجعة ملف التثبيت الخاص بكم وهو مكتمل ومستوفٍ لكافة المستندات.';
+    let msg;
+    if (!docs.length && !notes) {
+      msg = 'تحية طيبة أ/ ' + activeTeacher.name + '،\nتمت مراجعة ملف التثبيت الخاص بكم وهو مكتمل ومستوفٍ لكافة المستندات.';
+    } else {
+      msg = 'تحية طيبة أ/ ' + activeTeacher.name + '،\nبشأن مراجعة ملف التثبيت (المعلم المساعد)' +
+        (docs.length ? '، يرجى سرعة استكمال المستندات التالية وتسليمها لمسئول التعيينات:\n- ' + docs.join('\n- ') : ':') +
+        (notes ? '\nملاحظات المراجعة: ' + notes : '') +
+        '\nمع خالص التقدير.';
+    }
 
     window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
   }
 
-  async function submitReview() {
+  /* ---------- الحفظ: لو فيه نقص يظهر تنبيه بزرارين ---------- */
+  function submitReview() {
     if (!activeTeacher) return;
     if (!validateContractDate(false)) {
       showToast('التاريخ غير مقبول — صحّح تاريخ العقد ثم احفظ.');
       document.getElementById('inp_contractDate').focus();
       return;
     }
+    if (!checkIcdlNum()) {
+      showToast('رقم الشهادة لازم يكون بحروف وأرقام إنجليزية.');
+      document.getElementById('inp_icdlNum').focus();
+      return;
+    }
+    const gaps = computeFormGaps();
+    if (gaps.length) { openGapDialog(gaps); return; }
+    doSaveReview(false);
+  }
+
+  function openGapDialog(gaps) {
+    const body = document.getElementById('gapBody');
+    body.innerHTML = '';
+
+    const addSection = function (cls, title, items, withHint) {
+      if (!items.length) return;
+      const h = document.createElement('div');
+      h.className = 'gap-head ' + cls;
+      h.textContent = title;
+      body.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'gap-list';
+      items.forEach(function (g) {
+        const li = document.createElement('li');
+        li.textContent = g.name + (withHint && g.hint ? ' — ' + g.hint : '');
+        ul.appendChild(li);
+      });
+      body.appendChild(ul);
+    };
+
+    addSection('doc', 'مستندات ناقصة (هتتحط في رسالة الواتساب للمعلم):', gaps.filter(function (g) { return g.kind === 'doc'; }), true);
+    addSection('data', 'بيانات لم تُدخل (لو الملف فيها ارجع واكتبها):', gaps.filter(function (g) { return g.kind === 'data'; }), false);
+    addSection('doc', 'تنبيه:', gaps.filter(function (g) { return g.kind === 'note'; }), false);
+
+    const tip = document.createElement('div');
+    tip.className = 'field-hint';
+    tip.textContent = 'لو المستند فعلاً مش موجود عند المعلم: احفظ رغم النقص وابعت له النواقص بزر واتساب (📲).';
+    body.appendChild(tip);
+
+    document.getElementById('gapModal').style.display = 'flex';
+  }
+
+  function closeGapModal() {
+    document.getElementById('gapModal').style.display = 'none';
+  }
+
+  function saveAnyway() {
+    closeGapModal();
+    doSaveReview(true);
+  }
+
+  async function doSaveReview(withGaps) {
+    if (!activeTeacher) return;
     const btn = document.getElementById('btnSave');
     btn.disabled = true;
     btn.textContent = 'جاري الحفظ...';
 
+    const v = readForm();
     const payload = {
       row: activeTeacher.row,
       code: activeTeacher.code,
-      registered: document.getElementById('chk_registered').checked,
       docs: {
-        folder: document.getElementById('chk_folder').checked,
-        statusSheet: document.getElementById('chk_statusSheet').checked,
-        contract: document.getElementById('chk_contract').checked,
-        pedApp: document.getElementById('chk_pedApp').checked,
-        computer: document.getElementById('sel_computer').value,
-        principal: document.getElementById('chk_principal').checked,
-        supervisor: document.getElementById('chk_supervisor').checked,
-        nomination: document.getElementById('chk_nomination').checked,
-        qual: document.getElementById('sel_qual').value,
-        diploma: document.getElementById('sel_diploma').value,
-        salary: document.getElementById('chk_salary').checked,
-        nidCopy: document.getElementById('chk_nidCopy').checked
+        folder: v.folder,
+        statusSheet: v.statusSheet,
+        contract: !!v.contractDate,      // تاريخ العقد = دليل وجود صورة العقد
+        pedApp: !!v.pedAppDate,          // تاريخ التطبيقات = دليل وجود الشهادة
+        computer: v.computer,
+        principal: v.principal,
+        supervisor: v.supervisor,
+        nomination: v.nomination,
+        qual: v.qual,
+        diploma: v.diploma,
+        salary: v.salary,
+        nidCopy: v.nidCopy
       },
-      receiptDate: document.getElementById('inp_receiptDate').value,
-      notes: document.getElementById('inp_notes').value.trim(),
-      contractDate: document.getElementById('inp_contractDate').value || legacyContract,
-      stage: document.getElementById('inp_stage').value.trim(),
-      specialty: document.getElementById('inp_specialty').value.trim(),
-      pedAppDate: document.getElementById('inp_pedAppDate').value,
-      qualDate: document.getElementById('inp_qualDate').value,
-      icdlDate: document.getElementById('inp_icdlDate').value,
-      icdlNum: document.getElementById('inp_icdlNum').value.trim()
+      receiptDate: v.receiptDate,
+      notes: v.notes,
+      contractDate: v.contractDate || legacyContract,
+      stage: v.stage,
+      specialty: v.specialty,
+      pedAppDate: v.pedAppDate,
+      qualDate: v.qualDate,
+      icdlDate: v.icdlDate,
+      icdlNum: v.icdlNum
     };
 
     try {
       const res = await api('save', { payload: payload });
-      closeModal();
-      showToast(res.unchanged ? 'لا توجد تغييرات لحفظها.' : 'تم حفظ مراجعة الملف باسم ' + currentUser + '.');
+      const docGaps = computeFormGaps().filter(function (g) { return g.kind === 'doc'; }).length;
+      if (withGaps && docGaps > 0) {
+        // نسيب النافذة مفتوحة عشان يبعت النواقص للمعلم بزر الواتساب
+        showToast(res.unchanged ? 'لا توجد تغييرات لحفظها.' : 'اتحفظ الملف ناقصاً باسم ' + currentUser + ' — ابعت النواقص للمعلم بزر واتساب 📲');
+      } else {
+        closeModal();
+        showToast(res.unchanged ? 'لا توجد تغييرات لحفظها.' : 'تم حفظ مراجعة الملف باسم ' + currentUser + '.');
+      }
       await loadData(false);
     } catch (err) {
       if (err.code === 'SESSION') {
@@ -1273,6 +1467,12 @@
     return m ? (m[3] + '/' + m[2] + '/' + m[1]) : '';
   }
 
+  // للعرض والنسخ في شاشة التسجيل بالموقع الرسمي: يوم/شهر/سنة من غير أصفار (2/3/2026)
+  function ymdToDmyShort(ymd) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(ymd || ''));
+    return m ? (Number(m[3]) + '/' + Number(m[2]) + '/' + m[1]) : '';
+  }
+
   // 'dd/mm/yyyy' -> 'yyyy-mm-dd' (أو '' لو مش تاريخ حقيقي)
   function dmyToYmd(txt) {
     const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(txt || ''));
@@ -1394,9 +1594,9 @@
       ['كود المعلم', t.code],
       ['المرحلة', t.stage],
       ['التخصص المعتمد بالعقد', t.specialty],
-      ['تاريخ المؤهل التربوي', ymdToDmy(t.qualDate)],
-      ['تاريخ الحصول على التطبيقات التربوية', ymdToDmy(t.pedAppDate)],
-      ['تاريخ الحصول على الشهادة (ICDL أو ما يعادلها)', ymdToDmy(t.icdlDate)],
+      ['تاريخ المؤهل التربوي', ymdToDmyShort(t.qualDate)],
+      ['تاريخ الحصول على التطبيقات التربوية', ymdToDmyShort(t.pedAppDate)],
+      ['تاريخ الحصول على الشهادة (ICDL أو ما يعادلها)', ymdToDmyShort(t.icdlDate)],
       ['رقم الشهادة (ICDL أو ما يعادلها)', t.icdlNum]
     ];
 
@@ -1473,6 +1673,16 @@
 
     document.getElementById('loginPass').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') doLogin();
+    });
+
+    const rm = document.getElementById('reviewModal');
+    rm.addEventListener('input', updateStatusStrip);
+    rm.addEventListener('change', updateStatusStrip);
+    const icdl = document.getElementById('inp_icdlNum');
+    icdl.addEventListener('input', function () {
+      const n = toAsciiDigits(icdl.value);
+      if (n !== icdl.value) icdl.value = n;
+      checkIcdlNum();
     });
 
     loadPending();
