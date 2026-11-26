@@ -422,7 +422,7 @@
           </select>
         </div>
         <div class="field-group">
-          <label>تاريخ المؤهل التربوي</label>
+          <label>تاريخ المؤهل الأصلي</label>
           <input type="date" id="inp_qualDate" data-dmy>
         </div>
       </div>
@@ -1057,7 +1057,7 @@
     } else if (v.qual === 'غير تربوى' && (!v.diploma || v.diploma === 'غير موجود')) {
       doc('الدبلوم العام في التربية', 'مطلوب للمؤهل غير التربوي');
     } else if (!v.qualDate) {
-      dat('تاريخ المؤهل التربوي');
+      dat('تاريخ المؤهل الأصلي');
     }
 
     // شهادة الحاسب: نوعها ثم تاريخها ثم رقمها
