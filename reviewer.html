@@ -207,6 +207,20 @@
       padding: 12px 14px; margin-bottom: 12px;
     }
     .group-title { font-weight: 800; color: var(--primary); font-size: 0.98rem; margin-bottom: 10px; }
+
+    /* لون خفيف مميز لكل بطاقة */
+    .group-card.c-docs     { background: #f1f5f9; border-color: #cbd5e1; }
+    .group-card.c-docs     .group-title { color: #334155; }
+    .group-card.c-contract { background: #eff6ff; border-color: #bfdbfe; }
+    .group-card.c-contract .group-title { color: #1d4ed8; }
+    .group-card.c-ped      { background: #f0fdf4; border-color: #bbf7d0; }
+    .group-card.c-ped      .group-title { color: #15803d; }
+    .group-card.c-computer { background: #f5f3ff; border-color: #ddd6fe; }
+    .group-card.c-computer .group-title { color: #6d28d9; }
+    .group-card.c-qual     { background: #fff7ed; border-color: #fed7aa; }
+    .group-card.c-qual     .group-title { color: #c2410c; }
+    .group-card.c-notes    { background: #fefce8; border-color: #fde68a; }
+    .group-card.c-notes    .group-title { color: #a16207; }
     .group-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .group-fields.one { grid-template-columns: 1fr; max-width: 360px; }
     @media (max-width: 640px) {
@@ -366,7 +380,7 @@
 
     <div class="status-strip warn" id="statusStrip"></div>
 
-    <div class="group-card">
+    <div class="group-card c-docs">
       <div class="group-title">📁 المستندات (علامة صح)</div>
       <div class="checks-grid" id="checksContainer">
         <label class="check-item"><input type="checkbox" id="chk_folder" onchange="syncCheckUI(this)"> دوسيه ورقي</label>
@@ -379,7 +393,7 @@
       </div>
     </div>
 
-    <div class="group-card">
+    <div class="group-card c-contract">
       <div class="group-title">📄 العقد <span class="group-step">(تاريخه ثم المرحلة ثم التخصص)</span></div>
       <div class="group-fields">
         <div class="field-group">
@@ -400,35 +414,17 @@
       </div>
     </div>
 
-    <div class="group-card">
-      <div class="group-title">🎓 المؤهل <span class="group-step">(المؤهل ثم الدبلوم ثم تاريخه)</span></div>
-      <div class="group-fields">
+    <div class="group-card c-ped">
+      <div class="group-title">📚 التطبيقات التربوية</div>
+      <div class="group-fields one">
         <div class="field-group">
-          <label>صورة المؤهل</label>
-          <select id="sel_qual" onchange="toggleDiplomaNotice()">
-            <option value="">-- اختر --</option>
-            <option value="تربوى">تربوى</option>
-            <option value="غير تربوى">غير تربوى</option>
-            <option value="غير موجود">غير موجود</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label id="lbl_diploma">الدبلوم العام في التربية</label>
-          <select id="sel_diploma">
-            <option value="">-- اختر --</option>
-            <option value="موجود">موجود</option>
-            <option value="تربوى">تربوى</option>
-            <option value="غير موجود">غير موجود</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label>تاريخ المؤهل الأصلي</label>
-          <input type="date" id="inp_qualDate" data-dmy>
+          <label>تاريخ الحصول على شهادة التطبيقات التربوية</label>
+          <input type="date" id="inp_pedAppDate" data-dmy>
         </div>
       </div>
     </div>
 
-    <div class="group-card">
+    <div class="group-card c-computer">
       <div class="group-title">💻 شهادة الحاسب <span class="group-step">(نوعها ثم تاريخها ثم رقمها)</span></div>
       <div class="group-fields">
         <div class="field-group">
@@ -456,17 +452,35 @@
       </div>
     </div>
 
-    <div class="group-card">
-      <div class="group-title">📚 التطبيقات التربوية</div>
-      <div class="group-fields one">
+    <div class="group-card c-qual">
+      <div class="group-title">🎓 المؤهل <span class="group-step">(المؤهل ثم الدبلوم ثم تاريخه)</span></div>
+      <div class="group-fields">
         <div class="field-group">
-          <label>تاريخ الحصول على شهادة التطبيقات التربوية</label>
-          <input type="date" id="inp_pedAppDate" data-dmy>
+          <label>صورة المؤهل</label>
+          <select id="sel_qual" onchange="toggleDiplomaNotice()">
+            <option value="">-- اختر --</option>
+            <option value="تربوى">تربوى</option>
+            <option value="غير تربوى">غير تربوى</option>
+            <option value="غير موجود">غير موجود</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label id="lbl_diploma">الدبلوم العام في التربية</label>
+          <select id="sel_diploma">
+            <option value="">-- اختر --</option>
+            <option value="موجود">موجود</option>
+            <option value="تربوى">تربوى</option>
+            <option value="غير موجود">غير موجود</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>تاريخ المؤهل الأصلي</label>
+          <input type="date" id="inp_qualDate" data-dmy>
         </div>
       </div>
     </div>
 
-    <div class="group-card">
+    <div class="group-card c-notes">
       <div class="group-title">📝 الاستلام والملاحظات</div>
       <div class="group-fields">
         <div class="field-group">
@@ -1040,8 +1054,14 @@
     const doc = function (name, hint) { gaps.push({ name: name, hint: hint || '', kind: 'doc' }); };
     const dat = function (name) { gaps.push({ name: name, hint: '', kind: 'data' }); };
 
+    // نفس ترتيب البطاقات في الشاشة: المستندات ثم العقد ثم التطبيقات التربوية ثم الحاسب ثم المؤهل
     if (!v.folder) doc('دوسيه ورقي');
     if (!v.statusSheet) doc('صحيفة أحوال');
+    if (!v.principal) doc('تقرير المدير');
+    if (!v.supervisor) doc('تقرير الموجه');
+    if (!v.nomination) doc('خطاب ترشيح');
+    if (!v.salary) doc('مفردات مرتب');
+    if (!v.nidCopy) doc('صورة الرقم القومي');
 
     // العقد: تاريخه هو دليل وجوده
     if (!v.contractDate) {
@@ -1049,6 +1069,17 @@
     } else {
       if (!v.stage) dat('المرحلة');
       if (!v.specialty) dat('التخصص المعتمد بالعقد');
+    }
+
+    // التطبيقات التربوية: تاريخها هو دليل وجودها
+    if (!v.pedAppDate) doc('شهادة تطبيقات تربوية', 'تاريخ الحصول غير مُدخل');
+
+    // شهادة الحاسب: نوعها ثم تاريخها ثم رقمها
+    if (!v.computer) {
+      doc('شهادة اختبار الحاسب (ICDL أو ما يعادلها)', 'لم يُختر نوعها');
+    } else {
+      if (!v.icdlDate) dat('تاريخ شهادة الحاسب');
+      if (!v.icdlNum) dat('رقم شهادة الحاسب');
     }
 
     // المؤهل ثم الدبلوم ثم تاريخه
@@ -1059,23 +1090,6 @@
     } else if (!v.qualDate) {
       dat('تاريخ المؤهل الأصلي');
     }
-
-    // شهادة الحاسب: نوعها ثم تاريخها ثم رقمها
-    if (!v.computer) {
-      doc('شهادة اختبار الحاسب (ICDL أو ما يعادلها)', 'لم يُختر نوعها');
-    } else {
-      if (!v.icdlDate) dat('تاريخ شهادة الحاسب');
-      if (!v.icdlNum) dat('رقم شهادة الحاسب');
-    }
-
-    // التطبيقات التربوية: تاريخها هو دليل وجودها
-    if (!v.pedAppDate) doc('شهادة تطبيقات تربوية', 'تاريخ الحصول غير مُدخل');
-
-    if (!v.principal) doc('تقرير المدير');
-    if (!v.supervisor) doc('تقرير الموجه');
-    if (!v.nomination) doc('خطاب ترشيح');
-    if (!v.salary) doc('مفردات مرتب');
-    if (!v.nidCopy) doc('صورة الرقم القومي');
 
     if (v.notes.indexOf('مرفوض') !== -1) {
       gaps.push({ name: 'الملاحظات فيها كلمة «مرفوض» — الملف يُعتبر غير مكتمل', hint: '', kind: 'note' });
