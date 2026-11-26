@@ -333,8 +333,15 @@ details.inner input#inUrl{direction:ltr;text-align:left}
 <input type="file" id="dbFile" accept=".xlsx,.xlsm,.xls,.csv" hidden>
 <input type="file" id="restoreFile" accept=".json,application/json" hidden>
 
+<!-- تحميل إعدادات الربط تلقائيًا من config.js المحلي أو مجلد المتصفح أو رابط GitHub -->
 <script src="config.js"></script>
+<script>if(!window.KASHF_CONFIG){document.write('<script src="./كشف السفر_files/config.js.download"><\/script>');}</script>
+<script>if(!window.KASHF_CONFIG){document.write('<script src="https://pat-alex.github.io/guide/config.js"><\/script>');}</script>
+
+<!-- مكتبة Excel مع مسار احتياطي -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script>if(typeof XLSX==='undefined'){document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');}</script>
+
 <script>
 (function(){
 'use strict';
@@ -672,7 +679,7 @@ function latestOnly(){
   render();toast(changed?'تم إبقاء آخر شهادة فقط لكل شخص':'لا يوجد من لديه أكثر من شهادة',changed>0);
 }
 
-/* الأداة المطلوبة: استبعاد الشهادة الجديدة وإبقاء جميع الشهادات الإضافية أيًا كان عددها */
+/* استبعاد الشهادة الجديدة وإبقاء جميع الشهادات الإضافية أيًا كان عددها */
 function keepAdditionalOnly(singleId){
   if(!DB)return;
   var excludedNew=0,affectedPersons=0;
@@ -764,4 +771,444 @@ function clearAll(){
 function disarm(){clearArmed=false;clearTimeout(clearTimer);$('#btnClear').textContent='تفريغ الكشف بالكامل'}
 function fixEntry(oldId,newId){
   snap();
-  var exists=S.entries.some(function(e){return e.id===newId
+  var exists=S.entries.some(function(e){return e.id===newId});
+  if(exists)S.entries=S.entries.filter(function(e){return e.id!==oldId});
+  else S.entries.forEach(function(e){if(e.id===oldId)e.id=newId});
+  flashIds={};flashIds[newId]=1;render();
+  setTimeout(function(){var tr=$('tr[data-id="'+newId+'"]');if(tr)tr.scrollIntoView({block:'center',behavior:'smooth'})},40);
+  setTimeout(function(){flashIds={}},2600);
+}
+
+/* =====================================================================
+   البحث السريع بالاسم في قاعدة البيانات
+   ===================================================================== */
+function renderNameLookup(){
+  var box=$('#nameLookupRes');if(!box)return;
+  var q=normAr($('#inNameLookup').value);
+  if(!DB||q.length<2){box.innerHTML='';return}
+  var have={};S.entries.forEach(function(e){have[e.id]=1});
+  var foundIds=[];var seen={};
+  for(var i=0;i<DB.info.length;i++){
+    var inf=DB.info[i];
+    if(!seen[inf.id]&&inf.normName.indexOf(q)>=0){
+      seen[inf.id]=1;foundIds.push(inf.id);
+      if(foundIds.length>=8)break;
+    }
+  }
+  if(!foundIds.length){box.innerHTML='<div class="hint">لا توجد نتائج مطابقة في القاعدة.</div>';return}
+  box.innerHTML=foundIds.map(function(id){
+    var idx=DB.byId.get(id);var first=DB.info[idx[0]];
+    var types=idx.map(function(i){return DB.info[i].type}).filter(Boolean).join(' + ');
+    var added=!!have[id];
+    return '<div class="lookup-item"><div class="meta"><div class="nm">'+esc(first.name)+'</div>'
+      +'<div class="sub"><span class="idtxt">'+id+'</span>'+(types?'<span>· '+esc(types)+'</span>':'')+'</div></div>'
+      +(added?'<span class="chip ok">مُدرج</span>':'<button type="button" class="btn xs primary" data-lookup-add="'+id+'">+ إضافة</button>')
+      +'</div>';
+  }).join('');
+}
+
+/* =====================================================================
+   العرض
+   ===================================================================== */
+function toast(msg,withUndo){
+  var el=$('#toast');
+  el.innerHTML='<div class="t"><span>'+esc(msg)+'</span>'+(withUndo&&history.length?'<button type="button" id="toastUndo">تراجع</button>':'')+'</div>';
+  var b=$('#toastUndo');if(b)b.onclick=function(){undo();el.innerHTML=''};
+  clearTimeout(toast.t);toast.t=setTimeout(function(){el.innerHTML=''},withUndo?6500:3200);
+}
+
+function renderDbStat(){
+  var el=$('#dbStat');var h='';
+  if(!DB){h='<span class="chip warn">لم تُحمَّل قاعدة البيانات بعد</span>'}
+  else{
+    var d=new Date(DB.meta.loadedAt);
+    var src=DB.meta.source==='sheet'?'من جوجل شيت':'من ملف';
+    h='قاعدة البيانات: <b>'+fmtInt(DB.rows.length)+'</b> سجل · <b>'+fmtInt(DB.ids.length)+'</b> شخص'
+      +' <span title="'+esc(DB.meta.fileName||'')+'">· '+src+' · '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+' '+pad(d.getHours())+':'+pad(d.getMinutes())+'</span>';
+  }
+  if(Net.state==='syncing')h+=' <span class="chip">جارٍ المزامنة…</span>';
+  else if(Net.state==='ok'&&Conn.url)h+=' <span class="chip ok">متزامنة مع الشيت</span>';
+  else if(Net.state==='fail')h+=' <span class="chip bad">'+esc(Net.msg)+(DB?' — تعمل الأداة من آخر نسخة محفوظة':'')+'</span>';
+  if(!Store.ok)h+=' <span class="chip bad">التخزين غير متاح في هذا المتصفح: احفظ نسخة احتياطية قبل الإغلاق</span>';
+  el.innerHTML=h;
+  $('#connState').textContent=Conn.url?(Net.state==='fail'?'تعذر الاتصال':'مرتبطة بجوجل شيت'):'';
+  $('#btnSync').hidden=!Conn.url;$('#btnSync').disabled=Net.state==='syncing';
+}
+
+function stats(gs){
+  var recs=[];gs.forEach(function(g){g.recs.forEach(function(r){recs.push(r)})});
+  var inc=recs.filter(function(r){return !r.off});
+  var cntNew=0,cntAdd=0,cntFawry=0,cntR33=0;
+  inc.forEach(function(r){
+    if(isAdditionalType(r.info.type))cntAdd++;
+    else if(isNewType(r.info.type))cntNew++;
+    if(r.info.route==='فوري')cntFawry++;
+    else if(r.info.route==='إيصال 33')cntR33++;
+  });
+  return {persons:gs.length,missing:gs.filter(function(g){return !g.idx.length}).length,rows:inc.length,off:recs.length-inc.length,
+    cntNew:cntNew,cntAdd:cntAdd,cntFawry:cntFawry,cntR33:cntR33,
+    count:DB&&DB.col['العدد']!==undefined?sumKey('d:العدد',inc):null,paid:sumKey('v:paid',inc),inc:inc};
+}
+function renderSummary(gs){
+  var s=stats(gs);
+  var h='';
+  h+='<div class="stat"><div class="v">'+fmtInt(s.persons)+'</div><div class="l">أرقام قومية</div></div>';
+  var typeSub=(s.cntNew||s.cntAdd)?'<div class="subv">'+fmtInt(s.cntNew)+' جديدة · '+fmtInt(s.cntAdd)+' إضافية</div>':'';
+  h+='<div class="stat ok"><div class="v">'+fmtInt(s.rows)+'</div><div class="l">شهادات في الكشف</div>'+typeSub+'</div>';
+  if(s.count!=null)h+='<div class="stat"><div class="v">'+fmtInt(s.count)+'</div><div class="l">إجمالي العدد</div></div>';
+  if(s.paid!=null){
+    var routeSub=(s.cntFawry||s.cntR33)?'<div class="subv">فوري: '+fmtInt(s.cntFawry)+' · إيصال 33: '+fmtInt(s.cntR33)+'</div>':'';
+    h+='<div class="stat"><div class="v">'+fmtInt(s.paid)+'</div><div class="l">مسدد للأكاديمية (ج.م)</div>'+routeSub+'</div>';
+  }
+  if(s.off)h+='<div class="stat"><div class="v">'+fmtInt(s.off)+'</div><div class="l">مستبعدة من الكشف</div></div>';
+  if(s.missing)h+='<div class="stat bad"><div class="v">'+fmtInt(s.missing)+'</div><div class="l">غير موجودة في القاعدة</div></div>';
+  $('#summary').innerHTML=h;
+}
+
+function filterGroups(gs){
+  var q=normAr(S.q);
+  return gs.filter(function(g){
+    if(q){
+      var hit=g.e.id.indexOf(normDigits(S.q).replace(/\D/g,'')||'\u0000')>=0||g.recs.some(function(r){return r.info.normName.indexOf(q)>=0});
+      if(!hit)return false;
+    }
+    switch(S.flt){
+      case 'issues':return !g.idx.length||g.issues.length>0||g.recs.some(function(r){return r.info.noReceipt||r.info.noAmount||r.info.occ>1});
+      case 'multi':return g.idx.length>1;
+      case 'add_only':return g.recs.some(function(r){return isAdditionalType(r.info.type)});
+      case 'new_only':return g.recs.some(function(r){return isNewType(r.info.type)});
+      case 'missing':return !g.idx.length;
+      case 'off':return g.recs.some(function(r){return r.off});
+    }
+    return true;
+  });
+}
+
+function renderTable(gs){
+  var host=$('#tblHost');var keepTop=host.scrollTop;
+  if(!DB){
+    var hasConn=!!Conn.url,busy=Net.state==='syncing',failed=Net.state==='fail';
+    var title=busy?'جارٍ تحميل القاعدة من جوجل شيت…':failed?'تعذر تحميل القاعدة من جوجل شيت':hasConn?'القاعدة غير محمّلة':'ابدأ بتحميل قاعدة البيانات';
+    var para=failed?esc(Net.msg):hasConn?'اضغط «تحميل من جوجل شيت» أو اختر ملف Excel.':'اربط الأداة بشيت جوجل (الأفضل، وتتحدث تلقائيًا)، أو اختر ملف Excel يحتوي عمود «الرقم القومي». تُحفظ القاعدة داخل المتصفح بعد التحميل الأول.';
+    host.innerHTML='<div class="dz" id="dz"><h3>'+title+'</h3><p>'+para+'</p>'
+      +(hasConn?'<button class="btn primary" id="dzRetry"'+(busy?' disabled':'')+'>'+(failed?'إعادة المحاولة':'تحميل من جوجل شيت')+'</button> ':'<button class="btn primary" id="dzConn">الربط مع جوجل شيت</button> ')
+      +'<button class="btn" id="dzBtn">اختيار ملف Excel</button><p style="margin:12px 0 0;font-size:12.5px">أو اسحب ملف Excel وأفلته هنا</p></div>';
+    return;
+  }
+  if(!S.entries.length){
+    host.innerHTML='<div class="empty"><h3>الكشف فارغ</h3><div>الصق الأرقام القومية في المربع على اليمين واضغط «إضافة للكشف». يمكنك الإضافة أو الحذف في أي وقت وسيتحدث الكشف فورًا.</div></div>';
+    return;
+  }
+  var cols=activeCols();
+  var vis=filterGroups(gs);
+  if(!vis.length){host.innerHTML='<div class="empty"><h3>لا توجد نتائج</h3><div>غيّر البحث أو التصفية.</div></div>';return}
+  var h='<table class="tbl"><thead><tr><th class="c-chk" title="إدراج في الكشف">✓</th><th class="c-note">ملاحظات</th>'+cols.map(function(k){return '<th>'+esc(colLabel(k))+'</th>'}).join('')+'</tr></thead><tbody>';
+  vis.forEach(function(g,gi){
+    var odd=gi%2?' g-odd':'';var fl=flashIds[g.e.id]?' flash':'';
+    var idAttr=' data-id="'+g.e.id+'"';
+    if(!g.recs.length){
+      var sg=suggest(g.e.id);
+      h+='<tr class="missing gs'+fl+'"'+idAttr+'><td class="c-chk"></td><td colspan="'+(cols.length+1)+'" class="t"><div class="cell" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'
+        +'<span class="idtxt">'+g.e.id+'</span><strong style="color:var(--bad)">غير موجود في قاعدة البيانات</strong>'
+        +g.issues.map(function(x){return '<span class="chip bad">'+esc(x.t)+'</span>'}).join('')
+        +'<button class="icon-btn" data-act="rm" data-id="'+g.e.id+'" title="إزالة هذا الرقم" aria-label="إزالة هذا الرقم">✕</button></div>'
+        +(sg.length?'<div class="sug"><span style="color:var(--muted);font-size:12px">هل تقصد:</span>'+sg.map(function(c){var i=DB.byId.get(c)[0];return '<button class="btn sm" data-act="fix" data-id="'+g.e.id+'" data-to="'+c+'">'+esc(DB.info[i].name)+' — <span class="idtxt">'+c+'</span></button>'}).join('')+'</div>':'')
+        +'</td></tr>';
+      return;
+    }
+    var hasAdd=g.recs.some(function(r){return isAdditionalType(r.info.type)});
+    var hasActiveNew=g.recs.some(function(r){return isNewType(r.info.type)&&!r.off});
+    g.recs.forEach(function(r,ri){
+      var cls='rec'+odd+(ri===0?' gs':'')+(g.recs.length>1?' multi':'')+(r.off?' off':'')+(ri===0?fl:'');
+      h+='<tr class="'+cls+'"'+idAttr+'><td class="c-chk"><input type="checkbox" data-key="'+esc(r.info.key)+'" '+(r.off?'':'checked')+' aria-label="إدراج هذه الشهادة في الكشف"></td>';
+      h+='<td class="c-note"><div class="cell">';
+      if(ri===0)h+='<button class="icon-btn" data-act="rm" data-id="'+g.e.id+'" title="إزالة هذا الشخص من الكشف" aria-label="إزالة هذا الشخص من الكشف">✕</button>';
+      if(ri===0){
+        if(g.recs.length>1)h+='<span class="chip warn">'+g.recs.length+' شهادات</span>';
+        if(hasAdd&&hasActiveNew)h+='<button type="button" class="btn xs" data-act="keep-add" data-id="'+g.e.id+'" title="استبعاد الشهادة الجديدة وإبقاء الإضافية لهذا الشخص">إبقاء الإضافية</button>';
+        g.issues.forEach(function(x){h+='<span class="chip bad">'+esc(x.t)+'</span>'});
+      }
+      if(r.info.occ>1)h+='<span class="chip warn">مكرر بالقاعدة</span>';
+      if(r.info.noReceipt)h+='<span class="chip bad">بدون إيصال</span>';
+      else if(r.info.noAmount)h+='<span class="chip warn">بدون مبلغ</span>';
+      h+='</div></td>';
+      cols.forEach(function(k){
+        var t=TEXT_KEYS.indexOf(k)>=0;
+        var v=(k==='v:#')?(r.n==null?'—':r.n):disp(k,r);
+        var cellHTML=(k==='v:want'&&isAdditionalType(v))?'<span class="chip ok">'+esc(v)+'</span>':esc(v);
+        h+='<td dir="auto" class="'+(t?'t':'')+(k==='d:الاسم'?' name':'')+'">'+cellHTML+'</td>';
+      });
+      h+='</tr>';
+    });
+  });
+  h+='</tbody></table>';
+  host.innerHTML=h;host.scrollTop=keepTop;
+}
+
+function renderCols(){
+  var ul=$('#colList');
+  if(!DB){ul.innerHTML='<li class="sep">حمّل قاعدة البيانات أولًا</li>';return}
+  var sel=activeCols();
+  var all=VCOLS.map(function(c){return c[0]}).concat(DB.headers.map(function(h){return 'd:'+h}));
+  var rest=all.filter(function(k){return sel.indexOf(k)<0});
+  var h='';
+  sel.forEach(function(k,i){
+    h+='<li class="on"><label><input type="checkbox" checked data-col="'+esc(k)+'"><span>'+esc(colLabel(k))+'</span></label>'
+      +'<button class="icon-btn mv" data-mv="-1" data-col="'+esc(k)+'" aria-label="تقديم" '+(i===0?'disabled':'')+'>▲</button>'
+      +'<button class="icon-btn mv" data-mv="1" data-col="'+esc(k)+'" aria-label="تأخير" '+(i===sel.length-1?'disabled':'')+'>▼</button></li>';
+  });
+  h+='<li class="sep">أعمدة أخرى متاحة</li>';
+  rest.forEach(function(k){h+='<li><label><input type="checkbox" data-col="'+esc(k)+'"><span>'+esc(colLabel(k))+'</span></label></li>'});
+  ul.innerHTML=h;
+}
+
+/* ---------- ورقة الطباعة ---------- */
+function sheetHTML(){
+  var gs=model();var rows=[];gs.forEach(function(g){g.recs.forEach(function(r){if(!r.off)rows.push(r)})});
+  var cols=activeCols();
+  var fs=S.fsize==='auto'?(cols.length<=7?11:cols.length<=10?10:cols.length<=13?9:8.5):parseFloat(S.fsize);
+  var cnt=DB&&DB.col['العدد']!==undefined?sumKey('d:العدد',rows):null;
+  var h='<h1>'+esc(S.title||'')+'</h1><div class="meta"><span>تاريخ السفر: <b>'+esc(isoShow(S.date))+'</b></span><span>عدد الشهادات: <b>'+rows.length+'</b></span>'+(cnt!=null?'<span>إجمالي العدد: <b>'+fmtInt(cnt)+'</b></span>':'')+'</div>';
+  if(!rows.length)return h+'<div class="none">لا توجد شهادات مدرجة في الكشف.</div>';
+  h+='<table style="--sheet-fs:'+fs+'pt"><thead><tr>'+cols.map(function(k){return '<th>'+esc(colLabel(k))+'</th>'}).join('')+'</tr></thead><tbody>';
+  rows.forEach(function(r){
+    h+='<tr>'+cols.map(function(k){var c=k==='d:الاسم'?'nm':'';return '<td dir="auto"'+(c?' class="'+c+'"':'')+'>'+esc(disp(k,r))+'</td>'}).join('')+'</tr>';
+  });
+  h+='</tbody>';
+  var sums=cols.map(function(k){return SUM_KEYS.indexOf(k)>=0?sumKey(k,rows):null});
+  if(sums.some(function(x){return x!=null})){
+    var first=sums.findIndex(function(x){return x!=null});
+    h+='<tfoot><tr>';
+    if(first>0)h+='<td colspan="'+first+'">الإجمالي</td>';
+    for(var i=Math.max(first,0);i<cols.length;i++)h+='<td>'+(sums[i]==null?'':esc(Number.isInteger(sums[i])?fmtInt(sums[i]):fmtNum(sums[i])))+'</td>';
+    h+='</tr></tfoot>';
+  }
+  return h+'</table>';
+}
+function refreshPrint(){
+  $('#printRoot').innerHTML=sheetHTML();
+  $('#pageStyle').textContent='@page{size:A4 '+(S.orient==='portrait'?'portrait':'landscape')+';margin:8mm 8mm 10mm}';
+}
+function renderPreview(){
+  var p=$('#paper');p.className='paper sheet '+(S.orient==='portrait'?'port':'land');p.innerHTML=sheetHTML();
+}
+
+function render(){
+  var gs=DB?model():[];
+  renderDbStat();renderSummary(gs);renderTable(gs);renderCols();renderNameLookup();
+  if(tab==='prev')renderPreview();
+  var hasRows=DB&&gs.some(function(g){return g.recs.some(function(r){return !r.off})});
+  $('#btnPrint').disabled=!hasRows;$('#btnXlsx').disabled=!hasRows;$('#btnCopy').disabled=!hasRows;
+  persist();
+}
+
+/* =====================================================================
+   التصدير والنسخ والنسخ الاحتياطي
+   ===================================================================== */
+function download(name,blob){
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);
+}
+function printedRows(){var out=[];model().forEach(function(g){g.recs.forEach(function(r){if(!r.off)out.push(r)})});return out}
+function exportXlsx(){
+  if(typeof XLSX==='undefined'){toast('مكتبة تصدير Excel غير متاحة حاليًا — تأكد من الاتصال بالإنترنت أو استخدم نسخ الجدول');return}
+  var rows=printedRows();if(!rows.length)return;var cols=activeCols();
+  var STR=['d:الرقم القومي','d:الموبايل','v:receipt','d:رقم إيصال فوري','d:رقم إيصال 33','d:رقم الحافظة','d:كود المجموعة'];
+  var aoa=[cols.map(colLabel)];
+  rows.forEach(function(r){
+    aoa.push(cols.map(function(k){
+      var v=getCell(k,r);if(v===''||v==null)return null;
+      if(isDateKey(k)){var s=isoToSerial(v);return s?{t:'n',v:s,z:'dd/mm/yyyy'}:{t:'s',v:String(v)}}
+      if(k==='v:#')return {t:'n',v:r.n};
+      if(STR.indexOf(k)>=0)return {t:'s',v:String(v)};
+      return typeof v==='number'?{t:'n',v:v}:{t:'s',v:String(v)};
+    }));
+  });
+  var tot=cols.map(function(k,i){if(i===0)return {t:'s',v:'الإجمالي'};var s=SUM_KEYS.indexOf(k)>=0?sumKey(k,rows):null;return s==null?null:{t:'n',v:s}});
+  aoa.push(tot);
+  var ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols']=cols.map(function(k,ci){var m=colLabel(k).length+2;for(var i=0;i<Math.min(rows.length,300);i++){m=Math.max(m,disp(k,rows[i]).length+2)}return {wch:Math.min(42,m)}});
+  var wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
+  XLSX.utils.book_append_sheet(wb,ws,'كشف السفر');
+  var out=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  download('كشف_السفر_'+S.date+'.xlsx',new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  toast('تم تصدير ملف Excel');
+}
+function copyTable(){
+  var rows=printedRows();if(!rows.length)return;var cols=activeCols();
+  var lines=[cols.map(colLabel).join('\t')];
+  rows.forEach(function(r){lines.push(cols.map(function(k){return disp(k,r).replace(/[\t\r\n]+/g,' ')}).join('\t'))});
+  copyTextHelper(lines.join('\n'),'تم نسخ الجدول — الصقه في Excel أو Google Sheets');
+}
+function backup(){
+  var blob=new Blob([JSON.stringify({app:'kashf-safar',v:1,savedAt:Date.now(),state:S},null,1)],{type:'application/json'});
+  download('نسخة_كشف_السفر_'+S.date+'.json',blob);toast('تم حفظ النسخة الاحتياطية');
+}
+function restoreFrom(file){
+  var fr=new FileReader();
+  fr.onload=function(){
+    try{
+      var o=JSON.parse(fr.result);
+      if(!o||o.app!=='kashf-safar'||!o.state||!Array.isArray(o.state.entries))throw new Error('x');
+      snap();
+      var d=defaultState();var st=o.state;
+      S=Object.assign(d,st);
+      S.entries=(S.entries||[]).map(function(e){return {id:cleanId(e.id)}}).filter(function(e){return e.id});
+      S.off=S.off&&typeof S.off==='object'?S.off:{};
+      syncInputs();render();toast('تم استرجاع النسخة ('+S.entries.length+' رقم)',true);
+    }catch(e){toast('الملف ليس نسخة احتياطية صالحة')}
+  };
+  fr.readAsText(file);
+}
+
+/* =====================================================================
+   الربط مع جوجل شيت عبر Apps Script (Web App)
+   ===================================================================== */
+var CONN_LS='kashf-safar.conn.v1';
+var Conn={url:''};
+var FIXED=false; // true لو الرابط محدد في config.js
+var Net={state:'idle',at:0,msg:''};
+function loadConn(){try{var o=JSON.parse(localStorage.getItem(CONN_LS)||'null');if(o&&o.url){Conn.url=o.url}}catch(e){}}
+function saveConn(){try{localStorage.setItem(CONN_LS,JSON.stringify({url:Conn.url}))}catch(e){}Store.set('conn',{url:Conn.url})}
+function apiError(code,detail){var e=new Error(code);e.code=code;e.detail=detail||'';return e}
+function apiMsg(e){
+  switch(e&&e.code){
+    case 'open_failed':return 'تعذر فتح ملف الشيت: تأكد من معرّف الملف، ومن أنه ملف Google Sheets (وليس xlsx مرفوعًا)، وأن صاحب السكريبت يملك صلاحية الوصول إليه';
+    case 'no_sheet':return 'لم يجد السكريبت ورقة قاعدة البيانات (التي بها عمود «الرقم القومي»)';
+    case 'empty':return 'ورقة القاعدة في الشيت لا تحتوي سجلات';
+    case 'notjson':return 'الرابط لا يرجع بيانات: تأكد أنه رابط التطبيق المنتهي بـ /exec وأن الوصول مضبوط على «أي شخص»';
+    case 'timeout':return 'انتهت مهلة الاتصال بالشيت، حاول مرة أخرى';
+    case 'network':return 'تعذر الوصول إلى التطبيق: تأكد من الإنترنت ومن الرابط ومن أن الوصول مضبوط على «أي شخص»';
+    default:return 'خطأ من السكريبت'+(e&&e.detail?': '+e.detail:'');
+  }
+}
+async function api(action){
+  var ctl=new AbortController();var to=setTimeout(function(){ctl.abort()},120000);var res;
+  try{
+    res=await fetch(Conn.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:action}),signal:ctl.signal,redirect:'follow',credentials:'omit'});
+  }catch(e){throw apiError(e&&e.name==='AbortError'?'timeout':'network')}
+  finally{clearTimeout(to)}
+  var data;try{data=JSON.parse(await res.text())}catch(e){throw apiError('notjson')}
+  if(!data||!data.ok)throw apiError((data&&data.error)||'server',data&&data.message);
+  return data;
+}
+/* mode: 'force' تنزيل كامل دائمًا — 'check' يفحص أولًا ولا ينزّل إلا لو تغير الشيت */
+async function syncSheet(mode){
+  if(!Conn.url||Net.state==='syncing')return false;
+  Net={state:'syncing',at:Date.now(),msg:''};renderDbStat();if(!DB)renderTable([]);
+  try{
+    if(mode==='check'&&DB&&DB.meta.source==='sheet'){
+      var m=await api('meta');
+      if(m.sig===DB.meta.sig){Net={state:'ok',at:Date.now(),msg:''};renderDbStat();return true}
+    }
+    var d=await api('db');
+    var parsed=parseAoa([d.headers].concat(d.rows),0,{source:'sheet',sheet:d.sheet,sig:d.sig});
+    if(!parsed.rows.length)throw apiError('empty');
+    var before=DB?DB.rows.length:null;
+    setDB(parsed);
+    await Store.set('db',{headers:parsed.headers,rows:parsed.rows,meta:parsed.meta});
+    Net={state:'ok',at:Date.now(),msg:''};
+    render();
+    var msg='تمت المزامنة من جوجل شيت: '+fmtInt(parsed.rows.length)+' سجل لـ '+fmtInt(DB.ids.length)+' شخص';
+    if(before!=null){var df=parsed.rows.length-before;if(df>0)msg+=' (+'+fmtInt(df)+' سجل جديد)';else if(df<0)msg+=' ('+fmtInt(-df)+' سجل أقل)'}
+    toast(msg);
+    return true;
+  }catch(e){
+    Net={state:'fail',at:Date.now(),msg:apiMsg(e)};renderDbStat();if(!DB)render();
+    toast('تعذرت المزامنة: '+Net.msg);
+    return false;
+  }
+}
+async function connSaveTest(){
+  var u=$('#inUrl').value.trim();
+  if(!/^https:\/\/script\.google(usercontent)?\.com\//.test(u)){toast('الرابط يجب أن يبدأ بـ https://script.google.com/ وينتهي بـ /exec');return}
+  Conn.url=u;saveConn();
+  await syncSheet('force');
+}
+function connClear(){
+  Conn={url:''};try{localStorage.removeItem(CONN_LS)}catch(e){}Store.set('conn',null);
+  Net={state:'idle',at:0,msg:''};$('#inUrl').value='';render();toast('تم فصل الربط مع جوجل شيت (النسخة المحفوظة ما زالت موجودة)');
+}
+var wipeArmed=false,wipeTimer=null;
+async function wipeAll(){
+  var b=$('#btnWipe');
+  if(!wipeArmed){wipeArmed=true;b.textContent='اضغط مرة أخرى لتأكيد مسح كل شيء';wipeTimer=setTimeout(function(){wipeArmed=false;b.textContent='مسح كل البيانات من هذا المتصفح'},4000);return}
+  clearTimeout(wipeTimer);wipeArmed=false;b.textContent='مسح كل البيانات من هذا المتصفح';
+  clearTimeout(pt);
+  try{localStorage.removeItem(LS);localStorage.removeItem(CONN_LS)}catch(e){}
+  await Store.set('db',null);await Store.set('state',null);await Store.set('conn',null);
+  DB=null;Conn={url:FIXED?Conn.url:''};Net={state:'idle',at:0,msg:''};S=defaultState();history=[];updUndo();
+  $('#inUrl').value=Conn.url;syncInputs();$('#addMsg').innerHTML='';render();
+  clearTimeout(pt);try{localStorage.removeItem(LS)}catch(e){}Store.set('state',null);
+  toast('تم مسح القاعدة والكشف وإعدادات الربط من هذا المتصفح');
+}
+
+/* =====================================================================
+   تحميل ملف القاعدة
+   ===================================================================== */
+async function loadDbFile(file){
+  if(!file)return;
+  if(typeof XLSX==='undefined'){toast('مكتبة قراءة Excel غير متاحة حاليًا');return}
+  toast('جارٍ قراءة الملف… قد يستغرق ثوانيَ قليلة');
+  await new Promise(function(r){setTimeout(r,40)});
+  try{
+    var buf=await file.arrayBuffer();
+    var isCsv=/\.csv$/i.test(file.name);
+    var wb=isCsv?XLSX.read(new TextDecoder('utf-8').decode(buf),{type:'string'}):XLSX.read(buf,{type:'array'});
+    var parsed=parseWorkbook(wb,file.name);
+    if(!parsed.rows.length)throw new Error('الملف لا يحتوي سجلات بأرقام قومية.');
+    var before=DB?DB.rows.length:null;
+    setDB(parsed);
+    var saved=await Store.set('db',{headers:parsed.headers,rows:parsed.rows,meta:parsed.meta});
+    render();
+    var msg='تم تحميل '+fmtInt(parsed.rows.length)+' سجل لـ '+fmtInt(DB.ids.length)+' شخص من الورقة «'+parsed.meta.sheet+'»';
+    if(before!=null){var d=parsed.rows.length-before;msg+=d>0?' (+'+fmtInt(d)+' سجل جديد)':d<0?' ('+fmtInt(-d)+' سجل أقل من السابق)':' (نفس عدد السجلات السابق)'}
+    if(parsed.meta.skipped)msg+=' — تم تجاهل '+parsed.meta.skipped+' سجل بلا رقم قومي صالح';
+    if(!saved)msg+=' — لم يُحفظ داخل المتصفح';
+    toast(msg);
+  }catch(e){toast('تعذر قراءة الملف: '+(e&&e.message?e.message:e))}
+}
+
+/* =====================================================================
+   حفظ واسترجاع حالة الكشف
+   ===================================================================== */
+var pt=null;
+function persist(){
+  clearTimeout(pt);
+  pt=setTimeout(function(){
+    var payload=Object.assign({},S,{savedAt:Date.now()});
+    try{localStorage.setItem(LS,JSON.stringify(payload))}catch(e){}
+    Store.set('state',payload);
+  },150);
+}
+async function loadState(){
+  var a=null,b=null;
+  try{a=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
+  b=await Store.get('state');
+  var best=(a&&b)?(a.savedAt>=b.savedAt?a:b):(a||b);
+  S=Object.assign(defaultState(),best||{});
+  if(!Array.isArray(S.entries))S.entries=[];
+  if(!S.off||typeof S.off!=='object')S.off={};
+  S.q='';S.flt='all';
+  if(!Array.isArray(S.cols))S.cols=[];
+}
+function syncInputs(){
+  $('#inTitle').value=S.title;$('#inDate').value=S.date;$('#inOrient').value=S.orient;$('#inFont').value=S.fsize;
+  $('#q').value=S.q||'';$('#flt').value=S.flt||'all';$('#srt').value=S.sort||'added';
+}
+
+/* =====================================================================
+   الأحداث
+   ===================================================================== */
+function setTab(t){
+  tab=t;
+  $('#tabEdit').setAttribute('aria-selected',t==='edit');$('#tabPrev').setAttribute('aria-selected',t==='prev');
+  $('#paneEdit').hidden=t!=='edit';$('#panePrev').hidden=t!=='prev';
+  if(t==='prev')renderPreview();
+}
+function bind(){
+  $('#btnAdd').onclick=function(){addFromText($('#idInput').value)};
+  $('#btnClearInput').onclick=function(){$('#idInput').value='';$('#addMsg').innerHTML='';$('#idInput').focus()};
+  $('#idInput').addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();addFromText(this.value)}});
+  $('#inNameLookup').oninput=renderNameLookup;
+  $('#nameLookupRes').addEventListener
